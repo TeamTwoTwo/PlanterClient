@@ -57,8 +57,10 @@ const SignupScreen02 = () => {
   };
 
   const handlePressCheckCertifyNum = () => {
-    if (certifyNum !== '') {
+    if (certifyNum !== '' && birth !== '' && name !== '') {
       navigation.navigate('Signup03', {address: ''});
+    } else {
+      Alert.alert('잘못된 정보가 있습니다.');
     }
   };
 
@@ -103,7 +105,7 @@ const SignupScreen02 = () => {
                           phoneNum === '' ? color.gray_05 : color.mint_04,
                       },
                     ]}
-                    activeOpacity={0.5}
+                    activeOpacity={1}
                     onPress={handlePressSendCertifyNum}>
                     <Text
                       style={[
@@ -142,7 +144,7 @@ const SignupScreen02 = () => {
                           certifyNum === '' ? color.gray_05 : color.mint_04,
                       },
                     ]}
-                    activeOpacity={0.5}
+                    activeOpacity={1}
                     onPress={handlePressCheckCertifyNum}>
                     <Text
                       style={[
@@ -185,7 +187,8 @@ const SignupScreen02 = () => {
             </View>
           </View>
         </View>
-        {(step === 1 && name !== '') || (step === 2 && birth !== '') ? (
+        {(step === 1 && name !== '') ||
+        (step === 2 && name !== '' && birth !== '') ? (
           <View>
             <CustomButton
               backgroundColor={color.mint_05}

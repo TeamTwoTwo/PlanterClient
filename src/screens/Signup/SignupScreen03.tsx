@@ -48,7 +48,7 @@ const SignupScreen03 = ({route}: any) => {
     if (!showAddressView) {
       setShowAddressView(true);
       setStep(2);
-    } else if (nickname !== '') {
+    } else {
       navigation.navigate('Signup04');
     }
   };
@@ -122,7 +122,8 @@ const SignupScreen03 = ({route}: any) => {
             </View>
           </View>
         </View>
-        {(step === 1 && nickname !== '') || addressDetail !== '' ? (
+        {(step === 1 && nickname !== '') ||
+        (nickname !== '' && addressDetail !== '') ? (
           <View>
             <CustomButton
               backgroundColor={color.mint_05}

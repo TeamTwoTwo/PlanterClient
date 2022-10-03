@@ -110,7 +110,10 @@ const SignupScreen01 = () => {
           </View>
         </View>
         {(step === 1 && email !== '') ||
-        (step === 2 && password !== '' && checkPassword !== '') ? (
+        (step === 2 &&
+          email !== '' &&
+          password !== '' &&
+          checkPassword !== '') ? (
           <View>
             <CustomButton
               backgroundColor={color.mint_05}
