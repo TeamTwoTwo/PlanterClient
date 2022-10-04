@@ -6,10 +6,7 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
-  Dimensions,
   NativeModules,
-  ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
 import {color} from '../../utils/color';
@@ -17,7 +14,6 @@ import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
 
-const width = Dimensions.get('window').width;
 const {StatusBarManager} = NativeModules;
 
 const SignupScreen01 = () => {
@@ -37,7 +33,7 @@ const SignupScreen01 = () => {
       : null;
   }, []);
 
-  const handlePressNext = () => {
+  const onPressNext = () => {
     if (!showPasswordView) {
       setShowPasswordView(true);
       setStep(2);
@@ -118,7 +114,7 @@ const SignupScreen01 = () => {
             <CustomButton
               backgroundColor={color.mint_05}
               text="다음"
-              onPress={handlePressNext}
+              onPress={onPressNext}
             />
           </View>
         ) : null}

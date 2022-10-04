@@ -1,16 +1,8 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  Dimensions,
-} from 'react-native';
+import {Text, StyleSheet, View} from 'react-native';
 import {color} from '../../utils/color';
 import CustomButton from '../../components/common/CustomButton';
-
-const width = Dimensions.get('window').width;
 
 const SignupScreen04 = () => {
   return (

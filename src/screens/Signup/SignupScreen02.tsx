@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  Dimensions,
   NativeModules,
   Alert,
 } from 'react-native';
@@ -17,7 +16,6 @@ import {LoginStackNavigationProp} from '../LoginStack';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../components/common/CustomButton';
 
-const width = Dimensions.get('window').width;
 const {StatusBarManager} = NativeModules;
 
 const SignupScreen02 = () => {
@@ -40,7 +38,7 @@ const SignupScreen02 = () => {
       : null;
   }, []);
 
-  const handlePressNext = () => {
+  const onPressNext = () => {
     if (!showBirthView) {
       setShowBirthView(true);
       setStep(2);
@@ -50,13 +48,13 @@ const SignupScreen02 = () => {
     }
   };
 
-  const handlePressSendCertifyNum = () => {
+  const onPressSendCertifyNum = () => {
     if (phoneNum !== '') {
       setShowCertifyNumView(true);
     }
   };
 
-  const handlePressCheckCertifyNum = () => {
+  const onPressCheckCertifyNum = () => {
     if (certifyNum !== '' && birth !== '' && name !== '') {
       navigation.navigate('Signup03', {address: ''});
     } else {
@@ -106,7 +104,7 @@ const SignupScreen02 = () => {
                       },
                     ]}
                     activeOpacity={1}
-                    onPress={handlePressSendCertifyNum}>
+                    onPress={onPressSendCertifyNum}>
                     <Text
                       style={[
                         styles.certifyNumText,
@@ -145,7 +143,7 @@ const SignupScreen02 = () => {
                       },
                     ]}
                     activeOpacity={1}
-                    onPress={handlePressCheckCertifyNum}>
+                    onPress={onPressCheckCertifyNum}>
                     <Text
                       style={[
                         styles.certifyNumText,
@@ -193,7 +191,7 @@ const SignupScreen02 = () => {
             <CustomButton
               backgroundColor={color.mint_05}
               text="다음"
-              onPress={handlePressNext}
+              onPress={onPressNext}
             />
           </View>
         ) : null}

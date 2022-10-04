@@ -7,19 +7,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  Dimensions,
   NativeModules,
-  Alert,
-  Pressable,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
-// import styled from 'styled-components/native';
 
-const width = Dimensions.get('window').width;
 const {StatusBarManager} = NativeModules;
 
 const SignupScreen03 = ({route}: any) => {
@@ -44,7 +39,7 @@ const SignupScreen03 = ({route}: any) => {
     setAddress(addr);
   }, [addr]);
 
-  const handlePressNext = () => {
+  const onPressNext = () => {
     if (!showAddressView) {
       setShowAddressView(true);
       setStep(2);
@@ -53,7 +48,7 @@ const SignupScreen03 = ({route}: any) => {
     }
   };
 
-  const handlePressAddress = () => {
+  const onPressAddress = () => {
     navigation.navigate('FindAddress');
   };
 
@@ -88,7 +83,7 @@ const SignupScreen03 = ({route}: any) => {
                   <TouchableOpacity
                     style={styles.addressBtn}
                     activeOpacity={0.5}
-                    onPress={handlePressAddress}>
+                    onPress={onPressAddress}>
                     <Text style={styles.addressBtnText}>주소 검색</Text>
                   </TouchableOpacity>
                 </View>
@@ -128,7 +123,7 @@ const SignupScreen03 = ({route}: any) => {
             <CustomButton
               backgroundColor={color.mint_05}
               text="다음"
-              onPress={handlePressNext}
+              onPress={onPressNext}
             />
           </View>
         ) : null}
