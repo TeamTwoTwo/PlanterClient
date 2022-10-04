@@ -1,6 +1,9 @@
 module.exports = {
   root: true,
   extends: '@react-native-community',
+  rules: {
+    '@typescript-eslint/no-unused-vars': 0,
+  },
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   overrides: [
