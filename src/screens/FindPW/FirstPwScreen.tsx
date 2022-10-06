@@ -11,16 +11,17 @@ import {
 import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
-import {FindIdStackNavigationProp} from '../../screens/FindIdStack';
+import {FindPwStackNavigationProp} from '../../screens/FindPwStack';
 import {WithLocalSvg} from 'react-native-svg';
 import Clean from '../../assets/icon/ic-clean.svg';
 import Toast from 'react-native-easy-toast';
 
-const FirstScreen = () => {
-  const [name, setName] = useState<string>('');
+const FirstPwScreen = () => {
+  const [email, setEmail] = useState<string>('');
   const [isBtnShow, setIsBtnShow] = useState<boolean>(false);
   const [showLabel, setShowLabel] = useState<boolean>(false);
   const [isfocus, setIsFocus] = useState<boolean>(false);
+  const [isValidate, setIsValidate] = useState<boolean>(true);
 
   const [phone, setPhone] = useState<string>('');
   const [isPhoneShow, setIsPhoneShow] = useState<boolean>(false);
@@ -35,15 +36,17 @@ const FirstScreen = () => {
   const [stage, setStage] = useState<number>(1);
   const [isFull, setIsFull] = useState<boolean>(false);
 
-  const navigation = useNavigation<FindIdStackNavigationProp>();
+  const navigation = useNavigation<FindPwStackNavigationProp>();
   const inputRef = useRef<TextInput | null>(null);
 
   const onPress = (): void => {
-    Keyboard.dismiss();
-    setIsPhoneShow(true);
-    setIsBtnShow(false);
-    setIsFocus(false);
-    setStage(2);
+    if (isValidate) {
+      Keyboard.dismiss();
+      setIsPhoneShow(true);
+      setIsBtnShow(false);
+      setIsFocus(false);
+      setStage(2);
+    }
   };
 
   const onSend = () => {
@@ -57,11 +60,17 @@ const FirstScreen = () => {
   };
 
   const onConfirm = (): void => {
-    navigation.navigate('IdDoneScreen');
+    navigation.navigate('NewPwScreen');
+  };
+
+  const validateEmail = (id: string): boolean => {
+    const regex =
+      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+    return regex.test(id);
   };
 
   useEffect(() => {
-    if (name.length === 0) {
+    if (email.length === 0) {
       setShowLabel(false);
     } else {
       setShowLabel(true);
@@ -76,7 +85,7 @@ const FirstScreen = () => {
     } else {
       setShowMessageLable(true);
     }
-  }, [name, phone, message]);
+  }, [email, phone, message]);
 
   useEffect(() => {
     if (phone !== '') {
@@ -99,7 +108,7 @@ const FirstScreen = () => {
         <FindHeader />
       </View>
       <View style={styles.titleWrap}>
-        <Text style={styles.title}>아이디 찾기</Text>
+        <Text style={styles.title}>비밀번호 재설정</Text>
       </View>
       {showPhoneLabel && (
         <View>
@@ -187,7 +196,7 @@ const FirstScreen = () => {
               }}
               onFocus={() => setMessageFocus(true)}
               onSubmitEditing={() => {
-                navigation.navigate('IdDoneScreen');
+                navigation.navigate('NewPwScreen');
               }}
               ref={inputRef}
             />
@@ -221,19 +230,20 @@ const FirstScreen = () => {
       )}
       {showLabel && (
         <View>
-          <Text style={styles.label}>이름</Text>
+          <Text style={styles.label}>아이디</Text>
         </View>
       )}
-      <View style={styles.nameInputWrap}>
+      <View style={styles.emailInputWrap}>
         <TextInput
-          style={[styles.nameInput, isfocus && styles.focused]}
-          placeholder="이름"
+          style={[styles.emailInput, isfocus && inputStyle(isValidate).focused]}
+          placeholder="아이디"
           placeholderTextColor="#AEAEAE"
-          value={name}
+          value={email}
           onChange={event => {
             const {text} = event.nativeEvent;
-            setName(text);
+            setEmail(text);
             setIsBtnShow(true);
+            setIsValidate(validateEmail(text));
           }}
           onFocus={() => {
             setIsFocus(true);
@@ -242,10 +252,13 @@ const FirstScreen = () => {
             setIsFocus(false);
           }}
         />
+        {isValidate ? null : (
+          <Text style={styles.errorText}>이메일 주소를 확인해주세요.</Text>
+        )}
         {isfocus && (
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => setName('')}
+            onPress={() => setEmail('')}
             style={styles.cleanBtn}>
             <WithLocalSvg width={20} height={20} asset={Clean} />
           </TouchableOpacity>
@@ -262,6 +275,13 @@ const FirstScreen = () => {
     </SafeAreaView>
   );
 };
+
+const inputStyle = (isValidate: boolean) =>
+  StyleSheet.create({
+    focused: {
+      borderColor: isValidate ? color.mint_05 : color.red_02,
+    },
+  });
 
 const styles = StyleSheet.create({
   label: {
@@ -286,12 +306,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: color.gray_07,
   },
-  nameInputWrap: {
+  emailInputWrap: {
     marginHorizontal: 24,
     // marginBottom: 40,
     // borderWidth: 1,
   },
-  nameInput: {
+  emailInput: {
     fontSize: 16,
     color: color.gray_07,
     borderBottomWidth: 1,
@@ -349,6 +369,12 @@ const styles = StyleSheet.create({
   focused: {
     borderColor: color.mint_05,
   },
+  errorText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: color.red_02,
+    marginTop: 10,
+  },
   cleanBtn: {
     position: 'absolute',
     right: 10,
@@ -363,4 +389,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FirstScreen;
+export default FirstPwScreen;

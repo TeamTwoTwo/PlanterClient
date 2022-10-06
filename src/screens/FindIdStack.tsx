@@ -6,16 +6,17 @@ import {
 import FirstScreen from './FindID/FirstScreen';
 import IdDoneScreen from './FindID/IdDoneScreen';
 
-type FindStackParamList = {
+type FindIdStackParamList = {
   FirstScreen: undefined;
+  IdDoneScreen: undefined;
 };
 
-export type FindStackNavigationProp =
-  NativeStackNavigationProp<FindStackParamList>;
+export type FindIdStackNavigationProp =
+  NativeStackNavigationProp<FindIdStackParamList>;
 
-const Stack = createNativeStackNavigator<FindStackParamList>();
+const Stack = createNativeStackNavigator<FindIdStackParamList>();
 
-const FindStack = () => {
+const FindIdStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -32,4 +33,4 @@ const FindStack = () => {
   );
 };
 
-export default FindStack;
+export default FindIdStack;
