@@ -7,7 +7,7 @@ import {
   Text,
   KeyboardTypeOptions,
 } from 'react-native';
-import Clear from '../../assets/svg/svg-text-clear.svg';
+import Clear from '../../assets/icon/ic-clean.svg';
 import {color} from '../../utils/color';
 
 interface Props {
@@ -18,6 +18,9 @@ interface Props {
   secure?: boolean;
   disabled?: boolean;
   value: string;
+  checkStatus?: boolean;
+  multiline?: boolean;
+  pointerEventsNone?: boolean;
   onChangeText: Dispatch<SetStateAction<string>>;
   clearText?: () => void;
 }
@@ -30,6 +33,9 @@ const CustomInput = ({
   secure,
   disabled,
   value,
+  checkStatus = true,
+  multiline = false,
+  pointerEventsNone = false,
   onChangeText,
   clearText,
 }: Props) => {
@@ -49,16 +55,34 @@ const CustomInput = ({
     }
   }, [value]);
 
+  useEffect(() => {
+    if (value.length !== 0) {
+      if (checkStatus) {
+        setBorderBottomColor(color.mint_04);
+      } else {
+        setBorderBottomColor(color.red_02);
+      }
+    }
+  }, [checkStatus, value.length]);
+
   const onFocus = () => {
     if (value?.length !== 0) {
       setShowClearBtn(true);
     }
-    setBorderBottomColor(color.mint_04);
+    if (checkStatus) {
+      setBorderBottomColor(color.mint_04);
+    } else {
+      setBorderBottomColor(color.red_02);
+    }
   };
 
   const onEndEditing = () => {
-    setBorderBottomColor(color.gray_04);
-    setShowClearBtn(false);
+    if (!checkStatus) {
+      setBorderBottomColor(color.red_02);
+    } else {
+      setBorderBottomColor(color.gray_04);
+      setShowClearBtn(false);
+    }
   };
 
   return (
@@ -85,6 +109,8 @@ const CustomInput = ({
           secureTextEntry={secure}
           editable={!disabled}
           selectTextOnFocus={!disabled}
+          multiline={multiline}
+          pointerEvents={pointerEventsNone ? 'none' : 'auto'}
         />
         {showClearBtn && !disabled ? (
           <TouchableOpacity
@@ -95,9 +121,11 @@ const CustomInput = ({
           </TouchableOpacity>
         ) : null}
       </View>
-      {/* <View style={styles.errorTextView}>
-        <Text style={styles.errorText}>{errorText}</Text>
-      </View> */}
+      {!checkStatus && (
+        <View style={styles.errorTextView}>
+          <Text style={styles.errorText}>{errorText}</Text>
+        </View>
+      )}
     </>
   );
 };
