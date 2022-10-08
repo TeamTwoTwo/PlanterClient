@@ -11,8 +11,10 @@ import {useNavigation} from '@react-navigation/native';
 import SignupScreen03 from './Signup/SignupScreen03';
 import FindAddress from './Signup/FindAddress';
 import SignupScreen04 from './Signup/SignupScreen04';
+import TermsOfServiceScreen from './Signup/TermsOfServiceScreen';
 
 type LoginStackParamList = {
+  TermsOfService: undefined;
   Signup01: undefined;
   Signup02: undefined;
   Signup03: {address: string};
@@ -31,11 +33,28 @@ const LoginStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        component={TermsOfServiceScreen}
+        name="TermsOfService"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity style={styles.backBtn} onPress={() => {}}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
         component={SignupScreen01}
         name="Signup01"
         options={{
           headerLeft: () => (
-            <TouchableOpacity style={styles.backBtn} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                navigation.navigate('TermsOfService');
+              }}>
               <Back width="12" height="12" />
             </TouchableOpacity>
           ),
