@@ -7,7 +7,7 @@ const TOSDetail = ({route}: any) => {
 
   return (
     <SafeAreaView style={styles.safe} edges={['bottom']}>
-      <ScrollView>
+      <ScrollView style={styles.scroll}>
         <Text style={styles.title}>
           플랜터{' '}
           {number === 1
@@ -625,8 +625,8 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 24,
   },
+  scroll: {paddingHorizontal: 24},
   title: {
     fontSize: 24,
     fontWeight: '600',
