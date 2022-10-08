@@ -145,7 +145,7 @@ const SignupScreen03 = ({route}: any) => {
                 <CustomInput
                   label="닉네임"
                   placeholder="닉네임"
-                  errorText="한글 최대 10자/영어 최대 20자"
+                  errorText="한글 최대 10자, 영어 최대 20자로 입력해주세요."
                   onChangeText={setNickname}
                   value={nickname}
                   clearText={() => {
