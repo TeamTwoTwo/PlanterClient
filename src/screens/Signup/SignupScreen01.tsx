@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   StyleSheet,
@@ -16,6 +16,36 @@ import CustomButton from '../../components/common/CustomButton';
 
 const {StatusBarManager} = NativeModules;
 
+interface CheckStatusProps {
+  email: boolean;
+  password: boolean;
+  checkPassword: boolean;
+}
+
+interface Action {
+  type: string;
+  status: boolean;
+}
+
+const initialState: CheckStatusProps = {
+  email: true,
+  password: true,
+  checkPassword: true,
+};
+
+const reducer = (state: CheckStatusProps, action: Action) => {
+  switch (action.type) {
+    case 'email':
+      return {...state, email: action.status};
+    case 'password':
+      return {...state, password: action.status};
+    case 'checkPassword':
+      return {...state, checkPassword: action.status};
+    default:
+      throw new Error('error');
+  }
+};
+
 const SignupScreen01 = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
   const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
@@ -24,6 +54,10 @@ const SignupScreen01 = () => {
   const [password, setPassword] = useState<string>('');
   const [checkPassword, setCheckPassword] = useState<string>('');
   const [step, setStep] = useState<number>(1); // 다음 버튼을 위한 입력 단계
+  const [checkStatus, dispatch] = useReducer(reducer, initialState);
+
+  const setCheckStatus = (type: string, status: boolean) =>
+    dispatch({type, status});
 
   useEffect(() => {
     Platform.OS === 'ios'
@@ -33,12 +67,68 @@ const SignupScreen01 = () => {
       : null;
   }, []);
 
+  useEffect(() => {
+    emailCheckFunc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email]);
+
+  useEffect(() => {
+    passwordCheckFunc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [password]);
+
+  useEffect(() => {
+    if (password === checkPassword) {
+      setCheckStatus('checkPassword', true);
+    } else {
+      setCheckStatus('checkPassword', false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [password, checkPassword]);
+
   const onPressNext = () => {
-    if (!showPasswordView) {
+    if (!showPasswordView && checkStatus.email) {
       setShowPasswordView(true);
       setStep(2);
-    } else {
+    } else if (
+      showPasswordView &&
+      checkStatus.email &&
+      checkStatus.password &&
+      checkStatus.checkPassword
+    ) {
       navigation.navigate('Signup02');
+    }
+  };
+
+  // 이메일 형식 체크 정규식
+  const emailRegExp = (str: string) => {
+    var regExp =
+      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    return regExp.test(str) ? true : false;
+  };
+
+  // 이메일 형식 체크 함수
+  const emailCheckFunc = () => {
+    if (emailRegExp(email) || email.length === 0) {
+      setCheckStatus('email', true);
+    } else {
+      setCheckStatus('email', false);
+    }
+  };
+
+  // 영문, 숫자, 특수 문자 중 2개 이상이 들어간 8자 이상 20자 이하 비밀번호 정규식
+  const passwordRegExp = (str: string) => {
+    var regExp =
+      /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,20}$/;
+    return regExp.test(str) ? true : false;
+  };
+
+  // 비밀번호 형식 체크 함수
+  const passwordCheckFunc = () => {
+    if (passwordRegExp(password) || password.length === 0) {
+      setCheckStatus('password', true);
+    } else {
+      setCheckStatus('password', false);
     }
   };
 
@@ -65,26 +155,28 @@ const SignupScreen01 = () => {
                     <CustomInput
                       label="비밀번호"
                       placeholder="비밀번호"
-                      errorText="비밀번호를 확인해주세요."
+                      errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
                       secure={true}
                       onChangeText={setPassword}
                       value={password}
                       clearText={() => {
                         setPassword('');
                       }}
+                      checkStatus={checkStatus.password}
                     />
                   </View>
                   <View style={styles.inputWrap}>
                     <CustomInput
                       label="비밀번호 확인"
                       placeholder="비밀번호 확인"
-                      errorText="비밀번호를 확인해주세요."
+                      errorText="비밀번호가 일치하지 않습니다."
                       secure={true}
                       onChangeText={setCheckPassword}
                       value={checkPassword}
                       clearText={() => {
                         setCheckPassword('');
                       }}
+                      checkStatus={checkStatus.checkPassword}
                     />
                   </View>
                 </>
@@ -100,6 +192,7 @@ const SignupScreen01 = () => {
                   clearText={() => {
                     setEmail('');
                   }}
+                  checkStatus={checkStatus.email}
                 />
               </View>
             </View>

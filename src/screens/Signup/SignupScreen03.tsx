@@ -27,6 +27,8 @@ const SignupScreen03 = ({route}: any) => {
   const [addressDetail, setAddressDetail] = useState<string>('');
   const [step, setStep] = useState<number>(1); // 다음 버튼을 위한 입력 단계
 
+  const [nicknameCheckStatus, setNicknameCheckStatus] = useState<boolean>(true);
+
   useEffect(() => {
     Platform.OS === 'ios'
       ? StatusBarManager.getHeight((statusBarFrameData: any) => {
@@ -34,6 +36,11 @@ const SignupScreen03 = ({route}: any) => {
         })
       : null;
   }, []);
+
+  useEffect(() => {
+    nicknameCheckFunc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nickname]);
 
   useEffect(() => {
     setAddress(addr);
@@ -50,6 +57,34 @@ const SignupScreen03 = ({route}: any) => {
 
   const onPressAddress = () => {
     navigation.navigate('FindAddress');
+  };
+
+  const nicknameCheckFunc = () => {
+    var nicknameLen = 0;
+    var numCheck = /[0-9]/;
+    var specialCheck = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
+
+    //한글은 2, 영문은 1로 치환
+    for (var i = 0; i < nickname.length; i++) {
+      var nick = nickname.charAt(i);
+
+      if (encodeURIComponent(nick).length > 4) {
+        nicknameLen += 2;
+      } else {
+        nicknameLen += 1;
+      }
+    }
+
+    if (
+      specialCheck.test(nickname) ||
+      nickname.search(/\s/) !== -1 ||
+      numCheck.test(nickname) ||
+      nicknameLen > 20
+    ) {
+      setNicknameCheckStatus(false);
+    } else {
+      setNicknameCheckStatus(true);
+    }
   };
 
   return (
@@ -70,7 +105,10 @@ const SignupScreen03 = ({route}: any) => {
             <Text style={styles.stepText}>회원가입</Text>
             <View style={styles.content}>
               {showAddressView && (
-                <View style={styles.addressView}>
+                <TouchableOpacity
+                  style={styles.addressView}
+                  activeOpacity={1}
+                  onPress={onPressAddress}>
                   <View style={styles.address}>
                     <CustomInput
                       label="주소"
@@ -78,6 +116,8 @@ const SignupScreen03 = ({route}: any) => {
                       onChangeText={setAddress}
                       value={address}
                       disabled
+                      multiline
+                      pointerEventsNone
                     />
                   </View>
                   <TouchableOpacity
@@ -86,7 +126,7 @@ const SignupScreen03 = ({route}: any) => {
                     onPress={onPressAddress}>
                     <Text style={styles.addressBtnText}>주소 검색</Text>
                   </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
               )}
               {address !== '' && (
                 <View style={styles.inputWrap}>
@@ -105,13 +145,13 @@ const SignupScreen03 = ({route}: any) => {
                 <CustomInput
                   label="닉네임"
                   placeholder="닉네임"
-                  errorText="이메일 주소를 확인해주세요."
-                  type="email-address"
+                  errorText="한글 최대 10자/영어 최대 20자"
                   onChangeText={setNickname}
                   value={nickname}
                   clearText={() => {
                     setNickname('');
                   }}
+                  checkStatus={nicknameCheckStatus}
                 />
               </View>
             </View>

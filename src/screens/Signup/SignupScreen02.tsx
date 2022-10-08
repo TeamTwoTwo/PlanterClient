@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   StyleSheet,
@@ -15,6 +15,8 @@ import {color} from '../../utils/color';
 import {LoginStackNavigationProp} from '../LoginStack';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../components/common/CustomButton';
+import Toast from '../../components/common/Toast';
+import Timer from '../../components/common/Timer';
 
 const {StatusBarManager} = NativeModules;
 
@@ -24,11 +26,18 @@ const SignupScreen02 = () => {
   const [showBirthView, setShowBirthView] = useState<boolean>(false);
   const [showPhoneView, setShowPhoneView] = useState<boolean>(false);
   const [showCertifyNumView, setShowCertifyNumView] = useState<boolean>(false);
+  const [sendCertifyNumText, setSendCertifyNumText] =
+    useState<string>('인증번호 전송');
   const [name, setName] = useState<string>('');
   const [birth, setBirth] = useState<string>('');
   const [phoneNum, setPhoneNum] = useState<string>('');
   const [certifyNum, setCertifyNum] = useState<string>('');
   const [step, setStep] = useState<number>(1); // 다음 버튼을 위한 입력 단계
+  const [birthCheckStatus, setBirthCheckStatus] = useState<boolean>(true);
+  const [certifyNumCheckStatus, setCertifyNumCheckStatus] =
+    useState<boolean>(true);
+
+  const [toastStatus, setToastStatus] = useState<boolean>(false);
 
   useEffect(() => {
     Platform.OS === 'ios'
@@ -38,27 +47,59 @@ const SignupScreen02 = () => {
       : null;
   }, []);
 
+  useEffect(() => {
+    birthCheckFunc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [birth]);
+
+  useEffect(() => {
+    if (toastStatus) {
+      setTimeout(() => setToastStatus(false), 1000);
+    }
+  }, [toastStatus]);
+
   const onPressNext = () => {
     if (!showBirthView) {
       setShowBirthView(true);
       setStep(2);
-    } else if (!showPhoneView) {
+    } else if (!showPhoneView && birthCheckStatus) {
       setShowPhoneView(true);
       setStep(3);
     }
   };
 
   const onPressSendCertifyNum = () => {
+    //추후에 조건을 "인증번호 api 요청 성공하면" 으로 변경 예정
     if (phoneNum !== '') {
       setShowCertifyNumView(true);
+      setSendCertifyNumText('인증번호 재전송');
+      if (!toastStatus) {
+        setToastStatus(true);
+      }
     }
   };
 
   const onPressCheckCertifyNum = () => {
-    if (certifyNum !== '' && birth !== '' && name !== '') {
+    if (certifyNumCheckStatus && birthCheckStatus && name !== '') {
       navigation.navigate('Signup03', {address: ''});
     } else {
       Alert.alert('잘못된 정보가 있습니다.');
+    }
+  };
+
+  const birthRegExp = (str: string) => {
+    if (str.length > 6) {
+      return false;
+    }
+    var regExp = /([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))/g;
+    return regExp.test(str) ? true : false;
+  };
+
+  const birthCheckFunc = () => {
+    if (birthRegExp(birth) || birth.length === 0) {
+      setBirthCheckStatus(true);
+    } else if (!birthRegExp(birth)) {
+      setBirthCheckStatus(false);
     }
   };
 
@@ -113,7 +154,7 @@ const SignupScreen02 = () => {
                             phoneNum === '' ? color.gray_05 : color.mint_05,
                         },
                       ]}>
-                      인증번호 전송
+                      {sendCertifyNumText}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -130,6 +171,8 @@ const SignupScreen02 = () => {
                       clearText={() => {
                         setCertifyNum('');
                       }}
+                      checkStatus={certifyNumCheckStatus}
+                      errorText="잘못된 인증번호입니다."
                     />
                   </View>
                   <TouchableOpacity
@@ -155,6 +198,11 @@ const SignupScreen02 = () => {
                       인증번호 확인
                     </Text>
                   </TouchableOpacity>
+                  <View style={styles.timerView}>
+                    <Text style={styles.timerText}>
+                      남은시간 {<Timer mm={3} />}
+                    </Text>
+                  </View>
                 </View>
               )}
               {showBirthView && (
@@ -165,9 +213,11 @@ const SignupScreen02 = () => {
                     type="numeric"
                     onChangeText={setBirth}
                     value={birth}
+                    errorText="올바른 생년월일을 입력해주세요."
                     clearText={() => {
                       setBirth('');
                     }}
+                    checkStatus={birthCheckStatus}
                   />
                 </View>
               )}
@@ -187,7 +237,7 @@ const SignupScreen02 = () => {
         </View>
         {(step === 1 && name !== '') ||
         (step === 2 && name !== '' && birth !== '') ? (
-          <View>
+          <View style={styles.btnWrap}>
             <CustomButton
               backgroundColor={color.mint_05}
               text="다음"
@@ -195,6 +245,7 @@ const SignupScreen02 = () => {
             />
           </View>
         ) : null}
+        {toastStatus && <Toast />}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -204,9 +255,9 @@ const styles = StyleSheet.create({
   safe: {
     backgroundColor: 'white',
     flex: 1,
+    paddingHorizontal: 24,
   },
   container: {
-    paddingHorizontal: 24,
     flex: 1,
   },
   progressBarWrap: {
@@ -237,8 +288,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
+    position: 'relative',
   },
   phoneNum: {width: '65%'},
+  timerView: {
+    position: 'absolute',
+    bottom: -22,
+  },
+  timerText: {
+    color: color.red_02,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '500',
+  },
   certifyNumBtn: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -254,6 +316,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,
+  },
+  btnWrap: {
+    marginLeft: -24,
   },
   inputWrap: {marginTop: 36},
 });
