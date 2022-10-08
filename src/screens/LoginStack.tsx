@@ -4,7 +4,7 @@ import {
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import {TouchableOpacity, StyleSheet} from 'react-native';
-import Back from '../assets/svg/svg-back.svg';
+import Back from '../assets/icon/ic-back.svg';
 import SignupScreen01 from './Signup/SignupScreen01';
 import SignupScreen02 from './Signup/SignupScreen02';
 import {useNavigation} from '@react-navigation/native';
