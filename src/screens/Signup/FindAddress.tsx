@@ -16,7 +16,12 @@ const FindAddress = () => {
         style={{width, height}}
         jsOptions={{animation: true}}
         onSelected={data => {
-          navigation.navigate('Signup03', {address: data.address});
+          navigation.navigate('Signup03', {
+            address:
+              data.buildingName !== ''
+                ? data.address + ` (${data.buildingName})`
+                : data.address,
+          });
         }}
         onError={function (error: unknown): void {
           throw new Error('Function not implemented.');
