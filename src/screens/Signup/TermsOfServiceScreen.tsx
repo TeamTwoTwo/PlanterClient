@@ -60,9 +60,6 @@ const TermsOfServiceScreen = () => {
           <View style={styles.textView}>
             <Text style={styles.text}>약관 전체 동의</Text>
           </View>
-          <View>
-            <Text style={styles.detail}>보기</Text>
-          </View>
         </View>
         <View style={[styles.agreeView, {marginTop: 10}]}>
           <TouchableOpacity
@@ -84,9 +81,7 @@ const TermsOfServiceScreen = () => {
             <Text
               style={styles.detail}
               onPress={() => {
-                Linking.openURL(
-                  'https://drive.google.com/file/d/1l_EMBplrtKbWzXqv58WM7zQ1foup0Y_e/view?usp=sharing',
-                );
+                navigation.navigate('TOSDetail', {number: 1});
               }}>
               보기
             </Text>
@@ -112,9 +107,7 @@ const TermsOfServiceScreen = () => {
             <Text
               style={styles.detail}
               onPress={() => {
-                Linking.openURL(
-                  'https://drive.google.com/file/d/189kBabqRWcdpqCauyFZ1eD0vGaNpHFaG/view?usp=sharing',
-                );
+                navigation.navigate('TOSDetail', {number: 2});
               }}>
               보기
             </Text>
@@ -140,9 +133,7 @@ const TermsOfServiceScreen = () => {
             <Text
               style={styles.detail}
               onPress={() => {
-                Linking.openURL(
-                  'https://drive.google.com/file/d/1SZTzWRUzdCN_C8LjDtsjMoIK2OBGrgIk/view?usp=sharing',
-                );
+                navigation.navigate('TOSDetail', {number: 3});
               }}>
               보기
             </Text>

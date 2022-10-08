@@ -12,9 +12,11 @@ import SignupScreen03 from './Signup/SignupScreen03';
 import FindAddress from './Signup/FindAddress';
 import SignupScreen04 from './Signup/SignupScreen04';
 import TermsOfServiceScreen from './Signup/TermsOfServiceScreen';
+import TOSDetail from './Signup/TOSDetail';
 
 type LoginStackParamList = {
   TermsOfService: undefined;
+  TOSDetail: {number: number};
   Signup01: undefined;
   Signup02: undefined;
   Signup03: {address: string};
@@ -38,6 +40,23 @@ const LoginStack = () => {
         options={{
           headerLeft: () => (
             <TouchableOpacity style={styles.backBtn} onPress={() => {}}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        component={TOSDetail}
+        name="TOSDetail"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                navigation.navigate('TermsOfService');
+              }}>
               <Back width="12" height="12" />
             </TouchableOpacity>
           ),
