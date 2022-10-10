@@ -10,14 +10,12 @@
 
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import FindIdStack from './screens/FindIdStack';
-import FindPwStack from './screens/FindPwStack';
+import LoginStack from './screens/LoginStack';
 
 const App = () => {
   return (
     <NavigationContainer>
-      {/* <FindIdStack /> */}
-      <FindPwStack />
+      <LoginStack />
     </NavigationContainer>
   );
 };

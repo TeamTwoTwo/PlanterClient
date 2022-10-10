@@ -1,5 +1,7 @@
 import React from 'react';
 import {color} from '../../utils/color';
+import {useNavigation} from '@react-navigation/native';
+import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import {
   SafeAreaView,
   View,
@@ -9,6 +11,12 @@ import {
 } from 'react-native';
 
 const IdDoneScreen = () => {
+  const navigation = useNavigation<LoginStackNavigationProp>();
+
+  const onPress = (): void => {
+    navigation.navigate('LoginScreen');
+  };
+
   return (
     <SafeAreaView style={styles.block}>
       <View style={styles.titleWrap}>
@@ -17,7 +25,7 @@ const IdDoneScreen = () => {
         <Text style={styles.title}>입니다.</Text>
       </View>
       <View>
-        <TouchableOpacity activeOpacity={1}>
+        <TouchableOpacity activeOpacity={1} onPress={onPress}>
           <View style={styles.nextBtn}>
             <Text style={styles.btnText}>로그인 화면으로 돌아가기</Text>
           </View>
