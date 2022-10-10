@@ -235,7 +235,10 @@ const FirstPwScreen = () => {
       )}
       <View style={styles.emailInputWrap}>
         <TextInput
-          style={[styles.emailInput, isfocus && inputStyle(isValidate).focused]}
+          style={[
+            inputStyle(isValidate).emailInput,
+            isfocus && inputStyle(isValidate).focused,
+          ]}
           placeholder="아이디"
           placeholderTextColor="#AEAEAE"
           value={email}
@@ -280,6 +283,13 @@ const inputStyle = (isValidate: boolean) =>
   StyleSheet.create({
     focused: {
       borderColor: isValidate ? color.mint_05 : color.red_02,
+    },
+    emailInput: {
+      fontSize: 16,
+      color: color.gray_07,
+      borderBottomWidth: 1,
+      borderColor: isValidate ? color.gray_04 : color.red_02,
+      height: 48,
     },
   });
 

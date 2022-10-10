@@ -5,10 +5,12 @@ import {
 } from '@react-navigation/native-stack';
 import FirstPwScreen from './FindPW/FirstPwScreen';
 import NewPwScreen from './FindPW/NewPwScreen';
+import PwDoneScreen from './FindPW/PwDoneScreen';
 
 type FindPwStackParamList = {
   FirstPwScreen: undefined;
   NewPwScreen: undefined;
+  PwDoneScreen: undefined;
 };
 
 export type FindPwStackNavigationProp =
@@ -27,6 +29,11 @@ const FindPwStack = () => {
       <Stack.Screen
         component={NewPwScreen}
         name="NewPwScreen"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={PwDoneScreen}
+        name="PwDoneScreen"
         options={{headerShown: false}}
       />
     </Stack.Navigator>
