@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   StyleSheet,
@@ -48,6 +48,7 @@ const SignupScreen02 = () => {
   }, []);
 
   useEffect(() => {
+    autoAddDot();
     birthCheckFunc();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [birth]);
@@ -57,6 +58,26 @@ const SignupScreen02 = () => {
       setTimeout(() => setToastStatus(false), 1000);
     }
   }, [toastStatus]);
+
+  const autoAddDot = () => {
+    // 생년월일 사이 점 자동 추가 함수
+    let str: string = birth.replace(/[^0-9]/g, '');
+    var tmp = '';
+    if (str.length < 3) {
+      tmp = str;
+    } else if (str.length < 6) {
+      tmp += str.substring(0, 2);
+      tmp += '.';
+      tmp += str.substring(2);
+    } else {
+      tmp += str.substring(0, 2);
+      tmp += '.';
+      tmp += str.substring(2, 4);
+      tmp += '.';
+      tmp += str.substring(4);
+    }
+    setBirth(tmp);
+  };
 
   const onPressNext = () => {
     if (!showBirthView) {
@@ -87,7 +108,8 @@ const SignupScreen02 = () => {
     }
   };
 
-  const birthRegExp = (str: string) => {
+  const birthRegExp = (e: string) => {
+    let str: string = e.replace(/[^0-9]/g, '');
     if (str.length > 6) {
       return false;
     }
