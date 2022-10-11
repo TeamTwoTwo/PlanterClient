@@ -1,5 +1,5 @@
 import React from 'react';
-import {color} from '../../utils/color'
+import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {
   SafeAreaView,
@@ -9,7 +9,6 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {WithLocalSvg} from 'react-native-svg';
 import Apple from '../../assets/icon/ic-apple.svg';
 import Naver from '../../assets/icon/ic-naver.svg';
 import Bubble from '../../assets/icon/ic-bubble.svg';
@@ -57,11 +56,11 @@ const LoginScreen = () => {
         </Text>
       </View>
       <View style={styles.socialWrap}>
-        <WithLocalSvg width={40} height={40} asset={Apple} />
+        <Apple width={40} height={40} />
         <View style={styles.kakao}>
-          <WithLocalSvg width={25.71} height={25.71} asset={Bubble} />
+          <Bubble width={25.71} height={25.71} />
         </View>
-        <WithLocalSvg width={40} height={40} asset={Naver} />
+        <Naver width={40} height={40} />
       </View>
     </SafeAreaView>
   );
