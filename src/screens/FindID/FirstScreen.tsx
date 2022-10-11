@@ -11,7 +11,7 @@ import {
 import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
-import {FindIdStackNavigationProp} from '../../screens/FindIdStack';
+import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import {WithLocalSvg} from 'react-native-svg';
 import Clean from '../../assets/icon/ic-clean.svg';
 import Toast from 'react-native-easy-toast';
@@ -35,7 +35,7 @@ const FirstScreen = () => {
   const [stage, setStage] = useState<number>(1);
   const [isFull, setIsFull] = useState<boolean>(false);
 
-  const navigation = useNavigation<FindIdStackNavigationProp>();
+  const navigation = useNavigation<LoginStackNavigationProp>();
   const inputRef = useRef<TextInput | null>(null);
 
   const onPress = (): void => {
@@ -63,8 +63,10 @@ const FirstScreen = () => {
   useEffect(() => {
     if (name.length === 0) {
       setShowLabel(false);
+      setIsBtnShow(false);
     } else {
       setShowLabel(true);
+      setIsBtnShow(true);
     }
     if (phone.length === 0) {
       setShowPhoneLabel(false);

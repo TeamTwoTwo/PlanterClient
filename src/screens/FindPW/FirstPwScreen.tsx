@@ -11,7 +11,7 @@ import {
 import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
-import {FindPwStackNavigationProp} from '../../screens/FindPwStack';
+import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import {WithLocalSvg} from 'react-native-svg';
 import Clean from '../../assets/icon/ic-clean.svg';
 import Toast from 'react-native-easy-toast';
@@ -36,7 +36,7 @@ const FirstPwScreen = () => {
   const [stage, setStage] = useState<number>(1);
   const [isFull, setIsFull] = useState<boolean>(false);
 
-  const navigation = useNavigation<FindPwStackNavigationProp>();
+  const navigation = useNavigation<LoginStackNavigationProp>();
   const inputRef = useRef<TextInput | null>(null);
 
   const onPress = (): void => {
@@ -72,8 +72,10 @@ const FirstPwScreen = () => {
   useEffect(() => {
     if (email.length === 0) {
       setShowLabel(false);
+      setIsBtnShow(false);
     } else {
       setShowLabel(true);
+      setIsBtnShow(true);
     }
     if (phone.length === 0) {
       setShowPhoneLabel(false);

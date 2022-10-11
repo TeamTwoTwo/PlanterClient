@@ -4,10 +4,10 @@ import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {WithLocalSvg} from 'react-native-svg';
 import Back from '../../assets/icon/ic-back.svg';
 import {color} from '../../utils/color';
-import {FindStackNavigationProp} from '../../screens/FindStack';
+import {LoginStackNavigationProp} from '../../screens/LoginStack';
 
 const FindHeader = () => {
-  const navigation = useNavigation<FindStackNavigationProp>();
+  const navigation = useNavigation<LoginStackNavigationProp>();
   const onGoBack = () => {
     navigation.pop();
   };

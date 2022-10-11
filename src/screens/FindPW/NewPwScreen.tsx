@@ -11,7 +11,7 @@ import {
 import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
-import {FindPwStackNavigationProp} from '../../screens/FindPwStack';
+import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import {WithLocalSvg} from 'react-native-svg';
 import Clean from '../../assets/icon/ic-clean.svg';
 import Toast from 'react-native-easy-toast';
@@ -29,11 +29,11 @@ const NewPwScreen = () => {
   const [isSame, setIsSame] = useState<boolean>(true);
   const [isBtnShow, setIsBtnShow] = useState<boolean>(false);
 
-  const navigation = useNavigation<FindPwStackNavigationProp>();
+  const navigation = useNavigation<LoginStackNavigationProp>();
 
   const validatePW = (pw: string): boolean => {
-    //숫자+영문자+특수문자 조합으로 8자리 이상 입력
-    const regex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+    const regex =
+      /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,20}$/;
     return regex.test(pw);
   };
 
@@ -59,10 +59,12 @@ const NewPwScreen = () => {
   }, [newPW, password]);
 
   useEffect(() => {
-    if (newPW !== '' && isSame) {
+    if (password !== '' && newPW !== '' && isSame) {
       setIsBtnShow(true);
+    } else {
+      setIsBtnShow(false);
     }
-  }, [newPW, isSame]);
+  }, [password, newPW, isSame]);
 
   const onPress = (): void => {
     if (newPW !== '' && isSame) {

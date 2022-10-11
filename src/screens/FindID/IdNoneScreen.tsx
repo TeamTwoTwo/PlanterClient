@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   nextText: {
     fontSize: 14,
-    color: color.gary_05,
+    color: color.gray_05,
     textDecorationLine: 'underline',
   },
   titleWrap: {
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: color.gary_05,
+    color: color.gray_05,
     marginBottom: 2,
   },
   email: {

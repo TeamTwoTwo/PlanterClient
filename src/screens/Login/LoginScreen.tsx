@@ -12,7 +12,6 @@ import {
 import {WithLocalSvg} from 'react-native-svg';
 import Apple from '../../assets/icon/ic-apple.svg';
 import Naver from '../../assets/icon/ic-naver.svg';
-import KaKao from '../../assets/icon/ic-kakao.svg';
 import Bubble from '../../assets/icon/ic-bubble.svg';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 
