@@ -1,12 +1,12 @@
-import React, {useRef} from 'react';
-import {Text, View, StyleSheet, Animated} from 'react-native';
+import React from 'react';
+import {Text, View, StyleSheet} from 'react-native';
 import {color} from '../../utils/color';
 
 const Toast = () => {
   return (
-    <Animated.View style={styles.wrap}>
+    <View style={styles.wrap}>
       <Text style={styles.text}>인증번호가 전송되었습니다.</Text>
-    </Animated.View>
+    </View>
   );
 };
 
