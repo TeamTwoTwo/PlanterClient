@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import {WithLocalSvg} from 'react-native-svg';
 import Back from '../../assets/icon/ic-back.svg';
 import {color} from '../../utils/color';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
@@ -14,7 +13,7 @@ const FindHeader = () => {
   return (
     <View style={styles.block}>
       <TouchableOpacity activeOpacity={1} onPress={onGoBack}>
-        <WithLocalSvg width={9} height={13} asset={Back} />
+        <Back width={9} height={13} />
       </TouchableOpacity>
     </View>
   );
