@@ -2,6 +2,10 @@ import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Dimensions} from 'react-native';
 import {color} from '../../utils/color';
 
+// ?: 로 돼있는 건 props로 꼭 넘길 필요는 없음
+// 배경색, 버튼 text, onPress 함수는 필수로 넘겨야 함
+// disabled를 props로 넘기면 버튼 색 알아서 바뀌도록 구현
+// width는 16과 같이 숫자로 넘겨도 되고, '50%'와 같이 string으로 넘겨도 됨 (안 넘길 시 기본으로 가로 전체 차지)
 interface Props {
   backgroundColor: string;
   text: string;

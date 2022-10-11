@@ -10,6 +10,19 @@ import {
 import Clear from '../../assets/icon/ic-clean.svg';
 import {color} from '../../utils/color';
 
+// ?: 로 돼있는 건 props로 꼭 넘길 필요는 없음
+// label: focus 됐을 때 placeholder가 위로 올라가면서 생기는 text
+// errorText: 밑에 빨간 글씨로 뜨는 에러 메시지 내용 넘겨주면 됨
+// type: number-pad와 같은 키보드 타입. 안 넘길 시 default로 고정
+// secure: 비밀번호 인풋에 해당 props 사용하면 됨
+// disabled: 해당 props 넘겨주면 input에 focus 및 value 수정 불가
+// value: TextInput에 쓰여지는 value state 값 넘겨주면 됨
+// checkStatus: 비밀번호 형식이나 이메일 형식에 맞는지와 같은 check state. 이름처럼 정규식 안 쓰이는 곳에는 해당 props 안 넘겨도 됨. 이 props에 따라 에러 메시지가 보이고 말고를 결정함
+// multiline: 텍스트 여러 줄 입력 가능
+// pointerEventsNone: 주소 입력 input 때문에 추가한 props인데 사용하면 해당 input 클릭 안 됨
+// onChangeText: 단순히 TextInput value만 바꿔주는 경우엔 이거 쓰는 게 편함. 아래처럼 사용
+// <TextInput onChangeText={setText(~~)} />
+// clearText: x버튼 눌렀을 때 실행되는 함수. setText("") 같은 거 넣으면 됨
 interface Props {
   label: string;
   placeholder: string;
