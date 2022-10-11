@@ -12,9 +12,7 @@ import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
-import {WithLocalSvg} from 'react-native-svg';
 import Clean from '../../assets/icon/ic-clean.svg';
-import Toast from 'react-native-easy-toast';
 
 const FirstScreen = () => {
   const [name, setName] = useState<string>('');
@@ -134,7 +132,7 @@ const FirstScreen = () => {
                 activeOpacity={1}
                 onPress={() => setPhone('')}
                 style={styles.cleanBtn}>
-                <WithLocalSvg width={20} height={20} asset={Clean} />
+                <Clean width={20} height={20} />
               </TouchableOpacity>
             )}
           </View>
@@ -198,7 +196,7 @@ const FirstScreen = () => {
                 activeOpacity={1}
                 onPress={() => setMessage('')}
                 style={styles.cleanBtn}>
-                <WithLocalSvg width={20} height={20} asset={Clean} />
+                <Clean width={20} height={20} />
               </TouchableOpacity>
             )}
           </View>
@@ -249,7 +247,7 @@ const FirstScreen = () => {
             activeOpacity={1}
             onPress={() => setName('')}
             style={styles.cleanBtn}>
-            <WithLocalSvg width={20} height={20} asset={Clean} />
+            <Clean width={20} height={20} />
           </TouchableOpacity>
         )}
       </View>

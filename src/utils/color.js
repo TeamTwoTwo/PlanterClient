@@ -1,5 +1,8 @@
 export const color = {
+<<<<<<< HEAD
   gray_00: '#FFFFFF',
+=======
+>>>>>>> feature/signup
   gray_01: '#F7F7F7',
   gray_02: '#F5F4F3',
   gray_03: '#DFDFDF',

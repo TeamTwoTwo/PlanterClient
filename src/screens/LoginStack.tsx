@@ -9,6 +9,16 @@ import IdDoneScreen from './FindID/IdDoneScreen';
 import FirstPwScreen from './FindPW/FirstPwScreen';
 import NewPwScreen from './FindPW/NewPwScreen';
 import PwDoneScreen from './FindPW/PwDoneScreen';
+import {TouchableOpacity, StyleSheet} from 'react-native';
+import Back from '../assets/icon/ic-back.svg';
+import SignupScreen01 from './Signup/SignupScreen01';
+import SignupScreen02 from './Signup/SignupScreen02';
+import {useNavigation} from '@react-navigation/native';
+import SignupScreen03 from './Signup/SignupScreen03';
+import FindAddress from './Signup/FindAddress';
+import SignupScreen04 from './Signup/SignupScreen04';
+import TermsOfServiceScreen from './Signup/TermsOfServiceScreen';
+import TOSDetail from './Signup/TOSDetail';
 
 type LoginStackParamList = {
   LoginScreen: undefined;
@@ -17,6 +27,13 @@ type LoginStackParamList = {
   FirstPwScreen: undefined;
   NewPwScreen: undefined;
   PwDoneScreen: undefined;
+  TermsOfService: undefined;
+  TOSDetail: {number: number};
+  Signup01: undefined;
+  Signup02: undefined;
+  Signup03: {address: string};
+  FindAddress: undefined;
+  Signup04: undefined;
 };
 
 export type LoginStackNavigationProp =
@@ -25,6 +42,7 @@ export type LoginStackNavigationProp =
 const Stack = createNativeStackNavigator<LoginStackParamList>();
 
 const LoginStack = () => {
+  const navigation = useNavigation<LoginStackNavigationProp>();
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -57,8 +75,120 @@ const LoginStack = () => {
         name="PwDoneScreen"
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        component={TermsOfServiceScreen}
+        name="TermsOfService"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity style={styles.backBtn} onPress={() => {}}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        component={TOSDetail}
+        name="TOSDetail"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                navigation.navigate('TermsOfService');
+              }}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        component={SignupScreen01}
+        name="Signup01"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                navigation.navigate('TermsOfService');
+              }}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        component={SignupScreen02}
+        name="Signup02"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                navigation.navigate('Signup01');
+              }}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        component={SignupScreen03}
+        name="Signup03"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                navigation.navigate('Signup02');
+              }}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        component={FindAddress}
+        name="FindAddress"
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                navigation.navigate('Signup03', {address: ''});
+              }}>
+              <Back width="12" height="12" />
+            </TouchableOpacity>
+          ),
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
+        component={SignupScreen04}
+        name="Signup04"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  backBtn: {
+    padding: 18,
+    marginLeft: -12,
+  },
+});
 
 export default LoginStack;

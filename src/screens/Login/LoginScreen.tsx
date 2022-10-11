@@ -57,11 +57,11 @@ const LoginScreen = () => {
         </Text>
       </View>
       <View style={styles.socialWrap}>
-        <WithLocalSvg width={40} height={40} asset={Apple} />
+        <Apple width={40} height={40} />
         <View style={styles.kakao}>
-          <WithLocalSvg width={25.71} height={25.71} asset={Bubble} />
+          <Bubble width={25.71} height={25.71} />
         </View>
-        <WithLocalSvg width={40} height={40} asset={Naver} />
+        <Naver width={40} height={40} />
       </View>
     </SafeAreaView>
   );
