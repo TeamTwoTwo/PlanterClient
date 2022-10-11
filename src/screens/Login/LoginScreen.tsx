@@ -1,5 +1,5 @@
 import React from 'react';
-import {color} from '../../utils/color'
+import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {
   SafeAreaView,
