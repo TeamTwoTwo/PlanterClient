@@ -9,7 +9,6 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {WithLocalSvg} from 'react-native-svg';
 import Apple from '../../assets/icon/ic-apple.svg';
 import Naver from '../../assets/icon/ic-naver.svg';
 import Bubble from '../../assets/icon/ic-bubble.svg';
