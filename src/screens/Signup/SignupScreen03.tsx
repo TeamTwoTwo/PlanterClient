@@ -14,10 +14,14 @@ import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
+import {useSetRecoilState} from 'recoil';
+import {signupState} from '../../recoil/atoms/signup';
 
 const {StatusBarManager} = NativeModules;
 
 const SignupScreen03 = ({route}: any) => {
+  const set = useSetRecoilState(signupState);
+
   const navigation = useNavigation<LoginStackNavigationProp>();
   const addr = route.params?.address;
   const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
@@ -51,6 +55,7 @@ const SignupScreen03 = ({route}: any) => {
       setShowAddressView(true);
       setStep(2);
     } else {
+      set(prevState => ({...prevState, nickname}));
       navigation.navigate('Signup04');
     }
   };

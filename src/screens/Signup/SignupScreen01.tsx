@@ -7,12 +7,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   NativeModules,
+  Keyboard,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
+import {useSetRecoilState} from 'recoil';
+import {signupState} from '../../recoil/atoms/signup';
 
 const {StatusBarManager} = NativeModules;
 
@@ -47,6 +50,7 @@ const reducer = (state: CheckStatusProps, action: Action) => {
 };
 
 const SignupScreen01 = () => {
+  const set = useSetRecoilState(signupState);
   const navigation = useNavigation<LoginStackNavigationProp>();
   const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
   const [showPasswordView, setShowPasswordView] = useState<boolean>(false);
@@ -60,6 +64,7 @@ const SignupScreen01 = () => {
     dispatch({type, status});
 
   useEffect(() => {
+    Keyboard.dismiss();
     Platform.OS === 'ios'
       ? StatusBarManager.getHeight((statusBarFrameData: any) => {
           setStatusBarHeight(statusBarFrameData.height);
@@ -86,6 +91,16 @@ const SignupScreen01 = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [password, checkPassword]);
 
+  const clear = () => {
+    set(prevState => ({...prevState, email, password}));
+    Keyboard.dismiss();
+    setEmail('');
+    setPassword('');
+    setCheckPassword('');
+    setStep(1);
+    setShowPasswordView(false);
+  };
+
   const onPressNext = () => {
     if (!showPasswordView && checkStatus.email) {
       setShowPasswordView(true);
@@ -96,6 +111,7 @@ const SignupScreen01 = () => {
       checkStatus.password &&
       checkStatus.checkPassword
     ) {
+      clear();
       navigation.navigate('Signup02');
     }
   };

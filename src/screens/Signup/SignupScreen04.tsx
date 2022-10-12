@@ -3,8 +3,12 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {Text, StyleSheet, View} from 'react-native';
 import {color} from '../../utils/color';
 import CustomButton from '../../components/common/CustomButton';
+import {useRecoilValue} from 'recoil';
+import {signupState} from '../../recoil/atoms/signup';
 
 const SignupScreen04 = () => {
+  const userInfo = useRecoilValue(signupState);
+  console.log(userInfo);
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.wrap}>
