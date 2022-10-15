@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -13,45 +13,38 @@ import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import Clean from '../../assets/icon/ic-clean.svg';
+import CustomInput from '../../components/common/CustomInput';
+import Toast from '../../components/common/Toast';
+import Timer from '../../components/common/Timer';
 
 const FirstScreen = () => {
   const [name, setName] = useState<string>('');
   const [isBtnShow, setIsBtnShow] = useState<boolean>(false);
-  const [showLabel, setShowLabel] = useState<boolean>(false);
-  const [isfocus, setIsFocus] = useState<boolean>(false);
 
-  const [phone, setPhone] = useState<string>('');
+  const [phoneNum, setPhoneNum] = useState<string>('');
   const [isPhoneShow, setIsPhoneShow] = useState<boolean>(false);
-  const [showPhoneLabel, setShowPhoneLabel] = useState<boolean>(false);
-  const [isPhoneFocus, setIsPhoneFocus] = useState<boolean>(false);
 
-  const [message, setMessage] = useState<string>('');
+  const [certifyNum, setCertifyNum] = useState<string>('');
   const [isMessageShow, setIsMessageShow] = useState<boolean>(false);
-  const [showMessageLabel, setShowMessageLable] = useState<boolean>(false);
-  const [isMessageFocus, setMessageFocus] = useState<boolean>(false);
 
   const [stage, setStage] = useState<number>(1);
-  const [isFull, setIsFull] = useState<boolean>(false);
+  const [toastStatus, setToastStatus] = useState<boolean>(false);
+  const [certifyNumCheckStatus, setCertifyNumCheckStatus] =
+    useState<boolean>(true);
 
   const navigation = useNavigation<LoginStackNavigationProp>();
-  const inputRef = useRef<TextInput | null>(null);
 
   const onPress = (): void => {
     Keyboard.dismiss();
     setIsPhoneShow(true);
     setIsBtnShow(false);
-    setIsFocus(false);
     setStage(2);
   };
 
   const onSend = () => {
     Keyboard.dismiss();
     setIsMessageShow(true);
-    setIsPhoneFocus(false);
-    if (!inputRef.current) {
-      return;
-    }
-    inputRef.current.focus();
+    setToastStatus(true);
   };
 
   const onConfirm = (): void => {
@@ -59,39 +52,18 @@ const FirstScreen = () => {
   };
 
   useEffect(() => {
+    if (toastStatus) {
+      setTimeout(() => setToastStatus(false), 1000);
+    }
+  }, [toastStatus]);
+
+  useEffect(() => {
     if (name.length === 0) {
-      setShowLabel(false);
       setIsBtnShow(false);
     } else {
-      setShowLabel(true);
       setIsBtnShow(true);
     }
-    if (phone.length === 0) {
-      setShowPhoneLabel(false);
-    } else {
-      setShowPhoneLabel(true);
-    }
-    if (message.length === 0) {
-      setShowMessageLable(false);
-    } else {
-      setShowMessageLable(true);
-    }
-  }, [name, phone, message]);
-
-  useEffect(() => {
-    if (phone !== '') {
-      setIsFull(true);
-    }
-  }, [phone]);
-
-  useEffect(() => {
-    if (!inputRef.current) {
-      return;
-    }
-    if (isMessageShow) {
-      inputRef.current.focus();
-    }
-  }, [isMessageShow]);
+  }, [name]);
 
   return (
     <SafeAreaView style={styles.block}>
@@ -101,55 +73,38 @@ const FirstScreen = () => {
       <View style={styles.titleWrap}>
         <Text style={styles.title}>아이디 찾기</Text>
       </View>
-      {showPhoneLabel && (
-        <View>
-          <Text style={styles.label}>휴대폰번호</Text>
-        </View>
-      )}
       {isPhoneShow && (
         <View style={styles.phoneInputWrap}>
-          <View>
-            <TextInput
-              style={[styles.phoneInput, isPhoneFocus && styles.focused]}
-              placeholder="휴대폰번호"
-              placeholderTextColor="#AEAEAE"
-              keyboardType="number-pad"
-              onSubmitEditing={() => {
-                Keyboard.dismiss();
-                setIsPhoneFocus(false);
-              }}
-              value={phone}
-              onChange={event => {
-                const {text} = event.nativeEvent;
-                setPhone(text);
-              }}
-              onFocus={() => {
-                setIsPhoneFocus(true);
+          <View style={styles.phoneInput}>
+            <CustomInput
+              label="휴대폰 번호"
+              placeholder="휴대폰 번호"
+              type="numeric"
+              onChangeText={setPhoneNum}
+              value={phoneNum}
+              clearText={() => {
+                setPhoneNum('');
               }}
             />
-            {isPhoneFocus && (
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => setPhone('')}
-                style={styles.cleanBtn}>
-                <Clean width={20} height={20} />
-              </TouchableOpacity>
-            )}
           </View>
           <View style={styles.messageWrap}>
             <TouchableOpacity activeOpacity={1} onPress={onSend}>
               <View
                 style={[
                   styles.messageBtn,
-                  isPhoneFocus && styles.focusedBox,
-                  isFull && styles.focusedBox,
+                  {
+                    backgroundColor: phoneNum === '' ? 'white' : color.mint_00,
+                    borderColor:
+                      phoneNum === '' ? color.gray_03 : color.mint_04,
+                  },
                 ]}>
                 {isMessageShow ? (
                   <Text
                     style={[
                       styles.messageBtnText,
-                      isPhoneFocus && styles.focusedText,
-                      isFull && styles.focusedText,
+                      {
+                        color: phoneNum === '' ? color.gray_05 : color.mint_05,
+                      },
                     ]}>
                     인증번호 재전송
                   </Text>
@@ -157,7 +112,9 @@ const FirstScreen = () => {
                   <Text
                     style={[
                       styles.messageBtnText,
-                      isPhoneFocus && styles.focusedText,
+                      {
+                        color: phoneNum === '' ? color.gray_05 : color.mint_05,
+                      },
                     ]}>
                     인증번호 전송
                   </Text>
@@ -167,50 +124,43 @@ const FirstScreen = () => {
           </View>
         </View>
       )}
-      {showMessageLabel && (
-        <View>
-          <Text style={styles.label}>인증번호 입력</Text>
-        </View>
-      )}
       {isMessageShow && (
         <View style={styles.phoneInputWrap}>
-          <View>
-            <TextInput
-              style={[styles.phoneInput, isMessageFocus && styles.focused]}
+          <View style={styles.phoneInput}>
+            <CustomInput
+              label="인증번호 입력"
               placeholder="인증번호 입력"
-              placeholderTextColor="#AEAEAE"
-              keyboardType="number-pad"
-              value={message}
-              onChange={event => {
-                const {text} = event.nativeEvent;
-                setMessage(text);
+              type="numeric"
+              onChangeText={setCertifyNum}
+              value={certifyNum}
+              clearText={() => {
+                setCertifyNum('');
               }}
-              onFocus={() => setMessageFocus(true)}
-              onSubmitEditing={() => {
-                navigation.navigate('IdDoneScreen');
-              }}
-              ref={inputRef}
+              checkStatus={certifyNumCheckStatus}
+              errorText="잘못된 인증번호입니다."
             />
-            {isMessageFocus && (
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => setMessage('')}
-                style={styles.cleanBtn}>
-                <Clean width={20} height={20} />
-              </TouchableOpacity>
-            )}
+            <View style={styles.timerView}>
+              <Text style={styles.timerText}>남은시간 {<Timer mm={3} />}</Text>
+            </View>
           </View>
-          <View style={styles.messageWrap}>
+          <View style={styles.certifyNumWrap}>
             <TouchableOpacity activeOpacity={1} onPress={onConfirm}>
               <View
                 style={[
                   styles.messageBtn,
-                  isMessageFocus && styles.focusedBox,
+                  {
+                    backgroundColor:
+                      certifyNum === '' ? 'white' : color.mint_00,
+                    borderColor:
+                      certifyNum === '' ? color.gray_03 : color.mint_04,
+                  },
                 ]}>
                 <Text
                   style={[
                     styles.messageBtnText,
-                    isMessageFocus && styles.focusedText,
+                    {
+                      color: certifyNum === '' ? color.gray_05 : color.mint_05,
+                    },
                   ]}>
                   인증번호 확인
                 </Text>
@@ -219,37 +169,16 @@ const FirstScreen = () => {
           </View>
         </View>
       )}
-      {showLabel && (
-        <View>
-          <Text style={styles.label}>이름</Text>
-        </View>
-      )}
       <View style={styles.nameInputWrap}>
-        <TextInput
-          style={[styles.nameInput, isfocus && styles.focused]}
+        <CustomInput
+          label="이름"
           placeholder="이름"
-          placeholderTextColor="#AEAEAE"
+          onChangeText={setName}
           value={name}
-          onChange={event => {
-            const {text} = event.nativeEvent;
-            setName(text);
-            setIsBtnShow(true);
-          }}
-          onFocus={() => {
-            setIsFocus(true);
-          }}
-          onSubmitEditing={() => {
-            setIsFocus(false);
+          clearText={() => {
+            setName('');
           }}
         />
-        {isfocus && (
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setName('')}
-            style={styles.cleanBtn}>
-            <Clean width={20} height={20} />
-          </TouchableOpacity>
-        )}
       </View>
       <View style={styles.empty} />
       {isBtnShow && stage === 1 && (
@@ -259,6 +188,7 @@ const FirstScreen = () => {
           </View>
         </TouchableOpacity>
       )}
+      {toastStatus && <Toast />}
     </SafeAreaView>
   );
 };
@@ -299,16 +229,11 @@ const styles = StyleSheet.create({
     height: 48,
   },
   phoneInput: {
-    fontSize: 16,
-    color: color.gray_07,
-    borderBottomWidth: 1,
-    borderColor: color.gray_04,
     width: 250,
-    height: 48,
   },
   phoneInputWrap: {
     marginHorizontal: 24,
-    marginBottom: 15,
+    marginBottom: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     // borderWidth: 1,
@@ -339,27 +264,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 8,
     fontSize: 12,
-    color: color.gray_05,
   },
   messageWrap: {
     width: 95,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 10,
     // borderWidth: 1,
   },
-  focused: {
-    borderColor: color.mint_05,
+  certifyNumWrap: {
+    width: 95,
+    justifyContent: 'flex-end',
+    paddingBottom: 35,
+    // borderWidth: 1,
   },
-  cleanBtn: {
-    position: 'absolute',
-    right: 10,
-    top: 13,
+  timerView: {
+    marginTop: 5,
   },
-  focusedBox: {
-    borderColor: color.mint_05,
-    backgroundColor: color.mint_00,
-  },
-  focusedText: {
-    color: color.mint_05,
+  timerText: {
+    color: color.red_02,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '500',
   },
 });
 
