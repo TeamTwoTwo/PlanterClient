@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,62 +12,78 @@ import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
-import {WithLocalSvg} from 'react-native-svg';
-import Clean from '../../assets/icon/ic-clean.svg';
-import Toast from 'react-native-easy-toast';
+import CustomInput from '../../components/common/CustomInput';
+
+interface CheckStatusProps {
+  password: boolean;
+  checkPassword: boolean;
+}
+
+interface Action {
+  type: string;
+  status: boolean;
+}
+
+const initialState: CheckStatusProps = {
+  password: true,
+  checkPassword: true,
+};
+
+const reducer = (state: CheckStatusProps, action: Action) => {
+  switch (action.type) {
+    case 'password':
+      return {...state, password: action.status};
+    case 'checkPassword':
+      return {...state, checkPassword: action.status};
+    default:
+      throw new Error('error');
+  }
+};
 
 const NewPwScreen = () => {
   const [password, setPassword] = useState<string>('');
-  const [showLabel, setShowLabel] = useState<boolean>(false);
-  const [isfocus, setIsFocus] = useState<boolean>(false);
-  const [isValidate, setIsValidate] = useState<boolean>(true);
+  const [checkPassword, setCheckPassword] = useState<string>('');
 
-  const [newPW, setNewPW] = useState<string>('');
-  const [showNewLabel, setShowNewLabel] = useState<boolean>(false);
-  const [isNewfocus, setIsNewFocus] = useState<boolean>(false);
-
-  const [isSame, setIsSame] = useState<boolean>(true);
   const [isBtnShow, setIsBtnShow] = useState<boolean>(false);
+  const [checkStatus, dispatch] = useReducer(reducer, initialState);
+
+  const setCheckStatus = (type: string, status: boolean) =>
+    dispatch({type, status});
 
   const navigation = useNavigation<LoginStackNavigationProp>();
 
-  const validatePW = (pw: string): boolean => {
-    const regex =
+  useEffect(() => {
+    passwordCheckFunc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [password]);
+
+  useEffect(() => {
+    if (password === checkPassword) {
+      setCheckStatus('checkPassword', true);
+    } else {
+      setCheckStatus('checkPassword', false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [password, checkPassword]);
+
+  // 영문, 숫자, 특수 문자 중 2개 이상이 들어간 8자 이상 20자 이하 비밀번호 정규식
+  const passwordRegExp = (str: string) => {
+    var regExp =
       /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,20}$/;
-    return regex.test(pw);
+    return regExp.test(str);
   };
 
-  useEffect(() => {
-    if (password.length === 0) {
-      setShowLabel(false);
+  // 비밀번호 형식 체크 함수
+  const passwordCheckFunc = () => {
+    if (passwordRegExp(password) || password.length === 0) {
+      setCheckStatus('password', true);
     } else {
-      setShowLabel(true);
+      setCheckStatus('password', false);
     }
-    if (newPW.length === 0) {
-      setShowNewLabel(false);
-    } else {
-      setShowNewLabel(true);
-    }
-  }, [password, newPW]);
-
-  useEffect(() => {
-    if (newPW === password) {
-      setIsSame(true);
-    } else {
-      setIsSame(false);
-    }
-  }, [newPW, password]);
-
-  useEffect(() => {
-    if (password !== '' && newPW !== '' && isSame) {
-      setIsBtnShow(true);
-    } else {
-      setIsBtnShow(false);
-    }
-  }, [password, newPW, isSame]);
+  };
 
   const onPress = (): void => {
-    if (newPW !== '' && isSame) {
+    if (password === checkPassword) {
       navigation.navigate('PwDoneScreen');
     }
   };
@@ -80,133 +96,47 @@ const NewPwScreen = () => {
       <View style={styles.titleWrap}>
         <Text style={styles.title}>새 비밀번호 등록</Text>
       </View>
-      {showLabel && (
-        <View>
-          <Text style={styles.label}>새 비밀번호</Text>
-        </View>
-      )}
       <View style={styles.pwInputWrap}>
-        <TextInput
-          style={inputStyle(isfocus, isValidate, isSame).pwInput}
-          placeholder="새 비밀번호"
-          placeholderTextColor="#AEAEAE"
+        <CustomInput
+          label="비밀번호"
+          placeholder="비밀번호"
+          errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
+          secure={true}
+          onChangeText={setPassword}
           value={password}
-          onChange={event => {
-            const {text} = event.nativeEvent;
-            setPassword(text);
-            setIsValidate(validatePW(text));
+          clearText={() => {
+            setPassword('');
           }}
-          onFocus={() => {
-            setIsNewFocus(false);
-            setIsFocus(true);
-          }}
-          onSubmitEditing={() => {
-            setIsFocus(false);
-          }}
-          secureTextEntry
+          checkStatus={checkStatus.password}
         />
-        {isfocus &&
-          (isValidate ? null : (
-            <Text style={styles.errorText}>잘못된 비밀번호입니다.</Text>
-          ))}
-        {isfocus && (
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setPassword('')}
-            style={styles.cleanBtn}>
-            <WithLocalSvg width={20} height={20} asset={Clean} />
-          </TouchableOpacity>
-        )}
       </View>
-      {showNewLabel && (
-        <View>
-          <Text style={styles.label}>새 비밀번호 확인</Text>
-        </View>
-      )}
       <View style={styles.pwInputWrap}>
-        <TextInput
-          style={newInputStyle(isNewfocus, isSame).pwInput}
-          placeholder="새 비밀번호 확인"
-          placeholderTextColor="#AEAEAE"
-          value={newPW}
-          onChange={event => {
-            const {text} = event.nativeEvent;
-            setNewPW(text);
+        <CustomInput
+          label="비밀번호 확인"
+          placeholder="비밀번호 확인"
+          errorText="비밀번호가 일치하지 않습니다."
+          secure={true}
+          onChangeText={setCheckPassword}
+          value={checkPassword}
+          clearText={() => {
+            setCheckPassword('');
           }}
-          onFocus={() => {
-            setIsFocus(false);
-            setIsNewFocus(true);
-          }}
-          onSubmitEditing={() => {
-            setIsNewFocus(false);
-          }}
-          secureTextEntry
+          checkStatus={checkStatus.checkPassword}
         />
-        {isNewfocus &&
-          (isSame ? null : (
-            <Text style={styles.errorText}>비밀번호를 확인해주세요.</Text>
-          ))}
-        {isNewfocus && (
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setNewPW('')}
-            style={styles.cleanBtn}>
-            <WithLocalSvg width={20} height={20} asset={Clean} />
-          </TouchableOpacity>
-        )}
       </View>
       <View style={styles.empty} />
-      {isBtnShow && (
+      {password !== '' && checkPassword !== '' ? (
         <TouchableOpacity activeOpacity={1} onPress={onPress}>
           <View style={styles.nextBtn}>
             <Text style={styles.btnText}>다음</Text>
           </View>
         </TouchableOpacity>
-      )}
+      ) : null}
     </SafeAreaView>
   );
 };
 
-const inputStyle = (isfocus: boolean, isValidate: boolean, isSame: boolean) =>
-  StyleSheet.create({
-    pwInput: {
-      fontSize: 16,
-      color: color.gray_07,
-      borderBottomWidth: 1,
-      borderColor: isfocus
-        ? isValidate
-          ? color.mint_05
-          : color.red_02
-        : isSame
-        ? color.gray_04
-        : color.red_02,
-      height: 48,
-    },
-  });
-
-const newInputStyle = (isNewfocus: boolean, isSame: boolean) =>
-  StyleSheet.create({
-    pwInput: {
-      fontSize: 16,
-      color: color.gray_07,
-      borderBottomWidth: 1,
-      borderColor: isNewfocus
-        ? isSame
-          ? color.mint_05
-          : color.red_02
-        : color.gray_04,
-      height: 48,
-    },
-  });
-
 const styles = StyleSheet.create({
-  label: {
-    paddingHorizontal: 24,
-    fontSize: 12,
-    fontWeight: '500',
-    lineHeight: 18,
-    color: color.gray_04,
-  },
   block: {
     backgroundColor: color.gray_00,
     flex: 1,
@@ -228,13 +158,6 @@ const styles = StyleSheet.create({
     // marginBottom: 40,
     // borderWidth: 1,
   },
-  pwInput: {
-    fontSize: 16,
-    color: color.gray_07,
-    borderBottomWidth: 1,
-    borderColor: color.gray_04,
-    height: 48,
-  },
   nextBtn: {
     height: 52,
     backgroundColor: color.mint_05,
@@ -248,27 +171,6 @@ const styles = StyleSheet.create({
   },
   empty: {
     flex: 1,
-  },
-  errorText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: color.red_02,
-    marginTop: 10,
-  },
-  cleanBtn: {
-    position: 'absolute',
-    right: 10,
-    top: 13,
-  },
-  focusedBox: {
-    borderColor: color.mint_05,
-    backgroundColor: color.mint_00,
-  },
-  focusedText: {
-    color: color.mint_05,
-  },
-  focused: {
-    borderColor: color.mint_05,
   },
 });
 
