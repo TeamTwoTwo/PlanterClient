@@ -25,6 +25,10 @@ const LoginScreen = () => {
     navigation.navigate('FirstPwScreen');
   };
 
+  const onSignUp = (): void => {
+    navigation.navigate('TermsOfService');
+  };
+
   return (
     <SafeAreaView style={styles.block}>
       <View>
@@ -45,7 +49,9 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.underWrap}>
-        <Text style={styles.underText}>회원가입</Text>
+        <Text style={styles.underText} onPress={onSignUp}>
+          회원가입
+        </Text>
         <View style={styles.firstLine} />
         <Text style={styles.underText} onPress={onIdPress}>
           아이디 찾기
