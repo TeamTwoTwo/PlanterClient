@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Linking} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Linking,
+  Platform,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color} from '../../utils/color';
 import Check from '../../assets/icon/ic-check.svg';
@@ -143,7 +150,7 @@ const TermsOfServiceScreen = () => {
             </View>
           </View>
         </View>
-        <View>
+        <View style={styles.btnWrap}>
           <CustomButton
             text="다음"
             backgroundColor={color.mint_05}
@@ -204,6 +211,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: color.gray_04,
     textDecorationLine: 'underline',
+  },
+  btnWrap: {
+    marginBottom: Platform.OS === 'ios' ? 16 : 24,
   },
 });
 export default TermsOfServiceScreen;
