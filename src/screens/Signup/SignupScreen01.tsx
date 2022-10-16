@@ -134,10 +134,10 @@ const SignupScreen01 = () => {
     }
   };
 
-  // 영문, 숫자, 특수 문자 중 2개 이상이 들어간 8자 이상 20자 이하 비밀번호 정규식
+  // 영문, 숫자, 특수 문자가 포함된 8자 이상 20자 이하 비밀번호 정규식
   const passwordRegExp = (str: string) => {
     var regExp =
-      /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,20}$/;
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&)])[A-Za-z\d@$!%*#?&]{8,20}$/;
     return regExp.test(str) ? true : false;
   };
 
@@ -175,7 +175,7 @@ const SignupScreen01 = () => {
                       <CustomInput
                         label="비밀번호"
                         placeholder="비밀번호"
-                        errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
+                        errorText="알파벳/숫자/특수문자가 포함된 8~20자로 입력해주세요."
                         secure={true}
                         onChangeText={setPassword}
                         value={password}
