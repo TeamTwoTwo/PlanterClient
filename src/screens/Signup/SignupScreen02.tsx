@@ -31,6 +31,10 @@ interface ButtonRefProps {
   isLoading: boolean;
 }
 
+interface TimerProps {
+  reset: boolean;
+}
+
 const SignupScreen02 = () => {
   const buttonRef = useRef<ButtonRefProps>({isLoading: false});
   const set = useSetRecoilState(signupState);
@@ -56,6 +60,7 @@ const SignupScreen02 = () => {
 
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const [showTimer, setShowTimer] = useState<boolean>(false);
+  const resetTimer = useRef<TimerProps>({reset: false});
 
   useEffect(() => {
     Keyboard.dismiss();
@@ -135,12 +140,12 @@ const SignupScreen02 = () => {
   };
 
   const onPressSendCertifyNum = () => {
-    console.log(buttonRef.current.isLoading);
     if (buttonRef.current.isLoading) {
       return;
     }
 
     buttonRef.current.isLoading = true;
+    resetTimer.current.reset = true;
 
     axios
       .post(url.dev + 'auth/send-code', {phone: phoneNum})
@@ -157,6 +162,7 @@ const SignupScreen02 = () => {
       })
       .finally(() => {
         buttonRef.current.isLoading = false;
+        resetTimer.current.reset = false;
       })
       .catch(e => {
         console.error(e);
@@ -329,7 +335,8 @@ const SignupScreen02 = () => {
                     {showTimer && (
                       <View style={styles.timerView}>
                         <Text style={styles.timerText}>
-                          남은시간 {<Timer mm={3} />}
+                          남은시간{' '}
+                          {<Timer mm={3} reset={resetTimer.current.reset} />}
                         </Text>
                       </View>
                     )}
