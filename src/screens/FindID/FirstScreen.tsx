@@ -194,6 +194,7 @@ const FirstScreen = () => {
               />
             </View>
           </ScrollView>
+          {toastStatus && <Toast />}
         </View>
         {isBtnShow && stage === 1 && (
           <TouchableOpacity activeOpacity={1} onPress={onPress}>
@@ -202,7 +203,6 @@ const FirstScreen = () => {
             </View>
           </TouchableOpacity>
         )}
-        {toastStatus && <Toast />}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
