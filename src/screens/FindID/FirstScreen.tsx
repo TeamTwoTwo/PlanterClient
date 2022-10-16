@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Keyboard,
   KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
@@ -75,122 +76,124 @@ const FirstScreen = () => {
           <View>
             <FindHeader />
           </View>
-          <View style={styles.titleWrap}>
-            <Text style={styles.title}>아이디 찾기</Text>
-          </View>
-          {isPhoneShow && (
-            <View style={styles.phoneInputWrap}>
-              <View style={styles.phoneInput}>
-                <CustomInput
-                  label="휴대폰 번호"
-                  placeholder="휴대폰 번호"
-                  type="numeric"
-                  onChangeText={setPhoneNum}
-                  value={phoneNum}
-                  clearText={() => {
-                    setPhoneNum('');
-                  }}
-                />
-              </View>
-              <View style={styles.messageWrap}>
-                <TouchableOpacity activeOpacity={1} onPress={onSend}>
-                  <View
-                    style={[
-                      styles.messageBtn,
-                      {
-                        backgroundColor:
-                          phoneNum === '' ? 'white' : color.mint_00,
-                        borderColor:
-                          phoneNum === '' ? color.gray_03 : color.mint_04,
-                      },
-                    ]}>
-                    {isMessageShow ? (
-                      <Text
-                        style={[
-                          styles.messageBtnText,
-                          {
-                            color:
-                              phoneNum === '' ? color.gray_05 : color.mint_05,
-                          },
-                        ]}>
-                        인증번호 재전송
-                      </Text>
-                    ) : (
-                      <Text
-                        style={[
-                          styles.messageBtnText,
-                          {
-                            color:
-                              phoneNum === '' ? color.gray_05 : color.mint_05,
-                          },
-                        ]}>
-                        인증번호 전송
-                      </Text>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.titleWrap}>
+              <Text style={styles.title}>아이디 찾기</Text>
             </View>
-          )}
-          {isMessageShow && (
-            <View style={styles.phoneInputWrap}>
-              <View style={styles.phoneInput}>
-                <CustomInput
-                  label="인증번호 입력"
-                  placeholder="인증번호 입력"
-                  type="numeric"
-                  onChangeText={setCertifyNum}
-                  value={certifyNum}
-                  clearText={() => {
-                    setCertifyNum('');
-                  }}
-                  checkStatus={certifyNumCheckStatus}
-                  errorText="잘못된 인증번호입니다."
-                />
-                <View style={styles.timerView}>
-                  <Text style={styles.timerText}>
-                    남은시간 {<Timer mm={3} />}
-                  </Text>
+            {isPhoneShow && (
+              <View style={styles.phoneInputWrap}>
+                <View style={styles.phoneInput}>
+                  <CustomInput
+                    label="휴대폰 번호"
+                    placeholder="휴대폰 번호"
+                    type="numeric"
+                    onChangeText={setPhoneNum}
+                    value={phoneNum}
+                    clearText={() => {
+                      setPhoneNum('');
+                    }}
+                  />
                 </View>
-              </View>
-              <View style={styles.certifyNumWrap}>
-                <TouchableOpacity activeOpacity={1} onPress={onConfirm}>
-                  <View
-                    style={[
-                      styles.messageBtn,
-                      {
-                        backgroundColor:
-                          certifyNum === '' ? 'white' : color.mint_00,
-                        borderColor:
-                          certifyNum === '' ? color.gray_03 : color.mint_04,
-                      },
-                    ]}>
-                    <Text
+                <View style={styles.messageWrap}>
+                  <TouchableOpacity activeOpacity={1} onPress={onSend}>
+                    <View
                       style={[
-                        styles.messageBtnText,
+                        styles.messageBtn,
                         {
-                          color:
-                            certifyNum === '' ? color.gray_05 : color.mint_05,
+                          backgroundColor:
+                            phoneNum === '' ? 'white' : color.mint_00,
+                          borderColor:
+                            phoneNum === '' ? color.gray_03 : color.mint_04,
                         },
                       ]}>
-                      인증번호 확인
+                      {isMessageShow ? (
+                        <Text
+                          style={[
+                            styles.messageBtnText,
+                            {
+                              color:
+                                phoneNum === '' ? color.gray_05 : color.mint_05,
+                            },
+                          ]}>
+                          인증번호 재전송
+                        </Text>
+                      ) : (
+                        <Text
+                          style={[
+                            styles.messageBtnText,
+                            {
+                              color:
+                                phoneNum === '' ? color.gray_05 : color.mint_05,
+                            },
+                          ]}>
+                          인증번호 전송
+                        </Text>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+            {isMessageShow && (
+              <View style={styles.phoneInputWrap}>
+                <View style={styles.phoneInput}>
+                  <CustomInput
+                    label="인증번호 입력"
+                    placeholder="인증번호 입력"
+                    type="numeric"
+                    onChangeText={setCertifyNum}
+                    value={certifyNum}
+                    clearText={() => {
+                      setCertifyNum('');
+                    }}
+                    checkStatus={certifyNumCheckStatus}
+                    errorText="잘못된 인증번호입니다."
+                  />
+                  <View style={styles.timerView}>
+                    <Text style={styles.timerText}>
+                      남은시간 {<Timer mm={3} />}
                     </Text>
                   </View>
-                </TouchableOpacity>
+                </View>
+                <View style={styles.certifyNumWrap}>
+                  <TouchableOpacity activeOpacity={1} onPress={onConfirm}>
+                    <View
+                      style={[
+                        styles.messageBtn,
+                        {
+                          backgroundColor:
+                            certifyNum === '' ? 'white' : color.mint_00,
+                          borderColor:
+                            certifyNum === '' ? color.gray_03 : color.mint_04,
+                        },
+                      ]}>
+                      <Text
+                        style={[
+                          styles.messageBtnText,
+                          {
+                            color:
+                              certifyNum === '' ? color.gray_05 : color.mint_05,
+                          },
+                        ]}>
+                        인증번호 확인
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
               </View>
+            )}
+            <View style={styles.nameInputWrap}>
+              <CustomInput
+                label="이름"
+                placeholder="이름"
+                onChangeText={setName}
+                value={name}
+                clearText={() => {
+                  setName('');
+                }}
+              />
             </View>
-          )}
-          <View style={styles.nameInputWrap}>
-            <CustomInput
-              label="이름"
-              placeholder="이름"
-              onChangeText={setName}
-              value={name}
-              clearText={() => {
-                setName('');
-              }}
-            />
-          </View>
+          </ScrollView>
         </View>
         {isBtnShow && stage === 1 && (
           <TouchableOpacity activeOpacity={1} onPress={onPress}>
