@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/color';
@@ -90,49 +91,53 @@ const NewPwScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.block}>
-        <View>
-          <FindHeader />
-        </View>
-        <View style={styles.titleWrap}>
-          <Text style={styles.title}>새 비밀번호 등록</Text>
-        </View>
-        <View style={styles.pwInputWrap}>
-          <CustomInput
-            label="비밀번호"
-            placeholder="비밀번호"
-            errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
-            secure={true}
-            onChangeText={setPassword}
-            value={password}
-            clearText={() => {
-              setPassword('');
-            }}
-            checkStatus={checkStatus.password}
-          />
-        </View>
-        <View style={styles.pwInputWrap}>
-          <CustomInput
-            label="비밀번호 확인"
-            placeholder="비밀번호 확인"
-            errorText="비밀번호가 일치하지 않습니다."
-            secure={true}
-            onChangeText={setCheckPassword}
-            value={checkPassword}
-            clearText={() => {
-              setCheckPassword('');
-            }}
-            checkStatus={checkStatus.checkPassword}
-          />
-        </View>
-      </View>
-      {password !== '' && checkPassword !== '' ? (
-        <TouchableOpacity activeOpacity={1} onPress={onPress}>
-          <View style={styles.nextBtn}>
-            <Text style={styles.btnText}>다음</Text>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.block}>
+          <View>
+            <FindHeader />
           </View>
-        </TouchableOpacity>
-      ) : null}
+          <View style={styles.titleWrap}>
+            <Text style={styles.title}>새 비밀번호 등록</Text>
+          </View>
+          <View style={styles.pwInputWrap}>
+            <CustomInput
+              label="비밀번호"
+              placeholder="비밀번호"
+              errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
+              secure={true}
+              onChangeText={setPassword}
+              value={password}
+              clearText={() => {
+                setPassword('');
+              }}
+              checkStatus={checkStatus.password}
+            />
+          </View>
+          <View style={styles.pwInputWrap}>
+            <CustomInput
+              label="비밀번호 확인"
+              placeholder="비밀번호 확인"
+              errorText="비밀번호가 일치하지 않습니다."
+              secure={true}
+              onChangeText={setCheckPassword}
+              value={checkPassword}
+              clearText={() => {
+                setCheckPassword('');
+              }}
+              checkStatus={checkStatus.checkPassword}
+            />
+          </View>
+        </View>
+        {password !== '' && checkPassword !== '' ? (
+          <TouchableOpacity activeOpacity={1} onPress={onPress}>
+            <View style={styles.nextBtn}>
+              <Text style={styles.btnText}>다음</Text>
+            </View>
+          </TouchableOpacity>
+        ) : null}
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
