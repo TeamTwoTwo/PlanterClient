@@ -10,6 +10,7 @@ import {
   NativeModules,
   Alert,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
 import {color} from '../../utils/color';
@@ -206,146 +207,150 @@ const SignupScreen02 = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
           <FindHeader />
-          <View style={styles.progressBarWrap}>
-            <View style={styles.progressBarOuter}>
-              <View style={styles.progressBarInner} />
-            </View>
-          </View>
-          <View style={styles.contentWrap}>
-            <Text style={styles.stepText}>본인인증</Text>
-            <View style={styles.content}>
-              {showPhoneView && (
-                <View style={styles.phoneView}>
-                  <View style={styles.phoneNum}>
-                    <CustomInput
-                      label="휴대폰 번호"
-                      placeholder="휴대폰 번호"
-                      type="numeric"
-                      onChangeText={setPhoneNum}
-                      value={phoneNum}
-                      clearText={() => {
-                        setPhoneNum('');
-                      }}
-                      errorText={phoneNumErrorMsg}
-                      checkStatus={phoneNumCheckStatus}
-                    />
-                  </View>
-                  <View style={styles.codeBtnView}>
-                    <TouchableOpacity
-                      disabled={
-                        phoneNum === '' || !phoneNumCheckStatus ? true : false
-                      }
-                      style={[
-                        styles.certifyNumBtn,
-                        {
-                          backgroundColor:
-                            phoneNum === '' || !phoneNumCheckStatus
-                              ? 'white'
-                              : color.mint_00,
-                          borderColor:
-                            phoneNum === '' || !phoneNumCheckStatus
-                              ? color.gray_05
-                              : color.mint_04,
-                        },
-                      ]}
-                      activeOpacity={1}
-                      onPress={onPressSendCertifyNum}>
-                      <Text
-                        style={[
-                          styles.certifyNumText,
-                          {
-                            color:
-                              phoneNum === '' || !phoneNumCheckStatus
-                                ? color.gray_05
-                                : color.mint_05,
-                          },
-                        ]}>
-                        {sendCertifyNumText}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
-              {showCertifyNumView && (
-                <View style={[styles.phoneView, {marginTop: 36}]}>
-                  <View style={styles.phoneNum}>
-                    <CustomInput
-                      label="인증번호 입력"
-                      placeholder="인증번호 입력"
-                      type="numeric"
-                      onChangeText={setCertifyNum}
-                      value={certifyNum}
-                      clearText={() => {
-                        setCertifyNum('');
-                      }}
-                      checkStatus={certifyNumCheckStatus}
-                      errorText={codeErrorMsg}
-                    />
-                  </View>
-                  <View style={styles.codeBtnView}>
-                    <TouchableOpacity
-                      disabled={certifyNum === '' ? true : false}
-                      style={[
-                        styles.certifyNumBtn,
-                        {
-                          backgroundColor:
-                            certifyNum === '' ? 'white' : color.mint_00,
-                          borderColor:
-                            certifyNum === '' ? color.gray_05 : color.mint_04,
-                        },
-                      ]}
-                      activeOpacity={1}
-                      onPress={onPressCheckCertifyNum}>
-                      <Text
-                        style={[
-                          styles.certifyNumText,
-                          {
-                            color:
-                              certifyNum === '' ? color.gray_05 : color.mint_05,
-                          },
-                        ]}>
-                        인증번호 확인
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  {showTimer && (
-                    <View style={styles.timerView}>
-                      <Text style={styles.timerText}>
-                        남은시간 {<Timer mm={3} />}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-              )}
-              {showBirthView && (
-                <View style={styles.inputWrap}>
-                  <CustomInput
-                    label="생년월일 6자리"
-                    placeholder="생년월일 6자리"
-                    type="numeric"
-                    onChangeText={setBirth}
-                    value={birth}
-                    errorText="올바른 생년월일을 입력해주세요."
-                    clearText={() => {
-                      setBirth('');
-                    }}
-                    checkStatus={birthCheckStatus}
-                  />
-                </View>
-              )}
-              <View style={styles.inputWrap}>
-                <CustomInput
-                  label="이름"
-                  placeholder="이름"
-                  onChangeText={setName}
-                  value={name}
-                  clearText={() => {
-                    setName('');
-                  }}
-                />
+          <ScrollView>
+            <View style={styles.progressBarWrap}>
+              <View style={styles.progressBarOuter}>
+                <View style={styles.progressBarInner} />
               </View>
             </View>
-          </View>
+            <View style={styles.contentWrap}>
+              <Text style={styles.stepText}>본인인증</Text>
+              <View style={styles.content}>
+                {showPhoneView && (
+                  <View style={styles.phoneView}>
+                    <View style={styles.phoneNum}>
+                      <CustomInput
+                        label="휴대폰 번호"
+                        placeholder="휴대폰 번호"
+                        type="numeric"
+                        onChangeText={setPhoneNum}
+                        value={phoneNum}
+                        clearText={() => {
+                          setPhoneNum('');
+                        }}
+                        errorText={phoneNumErrorMsg}
+                        checkStatus={phoneNumCheckStatus}
+                      />
+                    </View>
+                    <View style={styles.codeBtnView}>
+                      <TouchableOpacity
+                        disabled={
+                          phoneNum === '' || !phoneNumCheckStatus ? true : false
+                        }
+                        style={[
+                          styles.certifyNumBtn,
+                          {
+                            backgroundColor:
+                              phoneNum === '' || !phoneNumCheckStatus
+                                ? 'white'
+                                : color.mint_00,
+                            borderColor:
+                              phoneNum === '' || !phoneNumCheckStatus
+                                ? color.gray_05
+                                : color.mint_04,
+                          },
+                        ]}
+                        activeOpacity={1}
+                        onPress={onPressSendCertifyNum}>
+                        <Text
+                          style={[
+                            styles.certifyNumText,
+                            {
+                              color:
+                                phoneNum === '' || !phoneNumCheckStatus
+                                  ? color.gray_05
+                                  : color.mint_05,
+                            },
+                          ]}>
+                          {sendCertifyNumText}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
+                {showCertifyNumView && (
+                  <View style={[styles.phoneView, {marginTop: 36}]}>
+                    <View style={styles.phoneNum}>
+                      <CustomInput
+                        label="인증번호 입력"
+                        placeholder="인증번호 입력"
+                        type="numeric"
+                        onChangeText={setCertifyNum}
+                        value={certifyNum}
+                        clearText={() => {
+                          setCertifyNum('');
+                        }}
+                        checkStatus={certifyNumCheckStatus}
+                        errorText={codeErrorMsg}
+                      />
+                    </View>
+                    <View style={styles.codeBtnView}>
+                      <TouchableOpacity
+                        disabled={certifyNum === '' ? true : false}
+                        style={[
+                          styles.certifyNumBtn,
+                          {
+                            backgroundColor:
+                              certifyNum === '' ? 'white' : color.mint_00,
+                            borderColor:
+                              certifyNum === '' ? color.gray_05 : color.mint_04,
+                          },
+                        ]}
+                        activeOpacity={1}
+                        onPress={onPressCheckCertifyNum}>
+                        <Text
+                          style={[
+                            styles.certifyNumText,
+                            {
+                              color:
+                                certifyNum === ''
+                                  ? color.gray_05
+                                  : color.mint_05,
+                            },
+                          ]}>
+                          인증번호 확인
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    {showTimer && (
+                      <View style={styles.timerView}>
+                        <Text style={styles.timerText}>
+                          남은시간 {<Timer mm={3} />}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                )}
+                {showBirthView && (
+                  <View style={styles.inputWrap}>
+                    <CustomInput
+                      label="생년월일 6자리"
+                      placeholder="생년월일 6자리"
+                      type="numeric"
+                      onChangeText={setBirth}
+                      value={birth}
+                      errorText="올바른 생년월일을 입력해주세요."
+                      clearText={() => {
+                        setBirth('');
+                      }}
+                      checkStatus={birthCheckStatus}
+                    />
+                  </View>
+                )}
+                <View style={styles.inputWrap}>
+                  <CustomInput
+                    label="이름"
+                    placeholder="이름"
+                    onChangeText={setName}
+                    value={name}
+                    clearText={() => {
+                      setName('');
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         </View>
         {(step === 1 && name !== '') ||
         (step === 2 && name !== '' && birth !== '') ? (

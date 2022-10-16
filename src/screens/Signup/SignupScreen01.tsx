@@ -160,62 +160,64 @@ const SignupScreen01 = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
           <FindHeader />
-          <View style={styles.progressBarWrap}>
-            <View style={styles.progressBarOuter}>
-              <View style={styles.progressBarInner} />
-            </View>
-          </View>
-          <View style={styles.contentWrap}>
-            <Text style={styles.stepText}>회원가입</Text>
-            <View style={styles.content}>
-              {showPasswordView ? (
-                <>
-                  <View style={{marginTop: 10}}>
-                    <CustomInput
-                      label="비밀번호"
-                      placeholder="비밀번호"
-                      errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
-                      secure={true}
-                      onChangeText={setPassword}
-                      value={password}
-                      clearText={() => {
-                        setPassword('');
-                      }}
-                      checkStatus={checkStatus.password}
-                    />
-                  </View>
-                  <View style={styles.inputWrap}>
-                    <CustomInput
-                      label="비밀번호 확인"
-                      placeholder="비밀번호 확인"
-                      errorText="비밀번호가 일치하지 않습니다."
-                      secure={true}
-                      onChangeText={setCheckPassword}
-                      value={checkPassword}
-                      clearText={() => {
-                        setCheckPassword('');
-                      }}
-                      checkStatus={checkStatus.checkPassword}
-                    />
-                  </View>
-                </>
-              ) : null}
-              <View style={styles.inputWrap}>
-                <CustomInput
-                  label="이메일"
-                  placeholder="이메일"
-                  errorText="이메일 주소를 확인해주세요."
-                  type="email-address"
-                  onChangeText={setEmail}
-                  value={email}
-                  clearText={() => {
-                    setEmail('');
-                  }}
-                  checkStatus={checkStatus.email}
-                />
+          <ScrollView>
+            <View style={styles.progressBarWrap}>
+              <View style={styles.progressBarOuter}>
+                <View style={styles.progressBarInner} />
               </View>
             </View>
-          </View>
+            <View style={styles.contentWrap}>
+              <Text style={styles.stepText}>회원가입</Text>
+              <View style={styles.content}>
+                {showPasswordView ? (
+                  <>
+                    <View style={{marginTop: 10}}>
+                      <CustomInput
+                        label="비밀번호"
+                        placeholder="비밀번호"
+                        errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
+                        secure={true}
+                        onChangeText={setPassword}
+                        value={password}
+                        clearText={() => {
+                          setPassword('');
+                        }}
+                        checkStatus={checkStatus.password}
+                      />
+                    </View>
+                    <View style={styles.inputWrap}>
+                      <CustomInput
+                        label="비밀번호 확인"
+                        placeholder="비밀번호 확인"
+                        errorText="비밀번호가 일치하지 않습니다."
+                        secure={true}
+                        onChangeText={setCheckPassword}
+                        value={checkPassword}
+                        clearText={() => {
+                          setCheckPassword('');
+                        }}
+                        checkStatus={checkStatus.checkPassword}
+                      />
+                    </View>
+                  </>
+                ) : null}
+                <View style={styles.inputWrap}>
+                  <CustomInput
+                    label="이메일"
+                    placeholder="이메일"
+                    errorText="이메일 주소를 확인해주세요."
+                    type="email-address"
+                    onChangeText={setEmail}
+                    value={email}
+                    clearText={() => {
+                      setEmail('');
+                    }}
+                    checkStatus={checkStatus.email}
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         </View>
         {(step === 1 && email !== '') ||
         (step === 2 &&

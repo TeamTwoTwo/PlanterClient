@@ -8,6 +8,7 @@ import {
   Platform,
   TouchableOpacity,
   NativeModules,
+  ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
 import {color} from '../../utils/color';
@@ -103,66 +104,68 @@ const SignupScreen03 = ({route}: any) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
           <FindHeader />
-          <View style={styles.progressBarWrap}>
-            <View style={styles.progressBarOuter}>
-              <View style={styles.progressBarInner} />
-            </View>
-          </View>
-          <View style={styles.contentWrap}>
-            <Text style={styles.stepText}>회원가입</Text>
-            <View style={styles.content}>
-              {showAddressView && (
-                <TouchableOpacity
-                  style={styles.addressView}
-                  activeOpacity={1}
-                  onPress={onPressAddress}>
-                  <View style={styles.address}>
-                    <CustomInput
-                      label="주소"
-                      placeholder="주소"
-                      onChangeText={setAddress}
-                      value={address}
-                      disabled
-                      multiline
-                      pointerEventsNone
-                    />
-                  </View>
-                  <TouchableOpacity
-                    style={styles.addressBtn}
-                    activeOpacity={0.5}
-                    onPress={onPressAddress}>
-                    <Text style={styles.addressBtnText}>주소 검색</Text>
-                  </TouchableOpacity>
-                </TouchableOpacity>
-              )}
-              {address !== '' && (
-                <View style={styles.inputWrap}>
-                  <CustomInput
-                    label="상세 주소"
-                    placeholder="상세 주소"
-                    onChangeText={setAddressDetail}
-                    value={addressDetail}
-                    clearText={() => {
-                      setAddressDetail('');
-                    }}
-                  />
-                </View>
-              )}
-              <View style={styles.inputWrap}>
-                <CustomInput
-                  label="닉네임"
-                  placeholder="닉네임"
-                  errorText="한글 최대 10자, 영어 최대 20자로 입력해주세요."
-                  onChangeText={setNickname}
-                  value={nickname}
-                  clearText={() => {
-                    setNickname('');
-                  }}
-                  checkStatus={nicknameCheckStatus}
-                />
+          <ScrollView>
+            <View style={styles.progressBarWrap}>
+              <View style={styles.progressBarOuter}>
+                <View style={styles.progressBarInner} />
               </View>
             </View>
-          </View>
+            <View style={styles.contentWrap}>
+              <Text style={styles.stepText}>회원가입</Text>
+              <View style={styles.content}>
+                {showAddressView && (
+                  <TouchableOpacity
+                    style={styles.addressView}
+                    activeOpacity={1}
+                    onPress={onPressAddress}>
+                    <View style={styles.address}>
+                      <CustomInput
+                        label="주소"
+                        placeholder="주소"
+                        onChangeText={setAddress}
+                        value={address}
+                        disabled
+                        multiline
+                        pointerEventsNone
+                      />
+                    </View>
+                    <TouchableOpacity
+                      style={styles.addressBtn}
+                      activeOpacity={0.5}
+                      onPress={onPressAddress}>
+                      <Text style={styles.addressBtnText}>주소 검색</Text>
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                )}
+                {address !== '' && (
+                  <View style={styles.inputWrap}>
+                    <CustomInput
+                      label="상세 주소"
+                      placeholder="상세 주소"
+                      onChangeText={setAddressDetail}
+                      value={addressDetail}
+                      clearText={() => {
+                        setAddressDetail('');
+                      }}
+                    />
+                  </View>
+                )}
+                <View style={styles.inputWrap}>
+                  <CustomInput
+                    label="닉네임"
+                    placeholder="닉네임"
+                    errorText="한글 최대 10자, 영어 최대 20자로 입력해주세요."
+                    onChangeText={setNickname}
+                    value={nickname}
+                    clearText={() => {
+                      setNickname('');
+                    }}
+                    checkStatus={nicknameCheckStatus}
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         </View>
         {(step === 1 && nickname !== '') ||
         (nickname !== '' && addressDetail !== '') ? (
