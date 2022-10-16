@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   StyleSheet,
@@ -27,7 +27,12 @@ import FindHeader from '../../components/common/FindHeader';
 
 const {StatusBarManager} = NativeModules;
 
+interface ButtonRefProps {
+  isLoading: boolean;
+}
+
 const SignupScreen02 = () => {
+  const buttonRef = useRef<ButtonRefProps>({isLoading: false});
   const set = useSetRecoilState(signupState);
   const navigation = useNavigation<LoginStackNavigationProp>();
   const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
@@ -130,7 +135,13 @@ const SignupScreen02 = () => {
   };
 
   const onPressSendCertifyNum = () => {
-    //추후에 조건을 "인증번호 api 요청 성공하면" 으로 변경 예정
+    console.log(buttonRef.current.isLoading);
+    if (buttonRef.current.isLoading) {
+      return;
+    }
+
+    buttonRef.current.isLoading = true;
+
     axios
       .post(url.dev + 'auth/send-code', {phone: phoneNum})
       .then(res => {
@@ -143,6 +154,9 @@ const SignupScreen02 = () => {
             setToastStatus(true);
           }
         }
+      })
+      .finally(() => {
+        buttonRef.current.isLoading = false;
       })
       .catch(e => {
         console.error(e);
