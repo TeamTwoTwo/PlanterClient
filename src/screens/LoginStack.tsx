@@ -78,107 +78,37 @@ const LoginStack = () => {
       <Stack.Screen
         component={TermsOfServiceScreen}
         name="TermsOfService"
-        options={{
-          headerLeft: () => (
-            <TouchableOpacity style={styles.backBtn} onPress={() => {}}>
-              <Back width="12" height="12" />
-            </TouchableOpacity>
-          ),
-          headerTitle: '',
-          headerShadowVisible: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         component={TOSDetail}
         name="TOSDetail"
-        options={{
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => {
-                navigation.navigate('TermsOfService');
-              }}>
-              <Back width="12" height="12" />
-            </TouchableOpacity>
-          ),
-          headerTitle: '',
-          headerShadowVisible: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         component={SignupScreen01}
         name="Signup01"
-        options={{
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => {
-                navigation.navigate('TermsOfService');
-              }}>
-              <Back width="12" height="12" />
-            </TouchableOpacity>
-          ),
-          headerTitle: '',
-          headerShadowVisible: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         component={SignupScreen02}
         name="Signup02"
-        options={{
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => {
-                navigation.navigate('Signup01');
-              }}>
-              <Back width="12" height="12" />
-            </TouchableOpacity>
-          ),
-          headerTitle: '',
-          headerShadowVisible: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         component={SignupScreen03}
         name="Signup03"
-        options={{
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => {
-                navigation.navigate('Signup02');
-              }}>
-              <Back width="12" height="12" />
-            </TouchableOpacity>
-          ),
-          headerTitle: '',
-          headerShadowVisible: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         component={FindAddress}
         name="FindAddress"
-        options={{
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => {
-                navigation.navigate('Signup03', {address: ''});
-              }}>
-              <Back width="12" height="12" />
-            </TouchableOpacity>
-          ),
-          headerTitle: '',
-          headerShadowVisible: false,
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         component={SignupScreen04}
         name="Signup04"
-        options={{
-          headerShown: false,
-        }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

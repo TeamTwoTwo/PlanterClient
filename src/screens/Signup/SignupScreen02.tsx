@@ -22,6 +22,7 @@ import axios from 'axios';
 import {url} from '../../utils/url';
 import {signupState} from '../../recoil/atoms/signup';
 import {useSetRecoilState} from 'recoil';
+import FindHeader from '../../components/common/FindHeader';
 
 const {StatusBarManager} = NativeModules;
 
@@ -196,14 +197,15 @@ const SignupScreen02 = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['bottom']}>
+    <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         keyboardVerticalOffset={
-          Platform.OS === 'ios' ? statusBarHeight + 44 : 0
+          Platform.OS === 'ios' ? statusBarHeight - 47 : 0
         }
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
+          <FindHeader />
           <View style={styles.progressBarWrap}>
             <View style={styles.progressBarOuter}>
               <View style={styles.progressBarInner} />
@@ -347,7 +349,7 @@ const SignupScreen02 = () => {
         </View>
         {(step === 1 && name !== '') ||
         (step === 2 && name !== '' && birth !== '') ? (
-          <View style={styles.btnWrap}>
+          <View>
             <CustomButton
               backgroundColor={color.mint_05}
               text="다음"
@@ -365,10 +367,10 @@ const styles = StyleSheet.create({
   safe: {
     backgroundColor: 'white',
     flex: 1,
-    paddingHorizontal: 24,
   },
   container: {
     flex: 1,
+    paddingHorizontal: 24,
   },
   progressBarWrap: {
     marginTop: 24,
@@ -431,9 +433,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     lineHeight: 18,
-  },
-  btnWrap: {
-    marginLeft: -24,
   },
   inputWrap: {marginTop: 36},
 });

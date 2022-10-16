@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
   block: {
     backgroundColor: color.gray_00,
     height: 48,
-    paddingHorizontal: 27,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

@@ -16,6 +16,7 @@ import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
 import {useSetRecoilState} from 'recoil';
 import {signupState} from '../../recoil/atoms/signup';
+import FindHeader from '../../components/common/FindHeader';
 
 const {StatusBarManager} = NativeModules;
 
@@ -93,14 +94,15 @@ const SignupScreen03 = ({route}: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['bottom']}>
+    <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         keyboardVerticalOffset={
-          Platform.OS === 'ios' ? statusBarHeight + 44 : 0
+          Platform.OS === 'ios' ? statusBarHeight - 47 : 0
         }
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
+          <FindHeader />
           <View style={styles.progressBarWrap}>
             <View style={styles.progressBarOuter}>
               <View style={styles.progressBarInner} />
