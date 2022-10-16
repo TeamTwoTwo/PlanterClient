@@ -252,7 +252,7 @@ const SignupScreen02 = () => {
                         checkStatus={phoneNumCheckStatus}
                       />
                     </View>
-                    <View style={styles.codeBtnView}>
+                    <View style={buttonStyles(phoneNumCheckStatus).btnView}>
                       <TouchableOpacity
                         disabled={
                           phoneNum === '' || !phoneNumCheckStatus ? true : false
@@ -290,7 +290,7 @@ const SignupScreen02 = () => {
                 )}
                 {showCertifyNumView && (
                   <View style={[styles.phoneView, {marginTop: 36}]}>
-                    <View style={styles.phoneNum}>
+                    <View style={styles.codeNum}>
                       <CustomInput
                         label="인증번호 입력"
                         placeholder="인증번호 입력"
@@ -301,10 +301,18 @@ const SignupScreen02 = () => {
                           setCertifyNum('');
                         }}
                         checkStatus={certifyNumCheckStatus}
-                        errorText={codeErrorMsg}
+                        errorText="잘못된 인증번호입니다."
                       />
                     </View>
-                    <View style={styles.codeBtnView}>
+                    {showTimer && (
+                      <View
+                        style={buttonStyles(certifyNumCheckStatus).timerView}>
+                        <Text style={styles.timerText}>
+                          {<Timer mm={3} reset={resetTimer.current.reset} />}
+                        </Text>
+                      </View>
+                    )}
+                    <View style={buttonStyles(certifyNumCheckStatus).btnView}>
                       <TouchableOpacity
                         disabled={certifyNum === '' ? true : false}
                         style={[
@@ -332,14 +340,6 @@ const SignupScreen02 = () => {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                    {showTimer && (
-                      <View style={styles.timerView}>
-                        <Text style={styles.timerText}>
-                          남은시간{' '}
-                          {<Timer mm={3} reset={resetTimer.current.reset} />}
-                        </Text>
-                      </View>
-                    )}
                   </View>
                 )}
                 {showBirthView && (
@@ -372,6 +372,7 @@ const SignupScreen02 = () => {
               </View>
             </View>
           </ScrollView>
+          {toastStatus && <Toast />}
         </View>
         {(step === 1 && name !== '') ||
         (step === 2 && name !== '' && birth !== '') ? (
@@ -383,11 +384,20 @@ const SignupScreen02 = () => {
             />
           </View>
         ) : null}
-        {toastStatus && <Toast />}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
+
+const buttonStyles = (checkStatus: boolean) =>
+  StyleSheet.create({
+    btnView: {marginTop: checkStatus ? 24 : 0},
+    timerView: {
+      flex: 1,
+      marginTop: checkStatus ? 24 : 0,
+      marginLeft: 8,
+    },
+  });
 
 const styles = StyleSheet.create({
   safe: {
@@ -424,25 +434,17 @@ const styles = StyleSheet.create({
   phoneView: {
     marginTop: 10,
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'space-between',
     position: 'relative',
   },
   phoneNum: {width: '65%'},
-  timerView: {
-    position: 'absolute',
-    bottom: -22,
-  },
+  codeNum: {width: '55%'},
   timerText: {
-    color: color.red_02,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '500',
-  },
-  codeBtnView: {
-    position: 'absolute',
-    top: 31,
-    right: 0,
+    color: color.gray_04,
+    fontSize: 14,
+    lineHeight: 22,
+    fontWeight: '400',
   },
   certifyNumBtn: {
     alignItems: 'center',
