@@ -89,42 +89,43 @@ const NewPwScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.block}>
-      <View>
-        <FindHeader />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.block}>
+        <View>
+          <FindHeader />
+        </View>
+        <View style={styles.titleWrap}>
+          <Text style={styles.title}>새 비밀번호 등록</Text>
+        </View>
+        <View style={styles.pwInputWrap}>
+          <CustomInput
+            label="비밀번호"
+            placeholder="비밀번호"
+            errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
+            secure={true}
+            onChangeText={setPassword}
+            value={password}
+            clearText={() => {
+              setPassword('');
+            }}
+            checkStatus={checkStatus.password}
+          />
+        </View>
+        <View style={styles.pwInputWrap}>
+          <CustomInput
+            label="비밀번호 확인"
+            placeholder="비밀번호 확인"
+            errorText="비밀번호가 일치하지 않습니다."
+            secure={true}
+            onChangeText={setCheckPassword}
+            value={checkPassword}
+            clearText={() => {
+              setCheckPassword('');
+            }}
+            checkStatus={checkStatus.checkPassword}
+          />
+        </View>
       </View>
-      <View style={styles.titleWrap}>
-        <Text style={styles.title}>새 비밀번호 등록</Text>
-      </View>
-      <View style={styles.pwInputWrap}>
-        <CustomInput
-          label="비밀번호"
-          placeholder="비밀번호"
-          errorText="영문/숫자/특수문자 중 2개 이상을 포함하여 8~20자로 입력해주세요."
-          secure={true}
-          onChangeText={setPassword}
-          value={password}
-          clearText={() => {
-            setPassword('');
-          }}
-          checkStatus={checkStatus.password}
-        />
-      </View>
-      <View style={styles.pwInputWrap}>
-        <CustomInput
-          label="비밀번호 확인"
-          placeholder="비밀번호 확인"
-          errorText="비밀번호가 일치하지 않습니다."
-          secure={true}
-          onChangeText={setCheckPassword}
-          value={checkPassword}
-          clearText={() => {
-            setCheckPassword('');
-          }}
-          checkStatus={checkStatus.checkPassword}
-        />
-      </View>
-      <View style={styles.empty} />
       {password !== '' && checkPassword !== '' ? (
         <TouchableOpacity activeOpacity={1} onPress={onPress}>
           <View style={styles.nextBtn}>
@@ -137,14 +138,16 @@ const NewPwScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  block: {
+  safeArea: {
+    flex: 1,
     backgroundColor: color.gray_00,
+  },
+  block: {
+    paddingHorizontal: 24,
     flex: 1,
   },
   titleWrap: {
-    paddingHorizontal: 24,
     paddingTop: 30,
-    // borderWidth: 1,
     marginBottom: 60,
   },
   title: {
@@ -153,10 +156,7 @@ const styles = StyleSheet.create({
     color: color.gray_07,
   },
   pwInputWrap: {
-    marginHorizontal: 24,
     marginBottom: 15,
-    // marginBottom: 40,
-    // borderWidth: 1,
   },
   nextBtn: {
     height: 52,
@@ -168,9 +168,6 @@ const styles = StyleSheet.create({
     color: color.gray_00,
     fontSize: 16,
     fontWeight: '600',
-  },
-  empty: {
-    flex: 1,
   },
 });
 
