@@ -1,13 +1,15 @@
 import React from 'react';
 import {Text, StyleSheet, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import FindHeader from '../../components/common/FindHeader';
 
 const TOSDetail = ({route}: any) => {
   const number = route.params.number;
 
   return (
-    <SafeAreaView style={styles.safe} edges={['bottom']}>
-      <ScrollView style={styles.scroll}>
+    <SafeAreaView style={styles.safe}>
+      <FindHeader />
+      <ScrollView>
         <Text style={styles.title}>
           플랜터{' '}
           {number === 1
@@ -625,8 +627,8 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: 'white',
+    paddingHorizontal: 24,
   },
-  scroll: {paddingHorizontal: 24},
   title: {
     fontSize: 24,
     fontWeight: '600',

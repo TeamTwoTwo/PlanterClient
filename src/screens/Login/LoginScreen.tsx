@@ -2,13 +2,13 @@ import React from 'react';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Apple from '../../assets/icon/ic-apple.svg';
 import Naver from '../../assets/icon/ic-naver.svg';
 import Bubble from '../../assets/icon/ic-bubble.svg';
@@ -25,7 +25,7 @@ const LoginScreen = () => {
     navigation.navigate('FirstPwScreen');
   };
 
-  const onSignUp = (): void => {
+  const onSignupPress = (): void => {
     navigation.navigate('TermsOfService');
   };
 
@@ -49,7 +49,7 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.underWrap}>
-        <Text style={styles.underText} onPress={onSignUp}>
+        <Text style={styles.underText} onPress={onSignupPress}>
           회원가입
         </Text>
         <View style={styles.firstLine} />

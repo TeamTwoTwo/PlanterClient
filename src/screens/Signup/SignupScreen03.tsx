@@ -8,16 +8,22 @@ import {
   Platform,
   TouchableOpacity,
   NativeModules,
+  ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
 import {color} from '../../utils/color';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
+import {useSetRecoilState} from 'recoil';
+import {signupState} from '../../recoil/atoms/signup';
+import FindHeader from '../../components/common/FindHeader';
 
 const {StatusBarManager} = NativeModules;
 
 const SignupScreen03 = ({route}: any) => {
+  const set = useSetRecoilState(signupState);
+
   const navigation = useNavigation<LoginStackNavigationProp>();
   const addr = route.params?.address;
   const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
@@ -51,6 +57,7 @@ const SignupScreen03 = ({route}: any) => {
       setShowAddressView(true);
       setStep(2);
     } else {
+      set(prevState => ({...prevState, nickname}));
       navigation.navigate('Signup04');
     }
   };
@@ -88,74 +95,77 @@ const SignupScreen03 = ({route}: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['bottom']}>
+    <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
         keyboardVerticalOffset={
-          Platform.OS === 'ios' ? statusBarHeight + 44 : 0
+          Platform.OS === 'ios' ? statusBarHeight - 47 : 0
         }
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
-          <View style={styles.progressBarWrap}>
-            <View style={styles.progressBarOuter}>
-              <View style={styles.progressBarInner} />
-            </View>
-          </View>
-          <View style={styles.contentWrap}>
-            <Text style={styles.stepText}>회원가입</Text>
-            <View style={styles.content}>
-              {showAddressView && (
-                <TouchableOpacity
-                  style={styles.addressView}
-                  activeOpacity={1}
-                  onPress={onPressAddress}>
-                  <View style={styles.address}>
-                    <CustomInput
-                      label="주소"
-                      placeholder="주소"
-                      onChangeText={setAddress}
-                      value={address}
-                      disabled
-                      multiline
-                      pointerEventsNone
-                    />
-                  </View>
-                  <TouchableOpacity
-                    style={styles.addressBtn}
-                    activeOpacity={0.5}
-                    onPress={onPressAddress}>
-                    <Text style={styles.addressBtnText}>주소 검색</Text>
-                  </TouchableOpacity>
-                </TouchableOpacity>
-              )}
-              {address !== '' && (
-                <View style={styles.inputWrap}>
-                  <CustomInput
-                    label="상세 주소"
-                    placeholder="상세 주소"
-                    onChangeText={setAddressDetail}
-                    value={addressDetail}
-                    clearText={() => {
-                      setAddressDetail('');
-                    }}
-                  />
-                </View>
-              )}
-              <View style={styles.inputWrap}>
-                <CustomInput
-                  label="닉네임"
-                  placeholder="닉네임"
-                  errorText="한글 최대 10자, 영어 최대 20자로 입력해주세요."
-                  onChangeText={setNickname}
-                  value={nickname}
-                  clearText={() => {
-                    setNickname('');
-                  }}
-                  checkStatus={nicknameCheckStatus}
-                />
+          <FindHeader />
+          <ScrollView>
+            <View style={styles.progressBarWrap}>
+              <View style={styles.progressBarOuter}>
+                <View style={styles.progressBarInner} />
               </View>
             </View>
-          </View>
+            <View style={styles.contentWrap}>
+              <Text style={styles.stepText}>회원가입</Text>
+              <View style={styles.content}>
+                {showAddressView && (
+                  <TouchableOpacity
+                    style={styles.addressView}
+                    activeOpacity={1}
+                    onPress={onPressAddress}>
+                    <View style={styles.address}>
+                      <CustomInput
+                        label="주소"
+                        placeholder="주소"
+                        onChangeText={setAddress}
+                        value={address}
+                        disabled
+                        multiline
+                        pointerEventsNone
+                      />
+                    </View>
+                    <TouchableOpacity
+                      style={styles.addressBtn}
+                      activeOpacity={0.5}
+                      onPress={onPressAddress}>
+                      <Text style={styles.addressBtnText}>주소 검색</Text>
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                )}
+                {address !== '' && (
+                  <View style={styles.inputWrap}>
+                    <CustomInput
+                      label="상세 주소"
+                      placeholder="상세 주소"
+                      onChangeText={setAddressDetail}
+                      value={addressDetail}
+                      clearText={() => {
+                        setAddressDetail('');
+                      }}
+                    />
+                  </View>
+                )}
+                <View style={styles.inputWrap}>
+                  <CustomInput
+                    label="닉네임"
+                    placeholder="닉네임"
+                    errorText="한글 최대 10자, 영어 최대 20자로 입력해주세요."
+                    onChangeText={setNickname}
+                    value={nickname}
+                    clearText={() => {
+                      setNickname('');
+                    }}
+                    checkStatus={nicknameCheckStatus}
+                  />
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         </View>
         {(step === 1 && nickname !== '') ||
         (nickname !== '' && addressDetail !== '') ? (

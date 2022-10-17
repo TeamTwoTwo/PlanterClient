@@ -1,8 +1,10 @@
 import React from 'react';
 import Postcode from '@actbase/react-daum-postcode';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
+import FindHeader from '../../components/common/FindHeader';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -11,9 +13,12 @@ const FindAddress = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
 
   return (
-    <View>
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.view}>
+        <FindHeader />
+      </View>
       <Postcode
-        style={{width, height}}
+        style={styles.post}
         jsOptions={{animation: true}}
         onSelected={data => {
           navigation.navigate('Signup03', {
@@ -27,8 +32,17 @@ const FindAddress = () => {
           throw new Error('Function not implemented.');
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
+const styles = StyleSheet.create({
+  safe: {flex: 1, backgroundColor: 'white'},
+  view: {paddingHorizontal: 24},
+  post: {
+    width,
+    height,
+    marginTop: 20,
+  },
+});
 export default FindAddress;
