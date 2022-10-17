@@ -1,3 +1,5 @@
+import {Dimensions} from 'react-native';
+
 export const color = {
   gray_00: '#FFFFFF',
   gray_01: '#F7F7F7',
@@ -27,4 +29,13 @@ export const color = {
   red_02: '#FF5757',
   blue_01: '76B5FF',
   blue_02: '509CF7',
+};
+
+export const url = {
+  dev: 'https://dev.planter22.shop/',
+};
+
+export const screen = {
+  width: Dimensions.get('window').width,
+  height: Dimensions.get('window').height,
 };
