@@ -9,9 +9,10 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
+  Platform,
 } from 'react-native';
 import FindHeader from '../../components/common/FindHeader';
-import {color, url} from '../../utils/utils';
+import {color, screen, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import Clean from '../../assets/icon/ic-clean.svg';
@@ -46,6 +47,8 @@ const FirstScreen = () => {
   const [phoneNumErrorMsg, setPhoneNumErrorMsg] =
     useState<string>('휴대폰번호 형식을 확인해주세요.');
   const [showTimer, setShowTimer] = useState<boolean>(false);
+  const [sendCertifyNumText, setSendCertifyNumText] =
+    useState<string>('인증번호 전송');
 
   const navigation = useNavigation<LoginStackNavigationProp>();
   const buttonRef = useRef<ButtonRefProps>({isLoading: false});
@@ -74,6 +77,7 @@ const FirstScreen = () => {
         console.log(res);
         if (res.status === 200) {
           setIsMessageShow(true);
+          setSendCertifyNumText('인증번호 재전송');
           setShowTimer(true);
           if (!toastStatus) {
             setToastStatus(true);
@@ -166,51 +170,42 @@ const FirstScreen = () => {
                 </View>
                 <View style={buttonStyles(phoneNumCheckStatus).btnView}>
                   <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={onSend}
                     disabled={
                       phoneNum === '' || !phoneNumCheckStatus ? true : false
-                    }>
-                    <View
+                    }
+                    style={[
+                      styles.certifyNumBtn,
+                      {
+                        backgroundColor:
+                          phoneNum === '' || !phoneNumCheckStatus
+                            ? 'white'
+                            : color.mint_00,
+                        borderColor:
+                          phoneNum === '' || !phoneNumCheckStatus
+                            ? color.gray_05
+                            : color.mint_04,
+                      },
+                    ]}
+                    activeOpacity={1}
+                    onPress={onSend}>
+                    <Text
                       style={[
-                        styles.messageBtn,
+                        styles.certifyNumText,
                         {
-                          backgroundColor:
-                            phoneNum === '' ? 'white' : color.mint_00,
-                          borderColor:
-                            phoneNum === '' ? color.gray_03 : color.mint_04,
+                          color:
+                            phoneNum === '' || !phoneNumCheckStatus
+                              ? color.gray_05
+                              : color.mint_05,
                         },
                       ]}>
-                      {isMessageShow ? (
-                        <Text
-                          style={[
-                            styles.messageBtnText,
-                            {
-                              color:
-                                phoneNum === '' ? color.gray_05 : color.mint_05,
-                            },
-                          ]}>
-                          인증번호 재전송
-                        </Text>
-                      ) : (
-                        <Text
-                          style={[
-                            styles.messageBtnText,
-                            {
-                              color:
-                                phoneNum === '' ? color.gray_05 : color.mint_05,
-                            },
-                          ]}>
-                          인증번호 전송
-                        </Text>
-                      )}
-                    </View>
+                      {sendCertifyNumText}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
             )}
             {isMessageShow && (
-              <View style={styles.phoneInputWrap}>
+              <View style={[styles.phoneInputWrap, {marginTop: 36}]}>
                 <View style={styles.numInput}>
                   <CustomInput
                     label="인증번호 입력"
@@ -232,33 +227,30 @@ const FirstScreen = () => {
                     </Text>
                   </View>
                 )}
-                <View
-                  style={buttonStyles(certifyNumCheckStatus).certifyNumWrap}>
+                <View style={buttonStyles(certifyNumCheckStatus).btnView}>
                   <TouchableOpacity
+                    disabled={certifyNum === '' ? true : false}
+                    style={[
+                      styles.certifyNumBtn,
+                      {
+                        backgroundColor:
+                          certifyNum === '' ? 'white' : color.mint_00,
+                        borderColor:
+                          certifyNum === '' ? color.gray_05 : color.mint_04,
+                      },
+                    ]}
                     activeOpacity={1}
-                    onPress={onConfirm}
-                    disabled={certifyNum === '' ? true : false}>
-                    <View
+                    onPress={onConfirm}>
+                    <Text
                       style={[
-                        styles.messageBtn,
+                        styles.certifyNumText,
                         {
-                          backgroundColor:
-                            certifyNum === '' ? 'white' : color.mint_00,
-                          borderColor:
-                            certifyNum === '' ? color.gray_03 : color.mint_04,
+                          color:
+                            certifyNum === '' ? color.gray_05 : color.mint_05,
                         },
                       ]}>
-                      <Text
-                        style={[
-                          styles.messageBtnText,
-                          {
-                            color:
-                              certifyNum === '' ? color.gray_05 : color.mint_05,
-                          },
-                        ]}>
-                        인증번호 확인
-                      </Text>
-                    </View>
+                      인증번호 확인
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -291,22 +283,11 @@ const FirstScreen = () => {
 
 const buttonStyles = (checkStatus: boolean) =>
   StyleSheet.create({
-    btnView: {
-      // borderWidth: 1,
-      width: 95,
-      justifyContent: 'flex-end',
-      paddingBottom: checkStatus ? 10 : 35,
-    },
+    btnView: {marginTop: checkStatus ? 24 : 0},
     timerView: {
-      marginBottom: checkStatus ? 20 : 40,
-      // borderWidth: 1,
-      justifyContent: 'flex-end',
-    },
-    certifyNumWrap: {
-      width: 95,
-      justifyContent: 'flex-end',
-      paddingBottom: checkStatus ? 15 : 35,
-      // borderWidth: 1,
+      flex: 1,
+      marginTop: checkStatus ? 24 : 0,
+      marginLeft: 8,
     },
   });
 
@@ -328,8 +309,6 @@ const styles = StyleSheet.create({
   },
   titleWrap: {
     paddingTop: 30,
-    // borderWidth: 1,
-    marginBottom: 60,
   },
   title: {
     fontSize: 28,
@@ -343,17 +322,6 @@ const styles = StyleSheet.create({
     borderColor: color.gray_04,
     height: 48,
   },
-  phoneInput: {
-    width: 250,
-  },
-  numInput: {
-    width: 184,
-  },
-  phoneInputWrap: {
-    marginBottom: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   nextBtn: {
     height: 52,
     backgroundColor: color.mint_05,
@@ -365,34 +333,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  messageBtn: {
-    height: 34,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: color.gray_03,
-    borderRadius: 6,
-  },
-  messageBtnText: {
-    paddingHorizontal: 6,
-    paddingVertical: 8,
-    fontSize: 12,
-  },
-  messageWrap: {
-    borderWidth: 1,
-    width: 95,
-    justifyContent: 'flex-end',
-    paddingBottom: 10,
-  },
-  certifyNumWrap: {
-    width: 95,
-    justifyContent: 'flex-end',
-    paddingBottom: 15,
-    // borderWidth: 1,
+  nameInputWrap: {
+    marginTop: 50,
   },
   timerView: {
     marginBottom: 20,
-    // borderWidth: 1,
     justifyContent: 'flex-end',
   },
   timerText: {
@@ -400,6 +345,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
     fontWeight: '400',
+  },
+  phoneInputWrap: {
+    marginTop: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'relative',
+  },
+  phoneInput: {width: '65%'},
+  numInput: {width: '55%'},
+  certifyNumBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: color.mint_00,
+    paddingVertical: 8,
+    paddingHorizontal: 13,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: color.mint_04,
+  },
+  certifyNumText: {
+    color: color.mint_04,
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 18,
   },
 });
 
