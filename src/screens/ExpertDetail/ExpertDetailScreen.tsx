@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -8,10 +8,13 @@ import {
   StatusBar,
   ScrollView,
   FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import {color, screen, Typography} from '../../utils/utils';
 import LinearGradient from 'react-native-linear-gradient';
 import Back from '../../assets/icon/ic-back-arrow.svg';
+import BackBlack from '../../assets/icon/ic-back-arrow-black.svg';
 import Meatball from '../../assets/icon/ic-meatball.svg';
 import PlantBadge from '../../assets/icon/ic-plant-badge.svg';
 import Camera from '../../assets/icon/ic-camera.svg';
@@ -20,13 +23,7 @@ import Cost from '../../assets/icon/ic-cost.svg';
 import ChatBubble from '../../assets/icon/ic-chat-bubble.svg';
 import Star from '../../assets/icon/ic-star.svg';
 import Message from '../../assets/icon/ic-message.svg';
-import NaverMapView, {
-  Circle,
-  Marker,
-  Path,
-  Polyline,
-  Polygon,
-} from 'react-native-nmap';
+import NaverMapView, {Marker} from 'react-native-nmap';
 import Review from '../../components/ExpertDetail/Review';
 import CustomButton from '../../components/common/CustomButton';
 
@@ -34,28 +31,46 @@ let mock = [1, 2, 3];
 
 const ExpertDetailScreen = () => {
   const P0 = {latitude: 37.564362, longitude: 126.977011};
+  const [isHeaderWhite, setIsHeaderWhite] = useState<boolean>(false);
+
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (e.nativeEvent.contentOffset.y > 55) {
+      if (!isHeaderWhite) {
+        setIsHeaderWhite(true);
+      }
+    } else {
+      if (isHeaderWhite) {
+        setIsHeaderWhite(false);
+      }
+    }
+  };
 
   return (
     <View style={styles.safe}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle={isHeaderWhite ? 'dark-content' : 'light-content'} />
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} activeOpacity={1}>
-          <Back />
+          {isHeaderWhite ? <BackBlack /> : <Back />}
         </TouchableOpacity>
         <TouchableOpacity style={styles.meatballBtn} activeOpacity={1}>
-          <Meatball />
+          <Meatball fill={isHeaderWhite ? color.gray_08 : 'white'} />
         </TouchableOpacity>
       </View>
+      {isHeaderWhite && <View style={styles.headerWhite} />}
       <ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={1}
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}>
         <View style={styles.expertImgWrap}>
-          <LinearGradient
-            colors={['rgba(16,16,16,0.8)', 'rgba(16,16,16,0)']}
-            style={styles.gradation}
-            start={{x: 0, y: 0}}
-            end={{x: 0, y: 1}}
-          />
+          {!isHeaderWhite && (
+            <LinearGradient
+              colors={['rgba(16,16,16,0.8)', 'rgba(16,16,16,0)']}
+              style={styles.gradation}
+              start={{x: 0, y: 0}}
+              end={{x: 0, y: 1}}
+            />
+          )}
           <View style={styles.expertImgView}>
             <FlatList
               data={mock}
@@ -84,7 +99,7 @@ const ExpertDetailScreen = () => {
             />
           </View>
         </View>
-        <View style={styles.main}>
+        <View style={mainStyles(isHeaderWhite).main}>
           <View>
             <Image
               style={styles.profileImg}
@@ -233,6 +248,15 @@ const ExpertDetailScreen = () => {
   );
 };
 
+const mainStyles = (isHeaderWhite: boolean) =>
+  StyleSheet.create({
+    main: {
+      paddingHorizontal: 20,
+      transform: [{translateY: -47.5}],
+      marginTop: isHeaderWhite ? 180 : 80,
+    },
+  });
+
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
@@ -240,6 +264,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: screen.width,
+    height: 48,
     zIndex: 4,
     position: 'absolute',
     top: screen.statusBarHeight,
@@ -263,10 +288,17 @@ const styles = StyleSheet.create({
   expertImgWrap: {
     position: 'relative',
   },
+  headerWhite: {
+    backgroundColor: 'white',
+    zIndex: 3,
+    width: screen.width,
+    height: 48 + Number(screen.statusBarHeight),
+    position: 'absolute',
+    top: 0,
+  },
   gradation: {
     height: 100,
     zIndex: 3,
-    marginBottom: 80,
   },
   expertImgView: {
     height: 180,
@@ -292,10 +324,6 @@ const styles = StyleSheet.create({
   },
   numOfImgsTextSub: {
     opacity: 0.6,
-  },
-  main: {
-    paddingHorizontal: 20,
-    transform: [{translateY: -47.5}],
   },
   profileImg: {
     width: 80,
