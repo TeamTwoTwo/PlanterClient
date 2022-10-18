@@ -6,7 +6,6 @@ import {
   Text,
   KeyboardAvoidingView,
   Platform,
-  NativeModules,
   Keyboard,
   ScrollView,
 } from 'react-native';
@@ -18,8 +17,6 @@ import CustomButton from '../../components/common/CustomButton';
 import {useSetRecoilState} from 'recoil';
 import {signupState} from '../../recoil/atoms/signup';
 import FindHeader from '../../components/common/FindHeader';
-
-const {StatusBarManager} = NativeModules;
 
 interface CheckStatusProps {
   email: boolean;
@@ -54,7 +51,6 @@ const reducer = (state: CheckStatusProps, action: Action) => {
 const SignupScreen01 = () => {
   const set = useSetRecoilState(signupState);
   const navigation = useNavigation<LoginStackNavigationProp>();
-  const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
   const [showPasswordView, setShowPasswordView] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -67,11 +63,6 @@ const SignupScreen01 = () => {
 
   useEffect(() => {
     Keyboard.dismiss();
-    Platform.OS === 'ios'
-      ? StatusBarManager.getHeight((statusBarFrameData: any) => {
-          setStatusBarHeight(statusBarFrameData.height);
-        })
-      : null;
   }, []);
 
   useEffect(() => {
@@ -153,9 +144,6 @@ const SignupScreen01 = () => {
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={
-          Platform.OS === 'ios' ? statusBarHeight - 47 : 0
-        }
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
