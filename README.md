@@ -14,6 +14,8 @@
  ┃ ┣ 📂icon
  ┣ 📂components
  ┃ ┣ 📂common
+ ┣ 📂recoil
+ ┃ ┣ 📂atoms
  ┣ 📂screens
  ┃ ┣ 📂FindID
  ┃ ┣ 📂FindPW
