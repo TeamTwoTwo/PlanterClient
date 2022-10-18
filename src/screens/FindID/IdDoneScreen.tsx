@@ -1,5 +1,5 @@
 import React from 'react';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import {

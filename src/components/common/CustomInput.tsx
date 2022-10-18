@@ -8,7 +8,7 @@ import {
   KeyboardTypeOptions,
 } from 'react-native';
 import Clear from '../../assets/icon/ic-clean.svg';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 
 // ?: 로 돼있는 건 props로 꼭 넘길 필요는 없음
 // label: focus 됐을 때 placeholder가 위로 올라가면서 생기는 text

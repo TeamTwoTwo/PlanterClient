@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Dimensions} from 'react-native';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 
 // ?: 로 돼있는 건 props로 꼭 넘길 필요는 없음
 // 배경색, 버튼 text, onPress 함수는 필수로 넘겨야 함

@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import FindHeader from '../../components/common/FindHeader';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import Clean from '../../assets/icon/ic-clean.svg';
@@ -19,7 +19,7 @@ import CustomInput from '../../components/common/CustomInput';
 import Toast from '../../components/common/Toast';
 import Timer from '../../components/common/Timer';
 import axios from 'axios';
-import {url} from '../../utils/url';
+import {url} from '../../utils/utils';
 
 interface ButtonRefProps {
   isLoading: boolean;

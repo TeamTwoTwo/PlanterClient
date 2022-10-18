@@ -8,7 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import Check from '../../assets/icon/ic-check.svg';
 import CustomButton from '../../components/common/CustomButton';
 import {useNavigation} from '@react-navigation/native';

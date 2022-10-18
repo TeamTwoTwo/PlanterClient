@@ -13,14 +13,14 @@ import {
   ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import {LoginStackNavigationProp} from '../LoginStack';
 import {useNavigation} from '@react-navigation/native';
 import CustomButton from '../../components/common/CustomButton';
 import Toast from '../../components/common/Toast';
 import Timer from '../../components/common/Timer';
 import axios from 'axios';
-import {url} from '../../utils/url';
+import {url} from '../../utils/utils';
 import {signupState} from '../../recoil/atoms/signup';
 import {useSetRecoilState} from 'recoil';
 import FindHeader from '../../components/common/FindHeader';

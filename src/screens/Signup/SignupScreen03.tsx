@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';

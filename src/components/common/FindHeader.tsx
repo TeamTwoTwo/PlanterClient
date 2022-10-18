@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import Back from '../../assets/icon/ic-back.svg';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 
 const FindHeader = () => {
