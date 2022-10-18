@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 
 const Toast = () => {
   return (

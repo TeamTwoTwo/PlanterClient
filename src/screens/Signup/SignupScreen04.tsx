@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Text, StyleSheet, View} from 'react-native';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import CustomButton from '../../components/common/CustomButton';
 import {useRecoilValue} from 'recoil';
 import {signupState} from '../../recoil/atoms/signup';

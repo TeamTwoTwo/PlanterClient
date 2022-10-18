@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   SafeAreaView,
   View,
@@ -11,13 +11,22 @@ import {
   ScrollView,
 } from 'react-native';
 import FindHeader from '../../components/common/FindHeader';
-import {color} from '../../utils/color';
+import {color, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import Clean from '../../assets/icon/ic-clean.svg';
 import CustomInput from '../../components/common/CustomInput';
 import Toast from '../../components/common/Toast';
 import Timer from '../../components/common/Timer';
+import axios from 'axios';
+
+interface ButtonRefProps {
+  isLoading: boolean;
+}
+
+interface TimerProps {
+  reset: boolean;
+}
 
 const FirstPwScreen = () => {
   const [email, setEmail] = useState<string>('');
@@ -34,8 +43,14 @@ const FirstPwScreen = () => {
   const [certifyNumCheckStatus, setCertifyNumCheckStatus] =
     useState<boolean>(true);
   const [emailCheckStatus, setEmailCheckStatus] = useState<boolean>(true);
+  const [phoneNumCheckStatus, setPhoneNumCheckStatus] = useState<boolean>(true);
+  const [phoneNumErrorMsg, setPhoneNumErrorMsg] =
+    useState<string>('휴대폰번호 형식을 확인해주세요.');
+  const [showTimer, setShowTimer] = useState<boolean>(false);
 
   const navigation = useNavigation<LoginStackNavigationProp>();
+  const buttonRef = useRef<ButtonRefProps>({isLoading: false});
+  const resetTimer = useRef<TimerProps>({reset: false});
 
   const onPress = (): void => {
     Keyboard.dismiss();
@@ -46,12 +61,47 @@ const FirstPwScreen = () => {
 
   const onSend = () => {
     Keyboard.dismiss();
-    setIsMessageShow(true);
-    setToastStatus(true);
+
+    if (buttonRef.current.isLoading) {
+      return;
+    }
+
+    buttonRef.current.isLoading = true;
+    resetTimer.current.reset = true;
+
+    axios
+      .post(url.dev + 'auth/send-code', {phone: phoneNum})
+      .then(res => {
+        console.log(res);
+        if (res.status === 200) {
+          setIsMessageShow(true);
+          setShowTimer(true);
+          if (!toastStatus) {
+            setToastStatus(true);
+          }
+        }
+      })
+      .finally(() => {
+        buttonRef.current.isLoading = false;
+        resetTimer.current.reset = false;
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   const onConfirm = (): void => {
-    navigation.navigate('NewPwScreen');
+    axios
+      .post(url.dev + 'auth/verify-code', {phone: phoneNum, code: certifyNum})
+      .then(res => {
+        console.log(res);
+        if (res.status === 200) {
+          navigation.navigate('NewPwScreen');
+        }
+      })
+      .catch(e => {
+        setCertifyNumCheckStatus(false);
+      });
   };
 
   useEffect(() => {
@@ -89,6 +139,24 @@ const FirstPwScreen = () => {
     }
   };
 
+  useEffect(() => {
+    phoneNumCheckFunc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phoneNum]);
+
+  const phoneNumRegExp = (str: string) => {
+    var regExp = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
+    return regExp.test(str);
+  };
+
+  const phoneNumCheckFunc = () => {
+    if (phoneNumRegExp(phoneNum) || phoneNum.length === 0) {
+      setPhoneNumCheckStatus(true);
+    } else if (!phoneNumRegExp(phoneNum)) {
+      setPhoneNumCheckStatus(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
@@ -114,10 +182,17 @@ const FirstPwScreen = () => {
                     clearText={() => {
                       setPhoneNum('');
                     }}
+                    errorText={phoneNumErrorMsg}
+                    checkStatus={phoneNumCheckStatus}
                   />
                 </View>
-                <View style={styles.messageWrap}>
-                  <TouchableOpacity activeOpacity={1} onPress={onSend}>
+                <View style={buttonStyles(phoneNumCheckStatus).btnView}>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={onSend}
+                    disabled={
+                      phoneNum === '' || !phoneNumCheckStatus ? true : false
+                    }>
                     <View
                       style={[
                         styles.messageBtn,
@@ -158,7 +233,7 @@ const FirstPwScreen = () => {
             )}
             {isMessageShow && (
               <View style={styles.phoneInputWrap}>
-                <View style={styles.phoneInput}>
+                <View style={styles.numInput}>
                   <CustomInput
                     label="인증번호 입력"
                     placeholder="인증번호 입력"
@@ -171,13 +246,16 @@ const FirstPwScreen = () => {
                     checkStatus={certifyNumCheckStatus}
                     errorText="잘못된 인증번호입니다."
                   />
-                  <View style={styles.timerView}>
+                </View>
+                {showTimer && (
+                  <View style={buttonStyles(certifyNumCheckStatus).timerView}>
                     <Text style={styles.timerText}>
-                      남은시간 {<Timer mm={3} />}
+                      {<Timer mm={3} reset={resetTimer.current.reset} />}
                     </Text>
                   </View>
-                </View>
-                <View style={styles.certifyNumWrap}>
+                )}
+                <View
+                  style={buttonStyles(certifyNumCheckStatus).certifyNumWrap}>
                   <TouchableOpacity activeOpacity={1} onPress={onConfirm}>
                     <View
                       style={[
@@ -233,6 +311,27 @@ const FirstPwScreen = () => {
   );
 };
 
+const buttonStyles = (checkStatus: boolean) =>
+  StyleSheet.create({
+    btnView: {
+      // borderWidth: 1,
+      width: 95,
+      justifyContent: 'flex-end',
+      paddingBottom: checkStatus ? 10 : 35,
+    },
+    timerView: {
+      marginBottom: checkStatus ? 20 : 42,
+      // borderWidth: 1,
+      justifyContent: 'flex-end',
+    },
+    certifyNumWrap: {
+      width: 95,
+      justifyContent: 'flex-end',
+      paddingBottom: checkStatus ? 15 : 37,
+      // borderWidth: 1,
+    },
+  });
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -266,6 +365,9 @@ const styles = StyleSheet.create({
   },
   phoneInput: {
     width: 250,
+  },
+  numInput: {
+    width: 184,
   },
   phoneInputWrap: {
     marginBottom: 8,
@@ -314,10 +416,10 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   timerText: {
-    color: color.red_02,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '500',
+    color: color.gray_04,
+    fontSize: 14,
+    lineHeight: 22,
+    fontWeight: '400',
   },
 });
 
