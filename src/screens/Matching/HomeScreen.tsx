@@ -1,11 +1,23 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, FlatList, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Pressable,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography} from '../../utils/utils';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackNavigationProp} from '../RootStack';
 import Place from '../../assets/icon/ic-place';
 import Message from '../../assets/icon/ic-message';
 import NoneCheck from '../../assets/icon/ic-nonecheck';
 import Filter from '../../assets/icon/ic-filter';
+import Cheked from '../../assets/icon/ic-cheked';
+import ChekedFilter from '../../assets/icon/ic-checked-filter';
 import MatchingFilter from '../../components/matching/MatchingFilter';
 import MatchingItem from '../../components/matching/MatchingItem';
 
@@ -28,8 +40,13 @@ interface UserData {
 
 const HomeScreen = () => {
   const [checkList, setCheckList] = useState<string[]>(['식물 집사']);
+  const [photoCheck, setPhotoCheck] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [checkedFilter, setCheckedFilter] = useState<string>('가까운순');
 
-  const onAddList = (text: string) => {
+  const navigation = useNavigation<RootStackNavigationProp>();
+
+  const onAddList = (text: string): void => {
     setCheckList([...checkList, text]);
 
     if (checkList.includes(text)) {
@@ -37,7 +54,9 @@ const HomeScreen = () => {
     }
   };
 
-  console.log(checkList);
+  const onChecked = (): void => {
+    setPhotoCheck(!photoCheck);
+  };
 
   const dummy: Dummy[] = [
     {id: 1, text: '식물 집사'},
@@ -88,12 +107,18 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.head}>
-        <View style={styles.navigation}>
-          <Place size={20} />
-          <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-            서울 서대문구 연희동
-          </Text>
-        </View>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            navigation.navigate('LocationScreen');
+          }}>
+          <View style={styles.navigation}>
+            <Place size={20} />
+            <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
+              서울 서대문구 연희동
+            </Text>
+          </View>
+        </TouchableOpacity>
         <View>
           <Message size={24} />
         </View>
@@ -114,16 +139,85 @@ const HomeScreen = () => {
       </View>
       <View style={styles.secondfilter}>
         <View style={styles.filterWrap}>
-          <NoneCheck size={20} />
+          <TouchableOpacity activeOpacity={1} onPress={onChecked}>
+            {photoCheck ? <Cheked size={20} /> : <NoneCheck size={20} />}
+          </TouchableOpacity>
           <Text style={[Typography.caption2, styles.filterText]}>
             사진 제공
           </Text>
         </View>
-        <View style={styles.filterWrap}>
-          <Filter size={16} />
-          <Text style={[Typography.caption2, styles.filterText]}>가까운순</Text>
-        </View>
+        <Pressable onPress={() => setModalVisible(!modalVisible)}>
+          <View style={styles.filterWrap}>
+            <Filter size={16} />
+            <Text style={[Typography.caption2, styles.filterText]}>
+              {checkedFilter}
+            </Text>
+          </View>
+        </Pressable>
       </View>
+
+      <Modal
+        animationType="none"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <Pressable
+          style={styles.centeredView}
+          onPress={() => {
+            setModalVisible(!modalVisible);
+          }}
+        />
+        <View style={styles.modalView}>
+          <Pressable
+            style={styles.filterLine}
+            onPress={() => {
+              setCheckedFilter('가까운순');
+              setModalVisible(!modalVisible);
+            }}>
+            <Text
+              style={[
+                Typography.subtitle3,
+                {
+                  color:
+                    checkedFilter === '가까운순'
+                      ? color.blueGray_06
+                      : color.gray_04,
+                },
+              ]}>
+              가까운순
+            </Text>
+            {checkedFilter === '가까운순' && (
+              <ChekedFilter size={20} style={{marginLeft: 5}} />
+            )}
+          </Pressable>
+          <View style={styles.line} />
+          <Pressable
+            style={styles.filterLine}
+            onPress={() => {
+              setCheckedFilter('별점순');
+              setModalVisible(!modalVisible);
+            }}>
+            <Text
+              style={[
+                Typography.subtitle3,
+                {
+                  color:
+                    checkedFilter === '별점순'
+                      ? color.blueGray_06
+                      : color.gray_04,
+                },
+              ]}>
+              별점순
+            </Text>
+            {checkedFilter === '별점순' && (
+              <ChekedFilter size={20} style={{marginLeft: 5}} />
+            )}
+          </Pressable>
+        </View>
+      </Modal>
+
       <View style={styles.contentWrap}>
         <FlatList
           contentContainerStyle={{paddingBottom: 20}}
@@ -194,6 +288,30 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     flex: 1,
+  },
+  centeredView: {
+    flex: 1,
+    backgroundColor: 'rgba(52, 52, 52, 0.5)',
+  },
+  modalView: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: 203,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingTop: 40,
+    paddingHorizontal: 32,
+  },
+  line: {
+    borderTopWidth: 1,
+    marginVertical: 20,
+    borderColor: color.gray_02,
+  },
+  filterLine: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
