@@ -9,6 +9,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
+  Platform,
 } from 'react-native';
 import FindHeader from '../../components/common/FindHeader';
 import {color} from '../../utils/utils';
