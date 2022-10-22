@@ -18,12 +18,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const RootStack = () => {
   const navigation = useNavigation<RootStackNavigationProp>();
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={ExpertDetailScreen}
-        name="ExpertDetailScreen"
-        options={{headerShown: false}}
-      />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen component={ExpertDetailScreen} name="ExpertDetailScreen" />
     </Stack.Navigator>
   );
 };
