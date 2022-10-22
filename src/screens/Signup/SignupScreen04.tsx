@@ -33,9 +33,10 @@ const styles = StyleSheet.create({
   safe: {flex: 1, backgroundColor: 'white'},
   wrap: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textView: {
-    marginTop: 146,
     alignItems: 'center',
   },
   mainText: {

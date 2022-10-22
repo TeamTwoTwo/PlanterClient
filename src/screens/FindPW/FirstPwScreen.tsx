@@ -9,6 +9,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
+  Platform,
 } from 'react-native';
 import FindHeader from '../../components/common/FindHeader';
 import {color, url} from '../../utils/utils';
@@ -192,47 +193,45 @@ const FirstPwScreen = () => {
                     onPress={onSend}
                     disabled={
                       phoneNum === '' || !phoneNumCheckStatus ? true : false
-                    }>
-                    <View
-                      style={[
-                        styles.messageBtn,
-                        {
-                          backgroundColor:
-                            phoneNum === '' ? 'white' : color.mint_00,
-                          borderColor:
-                            phoneNum === '' ? color.gray_03 : color.mint_04,
-                        },
-                      ]}>
-                      {isMessageShow ? (
-                        <Text
-                          style={[
-                            styles.messageBtnText,
-                            {
-                              color:
-                                phoneNum === '' ? color.gray_05 : color.mint_05,
-                            },
-                          ]}>
-                          인증번호 재전송
-                        </Text>
-                      ) : (
-                        <Text
-                          style={[
-                            styles.messageBtnText,
-                            {
-                              color:
-                                phoneNum === '' ? color.gray_05 : color.mint_05,
-                            },
-                          ]}>
-                          인증번호 전송
-                        </Text>
-                      )}
-                    </View>
+                    }
+                    style={[
+                      styles.messageBtn,
+                      {
+                        backgroundColor:
+                          phoneNum === '' ? 'white' : color.mint_00,
+                        borderColor:
+                          phoneNum === '' ? color.gray_03 : color.mint_04,
+                      },
+                    ]}>
+                    {isMessageShow ? (
+                      <Text
+                        style={[
+                          styles.messageBtnText,
+                          {
+                            color:
+                              phoneNum === '' ? color.gray_05 : color.mint_05,
+                          },
+                        ]}>
+                        인증번호 재전송
+                      </Text>
+                    ) : (
+                      <Text
+                        style={[
+                          styles.messageBtnText,
+                          {
+                            color:
+                              phoneNum === '' ? color.gray_05 : color.mint_05,
+                          },
+                        ]}>
+                        인증번호 전송
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 </View>
               </View>
             )}
             {isMessageShow && (
-              <View style={styles.phoneInputWrap}>
+              <View style={[styles.phoneInputWrap, {marginTop: 36}]}>
                 <View style={styles.numInput}>
                   <CustomInput
                     label="인증번호 입력"
@@ -254,30 +253,30 @@ const FirstPwScreen = () => {
                     </Text>
                   </View>
                 )}
-                <View
-                  style={buttonStyles(certifyNumCheckStatus).certifyNumWrap}>
-                  <TouchableOpacity activeOpacity={1} onPress={onConfirm}>
-                    <View
+                <View style={buttonStyles(certifyNumCheckStatus).btnView}>
+                  <TouchableOpacity
+                    disabled={certifyNum === '' ? true : false}
+                    style={[
+                      styles.certifyNumBtn,
+                      {
+                        backgroundColor:
+                          certifyNum === '' ? 'white' : color.mint_00,
+                        borderColor:
+                          certifyNum === '' ? color.gray_05 : color.mint_04,
+                      },
+                    ]}
+                    activeOpacity={1}
+                    onPress={onConfirm}>
+                    <Text
                       style={[
-                        styles.messageBtn,
+                        styles.certifyNumText,
                         {
-                          backgroundColor:
-                            certifyNum === '' ? 'white' : color.mint_00,
-                          borderColor:
-                            certifyNum === '' ? color.gray_03 : color.mint_04,
+                          color:
+                            certifyNum === '' ? color.gray_05 : color.mint_05,
                         },
                       ]}>
-                      <Text
-                        style={[
-                          styles.messageBtnText,
-                          {
-                            color:
-                              certifyNum === '' ? color.gray_05 : color.mint_05,
-                          },
-                        ]}>
-                        인증번호 확인
-                      </Text>
-                    </View>
+                      인증번호 확인
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -314,21 +313,12 @@ const FirstPwScreen = () => {
 const buttonStyles = (checkStatus: boolean) =>
   StyleSheet.create({
     btnView: {
-      // borderWidth: 1,
-      width: 95,
-      justifyContent: 'flex-end',
-      paddingBottom: checkStatus ? 10 : 35,
+      marginTop: checkStatus ? 24 : 0,
     },
     timerView: {
-      marginBottom: checkStatus ? 20 : 42,
-      // borderWidth: 1,
-      justifyContent: 'flex-end',
-    },
-    certifyNumWrap: {
-      width: 95,
-      justifyContent: 'flex-end',
-      paddingBottom: checkStatus ? 15 : 37,
-      // borderWidth: 1,
+      flex: 1,
+      marginTop: checkStatus ? 24 : 0,
+      marginLeft: 8,
     },
   });
 
@@ -349,7 +339,6 @@ const styles = StyleSheet.create({
   },
   titleWrap: {
     paddingTop: 30,
-    marginBottom: 60,
   },
   title: {
     fontSize: 28,
@@ -364,15 +353,17 @@ const styles = StyleSheet.create({
     height: 48,
   },
   phoneInput: {
-    width: 250,
+    width: '65%',
   },
   numInput: {
-    width: 184,
+    width: '55%',
   },
   phoneInputWrap: {
-    marginBottom: 8,
+    marginTop: 50,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
+    position: 'relative',
   },
   nextBtn: {
     height: 52,
@@ -385,41 +376,54 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  emailInputWrap: {
+    marginTop: 50,
+  },
   empty: {
     flex: 1,
   },
   messageBtn: {
-    height: 34,
-    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: color.gray_03,
+    backgroundColor: color.mint_00,
+    paddingVertical: 8,
+    paddingHorizontal: 13,
     borderRadius: 6,
+    borderWidth: 1,
+    borderColor: color.mint_04,
   },
   messageBtnText: {
-    paddingHorizontal: 6,
-    paddingVertical: 8,
+    color: color.mint_04,
     fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 18,
   },
   messageWrap: {
     width: 95,
     justifyContent: 'flex-end',
     paddingBottom: 10,
   },
-  certifyNumWrap: {
-    width: 95,
-    justifyContent: 'flex-end',
-    paddingBottom: 35,
-    // borderWidth: 1,
-  },
-  timerView: {
-    marginTop: 5,
-  },
   timerText: {
     color: color.gray_04,
     fontSize: 14,
     lineHeight: 22,
     fontWeight: '400',
+  },
+  certifyNumBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: color.mint_00,
+    paddingVertical: 8,
+    paddingHorizontal: 13,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: color.mint_04,
+  },
+  certifyNumText: {
+    color: color.mint_04,
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 18,
   },
 });
 
