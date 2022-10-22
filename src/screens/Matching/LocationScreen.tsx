@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography} from '../../utils/utils';
-import Place from '../../assets/icon/ic-place';
+import Place from '../../assets/icon/ic-place.svg';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 
 const LocationScreen = () => {
@@ -12,7 +12,7 @@ const LocationScreen = () => {
       <View style={styles.location}>
         <Text style={styles.title}>현재 위치</Text>
         <View style={styles.address}>
-          <Place size={20} />
+          <Place />
           <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
             서울 서대문구 연희동
           </Text>

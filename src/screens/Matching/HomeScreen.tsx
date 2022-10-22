@@ -12,12 +12,12 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackNavigationProp} from '../RootStack';
-import Place from '../../assets/icon/ic-place';
-import Message from '../../assets/icon/ic-message';
-import NoneCheck from '../../assets/icon/ic-nonecheck';
-import Filter from '../../assets/icon/ic-filter';
-import Cheked from '../../assets/icon/ic-cheked';
-import ChekedFilter from '../../assets/icon/ic-checked-filter';
+import Place from '../../assets/icon/ic-place.svg';
+import Message from '../../assets/icon/ic-message.svg';
+import NoneCheck from '../../assets/icon/ic-nonecheck.svg';
+import Filter from '../../assets/icon/ic-filter.svg';
+import Cheked from '../../assets/icon/ic-cheked.svg';
+import ChekedFilter from '../../assets/icon/ic-checked-filter.svg';
 import MatchingFilter from '../../components/matching/MatchingFilter';
 import MatchingItem from '../../components/matching/MatchingItem';
 
@@ -113,34 +113,34 @@ const HomeScreen = () => {
             navigation.navigate('LocationScreen');
           }}>
           <View style={styles.navigation}>
-            <Place size={20} />
+            <Place />
             <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
               서울 서대문구 연희동
             </Text>
           </View>
         </TouchableOpacity>
         <View>
-          <Message size={24} />
+          <Message />
         </View>
       </View>
       <View style={styles.filter}>
         <FlatList
           horizontal
           data={dummy}
-          renderItem={({item}: Dummy) => (
+          renderItem={({item}: {item: Dummy}) => (
             <MatchingFilter
               text={item.text}
               onAddList={() => onAddList(item.text)}
               checkList={checkList}
             />
           )}
-          keyExtractor={(item: Dummy) => item.id}
+          keyExtractor={(item: Dummy) => item.id.toString()}
         />
       </View>
       <View style={styles.secondfilter}>
         <View style={styles.filterWrap}>
           <TouchableOpacity activeOpacity={1} onPress={onChecked}>
-            {photoCheck ? <Cheked size={20} /> : <NoneCheck size={20} />}
+            {photoCheck ? <Cheked /> : <NoneCheck />}
           </TouchableOpacity>
           <Text style={[Typography.caption2, styles.filterText]}>
             사진 제공
@@ -148,7 +148,7 @@ const HomeScreen = () => {
         </View>
         <Pressable onPress={() => setModalVisible(!modalVisible)}>
           <View style={styles.filterWrap}>
-            <Filter size={16} />
+            <Filter />
             <Text style={[Typography.caption2, styles.filterText]}>
               {checkedFilter}
             </Text>
@@ -189,7 +189,7 @@ const HomeScreen = () => {
               가까운순
             </Text>
             {checkedFilter === '가까운순' && (
-              <ChekedFilter size={20} style={{marginLeft: 5}} />
+              <ChekedFilter style={{marginLeft: 5}} />
             )}
           </Pressable>
           <View style={styles.line} />
@@ -212,7 +212,7 @@ const HomeScreen = () => {
               별점순
             </Text>
             {checkedFilter === '별점순' && (
-              <ChekedFilter size={20} style={{marginLeft: 5}} />
+              <ChekedFilter style={{marginLeft: 5}} />
             )}
           </Pressable>
         </View>
@@ -223,7 +223,7 @@ const HomeScreen = () => {
           contentContainerStyle={{paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
           data={userData}
-          renderItem={({item}: UserData) => (
+          renderItem={({item}: {item: UserData}) => (
             <MatchingItem
               name={item.name}
               job={item.job}
@@ -235,7 +235,7 @@ const HomeScreen = () => {
               day={item.day}
             />
           )}
-          keyExtractor={(item: UserData) => item.id}
+          keyExtractor={(item: UserData) => item.id.toString()}
         />
       </View>
     </SafeAreaView>
