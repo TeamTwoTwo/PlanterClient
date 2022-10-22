@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import BackArrow from '../../assets/icon/ic-back-arrow.svg';
+import BackArrow from '../../assets/icon/ic-back-arrow-black.svg';
 import {color, Typography} from '../../utils/utils';
 import {RootStackNavigationProp} from '../../screens/RootStack';
 

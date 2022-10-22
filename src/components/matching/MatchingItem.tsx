@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform} from 'react-native';
 import {color, Typography} from '../../utils/utils';
-import Plant from '../../assets/icon/ic-plant.svg';
+import Plant from '../../assets/icon/ic-plant-badge.svg';
 import Star from '../../assets/icon/ic-star.svg';
 
 interface PropTypes {
