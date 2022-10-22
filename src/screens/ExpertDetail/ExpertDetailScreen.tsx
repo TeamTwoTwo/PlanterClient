@@ -27,10 +27,13 @@ import NaverMapView, {Marker} from 'react-native-nmap';
 import Review from '../../components/ExpertDetail/Review';
 import CustomButton from '../../components/common/CustomButton';
 import ImageDetail from '../../components/common/ImageDetail';
+import {useNavigation} from '@react-navigation/native';
+import {RootStackNavigationProp} from '../RootStack';
 
 let mock = [1, 2, 3];
 
 const ExpertDetailScreen = () => {
+  const navigation = useNavigation<RootStackNavigationProp>();
   const P0 = {latitude: 37.564362, longitude: 126.977011};
   const [isHeaderWhite, setIsHeaderWhite] = useState<boolean>(false);
   const [isExpertImageVisible, setIsExpertImageVisible] =
@@ -54,7 +57,12 @@ const ExpertDetailScreen = () => {
     <View style={styles.safe}>
       <StatusBar barStyle={isHeaderWhite ? 'dark-content' : 'light-content'} />
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} activeOpacity={1}>
+        <TouchableOpacity
+          style={styles.backBtn}
+          activeOpacity={1}
+          onPress={() => {
+            navigation.pop();
+          }}>
           {isHeaderWhite ? <BackBlack /> : <Back />}
         </TouchableOpacity>
         <TouchableOpacity style={styles.meatballBtn} activeOpacity={1}>
