@@ -1,11 +1,22 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image, FlatList} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {color, Typography} from '../../utils/utils';
 import Star from '../../assets/icon/ic-star.svg';
 
 let mock = [1, 2, 3, 4, 5, 6, 7];
 
-const Review = () => {
+interface Props {
+  onPress: () => void;
+}
+
+const Review = ({onPress}: Props) => {
   return (
     <View>
       <View style={styles.header}>
@@ -45,10 +56,12 @@ const Review = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({item}) => (
-            <Image
-              source={require('../../assets/img/img-expert-img.png')}
-              style={styles.img}
-            />
+            <TouchableOpacity activeOpacity={1} onPress={onPress}>
+              <Image
+                source={require('../../assets/img/img-expert-img.png')}
+                style={styles.img}
+              />
+            </TouchableOpacity>
           )}
           keyExtractor={item => `img ${item}`}
           ItemSeparatorComponent={() => <View style={{width: 8}} />}

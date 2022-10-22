@@ -26,12 +26,17 @@ import Message from '../../assets/icon/ic-message.svg';
 import NaverMapView, {Marker} from 'react-native-nmap';
 import Review from '../../components/ExpertDetail/Review';
 import CustomButton from '../../components/common/CustomButton';
+import ImageDetail from '../../components/common/ImageDetail';
 
 let mock = [1, 2, 3];
 
 const ExpertDetailScreen = () => {
   const P0 = {latitude: 37.564362, longitude: 126.977011};
   const [isHeaderWhite, setIsHeaderWhite] = useState<boolean>(false);
+  const [isExpertImageVisible, setIsExpertImageVisible] =
+    useState<boolean>(false);
+  const [isReviewImageVisible, setIsReviewImageVisible] =
+    useState<boolean>(false);
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (e.nativeEvent.contentOffset.y > 55) {
@@ -78,22 +83,31 @@ const ExpertDetailScreen = () => {
               pagingEnabled
               showsHorizontalScrollIndicator={false}
               renderItem={({item}) => (
-                <View>
-                  <Image
-                    style={styles.expertImg}
-                    source={require('../../assets/img/img-expert-img.png')}
-                  />
-                  <View style={styles.numOfImgs}>
-                    <Text style={[Typography.caption1, styles.numOfImgsText]}>
-                      {item}
-                      <Text
-                        style={[Typography.caption2, styles.numOfImgsTextSub]}>
-                        {' '}
-                        / 3
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => {
+                    setIsExpertImageVisible(true);
+                  }}>
+                  <View>
+                    <Image
+                      style={styles.expertImg}
+                      source={require('../../assets/img/img-expert-img.png')}
+                    />
+                    <View style={styles.numOfImgs}>
+                      <Text style={[Typography.caption1, styles.numOfImgsText]}>
+                        {item}
+                        <Text
+                          style={[
+                            Typography.caption2,
+                            styles.numOfImgsTextSub,
+                          ]}>
+                          {' '}
+                          / 3
+                        </Text>
                       </Text>
-                    </Text>
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               )}
               keyExtractor={item => `img ${item}`}
             />
@@ -209,7 +223,13 @@ const ExpertDetailScreen = () => {
             <View style={styles.contentFooterView}>
               <FlatList
                 data={mock}
-                renderItem={({item}) => <Review />}
+                renderItem={({item}) => (
+                  <Review
+                    onPress={() => {
+                      setIsReviewImageVisible(true);
+                    }}
+                  />
+                )}
                 keyExtractor={item => `img ${item}`}
                 ItemSeparatorComponent={() => <View style={{height: 40}} />}
               />
@@ -244,6 +264,14 @@ const ExpertDetailScreen = () => {
           />
         </View>
       </View>
+      <ImageDetail
+        visible={isExpertImageVisible}
+        setVisible={setIsExpertImageVisible}
+      />
+      <ImageDetail
+        visible={isReviewImageVisible}
+        setVisible={setIsReviewImageVisible}
+      />
     </View>
   );
 };
