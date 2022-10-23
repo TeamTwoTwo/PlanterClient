@@ -36,7 +36,13 @@ export const url = {
   dev: 'https://dev.planter22.shop/',
 };
 
-export const screen = {
+interface ScreenProps {
+  width: number;
+  height: number;
+  statusBarHeight: number | undefined;
+}
+
+export const screen: ScreenProps = {
   width: Dimensions.get('window').width,
   height: Dimensions.get('window').height,
   statusBarHeight:

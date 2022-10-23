@@ -20,6 +20,7 @@ import Cheked from '../../assets/icon/ic-cheked.svg';
 import ChekedFilter from '../../assets/icon/ic-checked-filter.svg';
 import MatchingFilter from '../../components/matching/MatchingFilter';
 import MatchingItem from '../../components/matching/MatchingItem';
+import {MainTabNavigationProp} from '../MainTab';
 
 interface Dummy {
   id: number;
@@ -39,12 +40,11 @@ interface UserData {
 }
 
 const HomeScreen = () => {
+  const navigation = useNavigation<MainTabNavigationProp>();
   const [checkList, setCheckList] = useState<string[]>(['식물 집사']);
   const [photoCheck, setPhotoCheck] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<string>('가까운순');
-
-  const navigation = useNavigation<RootStackNavigationProp>();
 
   const onAddList = (text: string): void => {
     setCheckList([...checkList, text]);
@@ -120,7 +120,7 @@ const HomeScreen = () => {
           </View>
         </TouchableOpacity>
         <View>
-          <Message />
+          <Message stroke={'black'} />
         </View>
       </View>
       <View style={styles.filter}>
@@ -233,6 +233,9 @@ const HomeScreen = () => {
               bodyText={item.bodyText}
               money={item.money}
               day={item.day}
+              onPress={() => {
+                navigation.navigate('ExpertDetailScreen');
+              }}
             />
           )}
           keyExtractor={(item: UserData) => item.id.toString()}

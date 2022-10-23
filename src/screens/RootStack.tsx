@@ -3,12 +3,14 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
+import ExpertDetailScreen from './ExpertDetail/ExpertDetailScreen';
 import MainTab from './MainTab';
 import LocationScreen from '../screens/Matching/LocationScreen';
 
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
+  ExpertDetailScreen: undefined;
 };
 
 export type RootStackNavigationProp =
@@ -21,6 +23,7 @@ const RootStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="MainTab" component={MainTab} />
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
+      <Stack.Screen name="ExpertDetailScreen" component={ExpertDetailScreen} />
     </Stack.Navigator>
   );
 };

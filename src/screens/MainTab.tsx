@@ -1,5 +1,12 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  createBottomTabNavigator,
+  BottomTabNavigationProp,
+} from '@react-navigation/bottom-tabs';
+import {
+  CompositeNavigationProp,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
 import {color} from '../utils/utils';
 import HomeScreen from '../screens/Matching/HomeScreen';
 import Matching from '../assets/icon/ic-focused-matching.svg';
@@ -7,17 +14,29 @@ import History from '../assets/icon/ic-history.svg';
 import Community from '../assets/icon/ic-community.svg';
 import MyPage from '../assets/icon/ic-mypage.svg';
 import {StyleSheet} from 'react-native';
+import {RootStackNavigationProp} from './RootStack';
 
 type MainTabParamList = {
-  HomeScreen: undefined;
+  Matching: undefined;
+  MatchingHistory: undefined;
+  Community: undefined;
+  Mypage: undefined;
 };
+
+export type MainTabNavigationProp = CompositeNavigationProp<
+  RootStackNavigationProp,
+  BottomTabNavigationProp<MainTabParamList>
+>;
+
+export type MainTabNavigationScreenParams =
+  NavigatorScreenParams<MainTabParamList>;
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const MainTab = () => {
   return (
     <Tab.Navigator
-      initialRouteName="매칭"
+      initialRouteName="Matching"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: color.blueGray_06,
@@ -30,31 +49,35 @@ const MainTab = () => {
         },
       }}>
       <Tab.Screen
-        name="매칭"
+        name="Matching"
         component={HomeScreen}
         options={{
-          tabBarIcon: () => <Matching name="매칭" size={24} />,
+          tabBarIcon: () => <Matching />,
+          title: '매칭',
         }}
       />
       <Tab.Screen
-        name="매칭 내역"
+        name="MatchingHistory"
         component={HomeScreen}
         options={{
-          tabBarIcon: () => <History name="매칭 내역" size={24} />,
+          tabBarIcon: () => <History />,
+          title: '매칭 내역',
         }}
       />
       <Tab.Screen
-        name="커뮤니티"
+        name="Community"
         component={HomeScreen}
         options={{
-          tabBarIcon: () => <Community name="커뮤니티" size={24} />,
+          tabBarIcon: () => <Community />,
+          title: '커뮤니티',
         }}
       />
       <Tab.Screen
-        name="마이페이지"
+        name="Mypage"
         component={HomeScreen}
         options={{
-          tabBarIcon: () => <MyPage name="마이페이지" size={24} />,
+          tabBarIcon: () => <MyPage />,
+          title: '마이페이지',
         }}
       />
     </Tab.Navigator>
