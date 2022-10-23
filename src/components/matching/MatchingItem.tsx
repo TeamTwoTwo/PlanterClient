@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import {View, Text, StyleSheet, Platform, Pressable} from 'react-native';
 import {color, Typography} from '../../utils/utils';
 import Plant from '../../assets/icon/ic-plant-badge.svg';
 import Star from '../../assets/icon/ic-star.svg';
@@ -13,6 +13,7 @@ interface PropTypes {
   bodyText: string;
   money: string;
   day: string;
+  onPress: () => void;
 }
 
 const MatchingItem = ({
@@ -24,23 +25,24 @@ const MatchingItem = ({
   bodyText,
   money,
   day,
+  onPress,
 }: PropTypes) => {
   return (
-    <View style={[styles.box, styles.shadow]}>
+    <Pressable style={[styles.box, styles.shadow]} onPress={onPress}>
       <View>
         <View style={styles.profile} />
       </View>
       <View style={styles.content}>
         <View style={styles.line}>
           <Text style={[Typography.subtitle3, styles.name]}>{name}</Text>
-          <Plant size={20} />
+          <Plant />
           <Text style={styles.job}>{job}</Text>
         </View>
         <View style={styles.line}>
           <Text style={[Typography.caption1, styles.info]}>
             {distance} · {info} ·
           </Text>
-          <Star size={14} />
+          <Star />
           <Text style={[Typography.caption1, styles.info]}>{grade}</Text>
         </View>
         <View style={styles.bodyLine}>
@@ -53,7 +55,7 @@ const MatchingItem = ({
           <Text style={[Typography.body2, styles.day]}>/{day}</Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
