@@ -7,8 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  NativeModules,
-  Alert,
   Keyboard,
   ScrollView,
 } from 'react-native';
@@ -24,8 +22,6 @@ import {signupState} from '../../recoil/atoms/signup';
 import {useSetRecoilState} from 'recoil';
 import FindHeader from '../../components/common/FindHeader';
 
-const {StatusBarManager} = NativeModules;
-
 interface ButtonRefProps {
   isLoading: boolean;
 }
@@ -38,7 +34,6 @@ const SignupScreen02 = () => {
   const buttonRef = useRef<ButtonRefProps>({isLoading: false});
   const set = useSetRecoilState(signupState);
   const navigation = useNavigation<LoginStackNavigationProp>();
-  const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
   const [showBirthView, setShowBirthView] = useState<boolean>(false);
   const [showPhoneView, setShowPhoneView] = useState<boolean>(false);
   const [showCertifyNumView, setShowCertifyNumView] = useState<boolean>(false);
@@ -55,7 +50,6 @@ const SignupScreen02 = () => {
   const [phoneNumCheckStatus, setPhoneNumCheckStatus] = useState<boolean>(true);
   const [phoneNumErrorMsg, setPhoneNumErrorMsg] =
     useState<string>('휴대폰번호 형식을 확인해주세요.');
-  const [codeErrorMsg, setCodeErrorMsg] = useState<string>('');
 
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const [showTimer, setShowTimer] = useState<boolean>(false);
@@ -63,11 +57,6 @@ const SignupScreen02 = () => {
 
   useEffect(() => {
     Keyboard.dismiss();
-    Platform.OS === 'ios'
-      ? StatusBarManager.getHeight((statusBarFrameData: any) => {
-          setStatusBarHeight(statusBarFrameData.height);
-        })
-      : null;
   }, []);
 
   useEffect(() => {
@@ -182,7 +171,6 @@ const SignupScreen02 = () => {
       })
       .catch(e => {
         setCertifyNumCheckStatus(false);
-        setCodeErrorMsg(e.response.data.errorMessage);
       });
   };
 
@@ -219,9 +207,6 @@ const SignupScreen02 = () => {
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={
-          Platform.OS === 'ios' ? statusBarHeight - 47 : 0
-        }
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>

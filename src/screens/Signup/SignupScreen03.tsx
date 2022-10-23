@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  NativeModules,
   ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
@@ -18,8 +17,6 @@ import CustomButton from '../../components/common/CustomButton';
 import {useSetRecoilState} from 'recoil';
 import {signupState} from '../../recoil/atoms/signup';
 import FindHeader from '../../components/common/FindHeader';
-
-const {StatusBarManager} = NativeModules;
 
 const SignupScreen03 = ({route}: any) => {
   const set = useSetRecoilState(signupState);
@@ -34,14 +31,6 @@ const SignupScreen03 = ({route}: any) => {
   const [step, setStep] = useState<number>(1); // 다음 버튼을 위한 입력 단계
 
   const [nicknameCheckStatus, setNicknameCheckStatus] = useState<boolean>(true);
-
-  useEffect(() => {
-    Platform.OS === 'ios'
-      ? StatusBarManager.getHeight((statusBarFrameData: any) => {
-          setStatusBarHeight(statusBarFrameData.height);
-        })
-      : null;
-  }, []);
 
   useEffect(() => {
     nicknameCheckFunc();
@@ -97,9 +86,6 @@ const SignupScreen03 = ({route}: any) => {
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
-        keyboardVerticalOffset={
-          Platform.OS === 'ios' ? statusBarHeight - 47 : 0
-        }
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>

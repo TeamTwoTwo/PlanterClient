@@ -1,5 +1,5 @@
 import React from 'react';
-import {color} from '../../utils/utils';
+import {color, screen} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {
   View,
@@ -31,42 +31,44 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView style={styles.block}>
-      <View>
-        <TextInput
-          style={styles.idInput}
-          placeholder="아이디"
-          placeholderTextColor="#AEAEAE"
-        />
-        <TextInput
-          style={styles.pwInput}
-          placeholder="비밀번호"
-          placeholderTextColor="#AEAEAE"
-        />
-        <TouchableOpacity>
-          <View style={styles.loginBtn}>
-            <Text style={styles.loginText}>로그인</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.underWrap}>
-        <Text style={styles.underText} onPress={onSignupPress}>
-          회원가입
-        </Text>
-        <View style={styles.firstLine} />
-        <Text style={styles.underText} onPress={onIdPress}>
-          아이디 찾기
-        </Text>
-        <View style={styles.secondLine} />
-        <Text style={styles.underText} onPress={onPwPress}>
-          비밀번호 찾기
-        </Text>
-      </View>
-      <View style={styles.socialWrap}>
-        <Apple width={40} height={40} />
-        <View style={styles.kakao}>
-          <Bubble width={25.71} height={25.71} />
+      <View style={styles.wrap}>
+        <View style={styles.inputWrap}>
+          <TextInput
+            style={styles.idInput}
+            placeholder="아이디"
+            placeholderTextColor="#AEAEAE"
+          />
+          <TextInput
+            style={styles.pwInput}
+            placeholder="비밀번호"
+            placeholderTextColor="#AEAEAE"
+          />
+          <TouchableOpacity>
+            <View style={styles.loginBtn}>
+              <Text style={styles.loginText}>로그인</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-        <Naver width={40} height={40} />
+        <View style={styles.underWrap}>
+          <Text style={styles.underText} onPress={onSignupPress}>
+            회원가입
+          </Text>
+          <View style={styles.firstLine} />
+          <Text style={styles.underText} onPress={onIdPress}>
+            아이디 찾기
+          </Text>
+          <View style={styles.secondLine} />
+          <Text style={styles.underText} onPress={onPwPress}>
+            비밀번호 찾기
+          </Text>
+        </View>
+        <View style={styles.socialWrap}>
+          <Apple width={40} height={40} />
+          <View style={styles.kakao}>
+            <Bubble width={25.71} height={25.71} />
+          </View>
+          <Naver width={40} height={40} />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -78,6 +80,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
   },
+  wrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputWrap: {
+    width: '100%',
+  },
   idInput: {
     height: 54,
     borderWidth: 1,
@@ -85,7 +95,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingLeft: 12,
     fontSize: 14,
-    marginTop: 224,
     marginBottom: 12,
     letterSpacing: -1,
   },

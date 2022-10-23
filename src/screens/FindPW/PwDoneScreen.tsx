@@ -1,5 +1,5 @@
 import React from 'react';
-import {color} from '../../utils/color';
+import {color} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import {
@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import CustomButton from '../../components/common/CustomButton';
 
 const PwDoneScreen = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
@@ -18,16 +19,21 @@ const PwDoneScreen = () => {
   };
   return (
     <SafeAreaView style={styles.block}>
-      <View style={styles.titleWrap}>
-        <Text style={styles.title}>비밀번호 재설정이</Text>
-        <Text style={styles.title}>완료되었습니다.</Text>
+      <View style={styles.wrap}>
+        <View style={styles.titleWrap}>
+          <Text style={styles.title}>비밀번호 재설정이</Text>
+          <Text style={styles.title}>완료되었습니다.</Text>
+        </View>
+        <View style={styles.illustView}>
+          <View style={styles.illust} />
+        </View>
       </View>
       <View>
-        <TouchableOpacity activeOpacity={1} onPress={onPress}>
-          <View style={styles.nextBtn}>
-            <Text style={styles.btnText}>로그인으로 돌아가기</Text>
-          </View>
-        </TouchableOpacity>
+        <CustomButton
+          backgroundColor={color.mint_05}
+          text="로그인 화면으로 돌아가기"
+          onPress={onPress}
+        />
       </View>
     </SafeAreaView>
   );
@@ -38,11 +44,12 @@ const styles = StyleSheet.create({
     backgroundColor: color.gray_00,
     flex: 1,
   },
+  wrap: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   titleWrap: {
     paddingHorizontal: 33,
-    marginTop: 120,
-    // borderWidth: 1,
-    flex: 1,
   },
   title: {
     fontSize: 28,
@@ -56,17 +63,15 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     color: color.blueGray_04,
   },
-  nextBtn: {
-    height: 90,
-    backgroundColor: color.mint_05,
+  illustView: {
+    marginTop: 40,
     alignItems: 'center',
-    // justifyContent: 'center',
+    justifyContent: 'center',
   },
-  btnText: {
-    color: color.gray_00,
-    fontSize: 16,
-    fontWeight: '600',
-    paddingTop: 14,
+  illust: {
+    width: 280,
+    height: 280,
+    backgroundColor: color.gray_03,
   },
 });
 

@@ -3,6 +3,12 @@ module.exports = {
   extends: '@react-native-community',
   rules: {
     '@typescript-eslint/no-unused-vars': 0,
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
