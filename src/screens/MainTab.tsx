@@ -9,7 +9,9 @@ import {
 } from '@react-navigation/native';
 import {color} from '../utils/utils';
 import HomeScreen from '../screens/Matching/HomeScreen';
-import Matching from '../assets/icon/ic-focused-matching.svg';
+import Matching from '../assets/icon/ic-matching.svg';
+import FocusedMatching from '../assets/icon/ic-focused-matching.svg';
+import FocusedHistory from '../assets/icon/ic-focused-history.svg';
 import History from '../assets/icon/ic-history.svg';
 import Community from '../assets/icon/ic-community.svg';
 import MyPage from '../assets/icon/ic-mypage.svg';
@@ -52,7 +54,8 @@ const MainTab = () => {
         name="Matching"
         component={HomeScreen}
         options={{
-          tabBarIcon: () => <Matching />,
+          tabBarIcon: ({focused}) =>
+            focused ? <FocusedMatching /> : <Matching />,
           title: '매칭',
         }}
       />
@@ -60,7 +63,8 @@ const MainTab = () => {
         name="MatchingHistory"
         component={HomeScreen}
         options={{
-          tabBarIcon: () => <History />,
+          tabBarIcon: ({focused}) =>
+            focused ? <FocusedHistory /> : <History />,
           title: '매칭 내역',
         }}
       />
