@@ -120,7 +120,12 @@ const HomeScreen = () => {
           </View>
         </TouchableOpacity>
         <View>
-          <Message stroke={'black'} />
+          <Pressable
+            onPress={() => {
+              navigation.navigate('MessageScreen');
+            }}>
+            <Message stroke={'black'} />
+          </Pressable>
         </View>
       </View>
       <View style={styles.filter}>
