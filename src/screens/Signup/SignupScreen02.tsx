@@ -23,7 +23,8 @@ import {useSetRecoilState} from 'recoil';
 import FindHeader from '../../components/common/FindHeader';
 
 interface ButtonRefProps {
-  isLoading: boolean;
+  isLoadingSend: boolean;
+  isLoadingVerify: boolean;
 }
 
 interface TimerProps {
@@ -31,7 +32,10 @@ interface TimerProps {
 }
 
 const SignupScreen02 = () => {
-  const buttonRef = useRef<ButtonRefProps>({isLoading: false});
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoadingSend: false,
+    isLoadingVerify: false,
+  });
   const set = useSetRecoilState(signupState);
   const navigation = useNavigation<LoginStackNavigationProp>();
   const [showBirthView, setShowBirthView] = useState<boolean>(false);
@@ -128,11 +132,11 @@ const SignupScreen02 = () => {
   };
 
   const onPressSendCertifyNum = () => {
-    if (buttonRef.current.isLoading) {
+    if (buttonRef.current.isLoadingSend) {
       return;
     }
 
-    buttonRef.current.isLoading = true;
+    buttonRef.current.isLoadingSend = true;
     resetTimer.current.reset = true;
 
     axios
@@ -149,7 +153,7 @@ const SignupScreen02 = () => {
         }
       })
       .finally(() => {
-        buttonRef.current.isLoading = false;
+        buttonRef.current.isLoadingSend = false;
         resetTimer.current.reset = false;
       })
       .catch(e => {
@@ -158,6 +162,12 @@ const SignupScreen02 = () => {
   };
 
   const onPressCheckCertifyNum = () => {
+    if (buttonRef.current.isLoadingVerify) {
+      return;
+    }
+
+    buttonRef.current.isLoadingVerify = true;
+
     axios
       .post(url.dev + 'auth/verify-code', {phone: phoneNum, code: certifyNum})
       .then(res => {
@@ -168,6 +178,9 @@ const SignupScreen02 = () => {
             navigation.navigate('Signup03', {address: ''});
           }
         }
+      })
+      .finally(() => {
+        buttonRef.current.isLoadingSend = false;
       })
       .catch(e => {
         setCertifyNumCheckStatus(false);

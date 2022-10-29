@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   StyleSheet,
@@ -10,24 +10,33 @@ import {
   ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
-import {color} from '../../utils/utils';
+import {color, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
 import {signupState} from '../../recoil/atoms/signup';
 import FindHeader from '../../components/common/FindHeader';
+import axios from 'axios';
+import {authState} from '../../recoil/atoms/auth';
+
+interface ButtonRefProps {
+  isLoading: boolean;
+}
 
 const SignupScreen03 = ({route}: any) => {
-  const set = useSetRecoilState(signupState);
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
+  const [signupInfo, setSignupState] = useRecoilState(signupState);
+  const setAuthState = useSetRecoilState(authState);
 
   const navigation = useNavigation<LoginStackNavigationProp>();
   const addr = route.params?.address;
-  const [statusBarHeight, setStatusBarHeight] = useState<any>(); //상태바 높이 저장
   const [showAddressView, setShowAddressView] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const [addressDetail, setAddressDetail] = useState<string>('');
+  const [detailAddress, setDetailAddress] = useState<string>('');
   const [step, setStep] = useState<number>(1); // 다음 버튼을 위한 입력 단계
 
   const [nicknameCheckStatus, setNicknameCheckStatus] = useState<boolean>(true);
@@ -46,8 +55,40 @@ const SignupScreen03 = ({route}: any) => {
       setShowAddressView(true);
       setStep(2);
     } else {
-      set(prevState => ({...prevState, nickname}));
-      navigation.navigate('Signup04');
+      if (buttonRef.current.isLoading) {
+        return;
+      }
+
+      buttonRef.current.isLoading = true;
+
+      setSignupState(prevState => ({
+        ...prevState,
+        nickname,
+        address,
+        detailAddress,
+      }));
+
+      let signupInfoTmp = {...signupInfo};
+      signupInfoTmp.nickname = nickname;
+      signupInfoTmp.address = address;
+      signupInfoTmp.detailAddress = detailAddress;
+
+      axios
+        .post(url.dev + 'auth/signup', signupInfoTmp)
+        .then(res => {
+          console.log(res);
+          if (res.status === 200) {
+            const {token, userId} = res.data.result;
+            setAuthState({token, userId});
+            navigation.navigate('Signup04');
+          }
+        })
+        .finally(() => {
+          buttonRef.current.isLoading = false;
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   };
 
@@ -128,10 +169,10 @@ const SignupScreen03 = ({route}: any) => {
                     <CustomInput
                       label="상세 주소"
                       placeholder="상세 주소"
-                      onChangeText={setAddressDetail}
-                      value={addressDetail}
+                      onChangeText={setDetailAddress}
+                      value={detailAddress}
                       clearText={() => {
-                        setAddressDetail('');
+                        setDetailAddress('');
                       }}
                     />
                   </View>
@@ -154,7 +195,7 @@ const SignupScreen03 = ({route}: any) => {
           </ScrollView>
         </View>
         {(step === 1 && nickname !== '') ||
-        (nickname !== '' && addressDetail !== '') ? (
+        (nickname !== '' && detailAddress !== '') ? (
           <View>
             <CustomButton
               backgroundColor={color.mint_05}
