@@ -1,5 +1,5 @@
-import React from 'react';
-import {color, screen} from '../../utils/utils';
+import React, {useRef, useState} from 'react';
+import {color, screen, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {
   View,
@@ -13,9 +13,23 @@ import Apple from '../../assets/icon/ic-apple.svg';
 import Naver from '../../assets/icon/ic-naver.svg';
 import Bubble from '../../assets/icon/ic-bubble.svg';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
+import axios from 'axios';
+import {setData} from '../../utils/AsyncStorage';
+import {useSetRecoilState} from 'recoil';
+import {LoginStatusState} from '../../recoil/atoms/loginStatus';
+
+interface ButtonRefProps {
+  isLoading: boolean;
+}
 
 const LoginScreen = () => {
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
+  const setLoginStatus = useSetRecoilState(LoginStatusState);
   const navigation = useNavigation<LoginStackNavigationProp>();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const onIdPress = (): void => {
     navigation.navigate('FirstScreen');
@@ -29,6 +43,56 @@ const LoginScreen = () => {
     navigation.navigate('TermsOfService');
   };
 
+  const onPressLogin = () => {
+    if (email !== '' && password !== '') {
+      if (buttonRef.current.isLoading) {
+        return;
+      }
+
+      buttonRef.current.isLoading = true;
+
+      axios
+        .post(url.dev + 'auth/login', {email, password})
+        .then(res => {
+          console.log(res.data.result);
+          if (res.status === 200) {
+            const {
+              name,
+              nickname,
+              birth,
+              phone,
+              address,
+              detailAddress,
+              token,
+              userId,
+            } = res.data.result;
+
+            const signupInfo = {
+              email: res.data.result.email,
+              password: res.data.result.password,
+              name,
+              nickname,
+              birth,
+              phone,
+              address,
+              detailAddress,
+            };
+            const authInfo = {token, userId};
+
+            setData('userInfo', signupInfo);
+            setData('auth', authInfo);
+            setLoginStatus({isLogined: true});
+          }
+        })
+        .finally(() => {
+          buttonRef.current.isLoading = false;
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    }
+  };
+
   return (
     <SafeAreaView style={styles.block}>
       <View style={styles.wrap}>
@@ -37,13 +101,17 @@ const LoginScreen = () => {
             style={styles.idInput}
             placeholder="아이디"
             placeholderTextColor="#AEAEAE"
+            onChangeText={setEmail}
+            autoCapitalize="none"
           />
           <TextInput
             style={styles.pwInput}
             placeholder="비밀번호"
             placeholderTextColor="#AEAEAE"
+            onChangeText={setPassword}
+            secureTextEntry
           />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPressLogin}>
             <View style={styles.loginBtn}>
               <Text style={styles.loginText}>로그인</Text>
             </View>
