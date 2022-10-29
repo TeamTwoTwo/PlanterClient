@@ -12,6 +12,7 @@ import HomeScreen from '../screens/Matching/HomeScreen';
 import Matching from '../assets/icon/ic-matching.svg';
 import FocusedMatching from '../assets/icon/ic-focused-matching.svg';
 import FocusedHistory from '../assets/icon/ic-focused-history.svg';
+import FocusedMypage from '../assets/icon/ic-focused-mypage.svg';
 import History from '../assets/icon/ic-history.svg';
 import Community from '../assets/icon/ic-community.svg';
 import MyPage from '../assets/icon/ic-mypage.svg';
@@ -21,7 +22,6 @@ import {RootStackNavigationProp} from './RootStack';
 type MainTabParamList = {
   Matching: undefined;
   MatchingHistory: undefined;
-  Community: undefined;
   Mypage: undefined;
 };
 
@@ -69,18 +69,10 @@ const MainTab = () => {
         }}
       />
       <Tab.Screen
-        name="Community"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: () => <Community />,
-          title: '커뮤니티',
-        }}
-      />
-      <Tab.Screen
         name="Mypage"
         component={HomeScreen}
         options={{
-          tabBarIcon: () => <MyPage />,
+          tabBarIcon: ({focused}) => (focused ? <FocusedMypage /> : <MyPage />),
           title: '마이페이지',
         }}
       />
