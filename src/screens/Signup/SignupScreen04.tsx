@@ -3,12 +3,24 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {Text, StyleSheet, View} from 'react-native';
 import {color} from '../../utils/utils';
 import CustomButton from '../../components/common/CustomButton';
-import {useRecoilValue} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {signupState} from '../../recoil/atoms/signup';
+import {authState} from '../../recoil/atoms/auth';
+import {setData} from '../../utils/AsyncStorage';
+import {LoginStatusState} from '../../recoil/atoms/loginStatus';
 
 const SignupScreen04 = () => {
-  const userInfo = useRecoilValue(signupState);
-  console.log(userInfo);
+  const signupInfo = useRecoilValue(signupState);
+  const authInfo = useRecoilValue(authState);
+  const setLoginStatus = useSetRecoilState(LoginStatusState);
+
+  const moveToMatching = () => {
+    //어싱크 스토리지에 signupInfo, authState 넣음
+    setData('userInfo', signupInfo);
+    setData('auth', authInfo);
+    setLoginStatus({isLogined: true});
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.wrap}>
@@ -23,7 +35,7 @@ const SignupScreen04 = () => {
       <CustomButton
         backgroundColor={color.mint_05}
         text="시작하기"
-        onPress={() => {}}
+        onPress={moveToMatching}
       />
     </SafeAreaView>
   );

@@ -7,6 +7,10 @@ interface User {
   nickname: string;
   birth: string;
   phone: string;
+  address: string;
+  detailAddress: string;
+  latitude: string | null;
+  longitude: string | null;
 }
 
 export const signupState = atom<User>({
@@ -18,5 +22,9 @@ export const signupState = atom<User>({
     nickname: '',
     birth: '',
     phone: '',
+    address: '',
+    detailAddress: '',
+    latitude: null,
+    longitude: null,
   },
 });
