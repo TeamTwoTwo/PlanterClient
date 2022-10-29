@@ -11,7 +11,7 @@ interface PropTypes {
   title: string;
 }
 
-const MatchingHeader = ({title}: PropTypes) => {
+const MessageHeader = ({title}: PropTypes) => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const onGoBack = () => {
     navigation.pop();
@@ -24,7 +24,7 @@ const MatchingHeader = ({title}: PropTypes) => {
       <View>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <Meatball fill={color.gray_08} />
+      <View style={styles.side} />
     </View>
   );
 };
@@ -49,4 +49,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MatchingHeader;
+export default MessageHeader;
