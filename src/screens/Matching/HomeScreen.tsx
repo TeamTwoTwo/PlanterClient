@@ -21,6 +21,9 @@ import ChekedFilter from '../../assets/icon/ic-checked-filter.svg';
 import MatchingFilter from '../../components/matching/MatchingFilter';
 import MatchingItem from '../../components/matching/MatchingItem';
 import {MainTabNavigationProp} from '../MainTab';
+import {removeData} from '../../utils/AsyncStorage';
+import {useRecoilState} from 'recoil';
+import {LoginStatusState} from '../../recoil/atoms/loginStatus';
 
 interface Dummy {
   id: number;
@@ -104,6 +107,7 @@ const HomeScreen = () => {
     },
   ];
 
+  const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.head}>
@@ -118,6 +122,13 @@ const HomeScreen = () => {
               서울 서대문구 연희동
             </Text>
           </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            removeData('auth');
+            setLoginStatus({isLogined: false});
+          }}>
+          <Text>logout</Text>
         </TouchableOpacity>
         <View>
           <Message stroke={'black'} />
