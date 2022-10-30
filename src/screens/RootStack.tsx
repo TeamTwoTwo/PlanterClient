@@ -6,11 +6,13 @@ import {
 import ExpertDetailScreen from './ExpertDetail/ExpertDetailScreen';
 import MainTab from './MainTab';
 import LocationScreen from '../screens/Matching/LocationScreen';
+import ReviewDetailScreen from './ExpertDetail/ReviewDetailScreen';
 
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
   ExpertDetailScreen: undefined;
+  ReviewDetailScreen: undefined;
 };
 
 export type RootStackNavigationProp =
@@ -24,6 +26,7 @@ const RootStack = () => {
       <Stack.Screen name="MainTab" component={MainTab} />
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
       <Stack.Screen name="ExpertDetailScreen" component={ExpertDetailScreen} />
+      <Stack.Screen name="ReviewDetailScreen" component={ReviewDetailScreen} />
     </Stack.Navigator>
   );
 };
