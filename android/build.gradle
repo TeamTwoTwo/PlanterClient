@@ -46,7 +46,9 @@ allprojects {
             }
         }
         google()
-        jcenter()
+        // jcenter()
+        mavenCentral()
+        
         maven {
             url 'https://naver.jfrog.io/artifactory/maven/'
         }
