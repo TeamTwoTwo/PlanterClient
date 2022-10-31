@@ -205,8 +205,17 @@ const ExpertDetailScreen = () => {
               </Text>
             </View>
             <View>
-              <NaverMapView style={styles.mapView} center={{...P0, zoom: 16}}>
-                <Marker coordinate={P0} pinColor={color.mint_05} />
+              {/* <WebView
+                style={styles.webview}
+                source={{uri: 'http://localhost:3000'}}
+              /> */}
+              <NaverMapView
+                style={styles.mapView}
+                center={{...P0, zoom: 16}}
+                scrollGesturesEnabled={false}>
+                <Image
+                  source={require('../../assets/img/img-map-marker.png')}
+                />
               </NaverMapView>
             </View>
           </View>
@@ -437,6 +446,8 @@ const styles = StyleSheet.create({
   },
   mapView: {
     height: 170,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   reviewHeader: {
     flexDirection: 'row',
