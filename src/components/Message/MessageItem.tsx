@@ -1,11 +1,16 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
 import {color, Typography} from '../../utils/utils';
 import PlantBadge from '../../assets/icon/ic-plant-badge.svg';
 
-const MessageItem = () => {
+interface PropTypes {
+  onPress: () => void;
+}
+
+const MessageItem = ({onPress}: PropTypes) => {
   return (
-    <View style={styles.wrap}>
+    <Pressable style={styles.wrap} onPress={onPress}>
+      <View style={styles.alram} />
       <View>
         <Image
           style={styles.profileImg}
@@ -33,7 +38,7 @@ const MessageItem = () => {
           오후 09:03
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -64,6 +69,15 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingRight: 35,
     marginVertical: 3,
+  },
+  alram: {
+    position: 'absolute',
+    right: 0,
+    top: 15,
+    width: 8,
+    height: 8,
+    backgroundColor: '#FF5757',
+    borderRadius: 40,
   },
 });
 
