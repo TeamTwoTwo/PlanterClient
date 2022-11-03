@@ -12,6 +12,8 @@ interface Props {
   disabled?: boolean;
   width?: number | string;
   borderRadius?: number;
+  style?: object;
+  textStyle?: object;
   onPress: () => void;
 }
 
@@ -21,15 +23,20 @@ const CustomButton = ({
   disabled = false,
   width = Dimensions.get('window').width,
   borderRadius = 0,
+  style,
+  textStyle,
   onPress,
 }: Props) => {
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={dstyles(backgroundColor, disabled, width, borderRadius).button}
+      style={[
+        dstyles(backgroundColor, disabled, width, borderRadius).button,
+        style,
+      ]}
       activeOpacity={1}
       onPress={onPress}>
-      <Text style={styles.buttonText}>{text}</Text>
+      <Text style={[styles.buttonText, textStyle]}>{text}</Text>
     </TouchableOpacity>
   );
 };
