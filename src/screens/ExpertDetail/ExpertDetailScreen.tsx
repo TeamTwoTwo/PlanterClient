@@ -263,13 +263,15 @@ const ExpertDetailScreen = () => {
           <TouchableOpacity style={styles.msgBtn} activeOpacity={1}>
             <Message />
           </TouchableOpacity>
-          <CustomButton
-            backgroundColor={color.mint_05}
-            text="매칭 요청"
-            onPress={() => {}}
-            width={(screen.width * 275) / 375}
-            borderRadius={6}
-          />
+          <View style={{width: (screen.width * 275) / 375}}>
+            <CustomButton
+              backgroundColor={color.mint_05}
+              text="매칭 요청"
+              onPress={() => {}}
+              borderRadius={6}
+              style={{flex: 1}}
+            />
+          </View>
         </View>
       </View>
       <ImageDetail

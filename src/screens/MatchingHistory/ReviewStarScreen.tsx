@@ -69,7 +69,6 @@ const ReviewStarScreen = () => {
           text="다음"
           backgroundColor={color.mint_05}
           onPress={onPressNext}
-          width="100%"
           borderRadius={6}
           disabled={rating > 0 ? false : true}
         />
