@@ -23,7 +23,7 @@ const ImageDetail = ({visible, setVisible}: Props) => {
           onPress={() => {
             setVisible(false);
           }}>
-          <Close />
+          <Close stroke="white" />
         </TouchableOpacity>
         <ImageViewer
           imageUrls={images}

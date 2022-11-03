@@ -105,7 +105,7 @@ const WriteScreen = () => {
                 showsHorizontalScrollIndicator={false}
                 nestedScrollEnabled
                 horizontal
-                data={images}
+                data={images.slice(0, 10)}
                 renderItem={({item}) => (
                   <View style={styles.img}>
                     <Pressable
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: 18,
     // borderWidth: 1,
-    marginLeft: 24,
+    paddingHorizontal: 24,
   },
   delete: {
     position: 'absolute',

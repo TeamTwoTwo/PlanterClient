@@ -6,13 +6,19 @@ import DetailHeader from '../../components/Message/DetailHeader';
 import Plus from '../../assets/icon/ic-plus.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
+import ReceiveMessage from '../../components/Message/ReceiveMessage';
+import SendMessage from '../../components/Message/SendMessage';
 
 const MessageDetailScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
 
   return (
     <SafeAreaView style={styles.safe}>
-      <DetailHeader title="김보경" />
+      <View style={{paddingHorizontal: 24}}>
+        <DetailHeader title="김보경" />
+      </View>
+      <SendMessage />
+      <ReceiveMessage />
       <View style={styles.wrap}>
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
@@ -30,7 +36,7 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: color.gray_00,
-    paddingHorizontal: 24,
+    // paddingHorizontal: 24,
   },
   writeBtn: {
     width: 56,
