@@ -218,7 +218,7 @@ const ExpertDetailScreen = () => {
                 </Text>
               </View>
               <View style={styles.reviewHeader}>
-                <Star />
+                <Star fill="#FFC42C" />
                 <Text
                   style={[
                     Typography.body2,
