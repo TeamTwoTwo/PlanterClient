@@ -8,7 +8,8 @@ import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../MainTab';
 import {ScrollView} from 'react-native-virtualized-view';
 
-const mock = ['care', 'complete', 'cancel', 'request'];
+const mockReq = ['care', 'complete', 'cancel', 'request'];
+const mockRcv = ['care', 'complete', 'cancel', 'new'];
 
 const MatchingHistoryListScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
@@ -49,47 +50,83 @@ const MatchingHistoryListScreen = () => {
       <ScrollView>
         <View style={styles.main}>
           <View style={styles.upperListWrap}>
-            <Text style={[Typography.subtitle1, {color: color.blueGray_06}]}>
-              진행중인 매칭
-            </Text>
+            <View style={styles.textWrap}>
+              <Text style={[Typography.subtitle1, {color: color.blueGray_06}]}>
+                진행중인 매칭
+              </Text>
+            </View>
             <View style={styles.matchingListWrap}>
-              <FlatList
-                data={mock}
-                renderItem={({item}) => (
-                  <MatchingHistoryItem
-                    type={item}
-                    onPress={() => {
-                      navigation.navigate('MatchingHistoryDetailScreen', {
-                        type: item,
-                      });
-                    }}
-                  />
-                )}
-                keyExtractor={item => `img ${item}`}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-              />
+              {isSelectedReq ? (
+                <FlatList
+                  data={mockReq}
+                  renderItem={({item}) => (
+                    <MatchingHistoryItem
+                      type={item}
+                      onPress={() => {
+                        navigation.navigate('MatchingHistoryDetailScreen', {
+                          type: item,
+                        });
+                      }}
+                    />
+                  )}
+                  keyExtractor={item => `img ${item}`}
+                />
+              ) : (
+                <FlatList
+                  data={mockRcv}
+                  renderItem={({item}) => (
+                    <MatchingHistoryItem
+                      type={item}
+                      onPress={() => {
+                        navigation.navigate('MatchingHistoryDetailScreen', {
+                          type: item,
+                        });
+                      }}
+                    />
+                  )}
+                  keyExtractor={item => `img ${item}`}
+                />
+              )}
             </View>
           </View>
           <View style={styles.lowerListWrap}>
-            <Text style={[Typography.subtitle1, {color: color.blueGray_06}]}>
-              지난 매칭
-            </Text>
+            <View style={styles.textWrap}>
+              <Text style={[Typography.subtitle1, {color: color.blueGray_06}]}>
+                지난 매칭
+              </Text>
+            </View>
             <View style={styles.matchingListWrap}>
-              <FlatList
-                data={mock}
-                renderItem={({item}) => (
-                  <MatchingHistoryItem
-                    type={item}
-                    onPress={() => {
-                      navigation.navigate('MatchingHistoryDetailScreen', {
-                        type: item,
-                      });
-                    }}
-                  />
-                )}
-                keyExtractor={item => `img ${item}`}
-                ItemSeparatorComponent={() => <View style={styles.separator} />}
-              />
+              {isSelectedReq ? (
+                <FlatList
+                  data={mockReq}
+                  renderItem={({item}) => (
+                    <MatchingHistoryItem
+                      type={item}
+                      onPress={() => {
+                        navigation.navigate('MatchingHistoryDetailScreen', {
+                          type: item,
+                        });
+                      }}
+                    />
+                  )}
+                  keyExtractor={item => `img ${item}`}
+                />
+              ) : (
+                <FlatList
+                  data={mockRcv}
+                  renderItem={({item}) => (
+                    <MatchingHistoryItem
+                      type={item}
+                      onPress={() => {
+                        navigation.navigate('MatchingHistoryDetailScreen', {
+                          type: item,
+                        });
+                      }}
+                    />
+                  )}
+                  keyExtractor={item => `img ${item}`}
+                />
+              )}
             </View>
           </View>
         </View>
@@ -139,17 +176,17 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   matchingListWrap: {
-    paddingTop: 20,
+    paddingTop: 8,
     paddingBottom: 32,
   },
-  separator: {height: 24},
   upperListWrap: {
     borderBottomWidth: 1,
     borderBottomColor: color.blueGray_00,
-    paddingHorizontal: 20,
   },
   lowerListWrap: {
     paddingTop: 32,
+  },
+  textWrap: {
     paddingHorizontal: 20,
   },
 });

@@ -12,12 +12,15 @@ interface Props {
 const MatchingHistoryItem = ({type, onPress}: Props) => {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-      <View style={styles.wrap}>
+      <View style={dstyles(type).wrap}>
         <View style={styles.profileWrap}>
-          <Image
-            style={dstyles(type).profileImg}
-            source={require('../../assets/img/img-expert-profile.png')}
-          />
+          <View style={styles.profileImgWrap}>
+            <Image
+              style={dstyles(type).profileImg}
+              source={require('../../assets/img/img-expert-profile.png')}
+            />
+            {type === 'new' && <View style={styles.redPoint} />}
+          </View>
           <View style={styles.profileTextWrap}>
             <View style={styles.nameWrap}>
               <Text
@@ -64,7 +67,9 @@ const MatchingHistoryItem = ({type, onPress}: Props) => {
               ? '매칭 요청중'
               : type === 'complete'
               ? '케어 완료'
-              : '매칭 취소'}
+              : type === 'cancel'
+              ? '매칭 취소'
+              : '새 매칭 요청'}
           </Text>
         </View>
       </View>
@@ -76,7 +81,7 @@ const dstyles = (type: string) =>
   StyleSheet.create({
     text: {
       color:
-        type === 'care'
+        type === 'care' || type === 'new'
           ? color.mint_05
           : type === 'request'
           ? color.blueGray_06
@@ -88,13 +93,16 @@ const dstyles = (type: string) =>
       borderRadius: 20,
       opacity: type === 'cancel' ? 0.5 : 1,
     },
+    wrap: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: type === 'new' ? color.mint_00 : color.gray_00,
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+    },
   });
 const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   profileWrap: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -108,6 +116,20 @@ const styles = StyleSheet.create({
   nameWrap: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  profileImgWrap: {
+    position: 'relative',
+  },
+  redPoint: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 8,
+    height: 8,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 4,
+    backgroundColor: color.red_02,
   },
 });
 

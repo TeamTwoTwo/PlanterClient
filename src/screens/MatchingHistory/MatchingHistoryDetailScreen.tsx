@@ -29,6 +29,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
+  const [btnType, setBtnType] = useState<string>();
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -38,15 +39,16 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
     setModalHeight(height);
   };
 
-  const onPressComplete = () => {
+  const onPressComplete = (btype: string) => {
     setIsModalShown(true);
+    setBtnType(btype);
   };
 
   return (
     <SafeAreaView style={styles.safe}>
       <MatchingHeader
         title={
-          type === 'request' || type === 'care'
+          type === 'request' || type === 'care' || type === 'new'
             ? '진행중인 매칭'
             : '완료된 매칭'
         }
@@ -70,7 +72,9 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
                 ? '매칭 요청중'
                 : type === 'complete'
                 ? '케어 완료'
-                : '매칭 취소'}
+                : type === 'cancel'
+                ? '매칭 취소'
+                : '새 매칭 요청'}
             </Text>
             <View style={styles.nameWrap}>
               <Text style={[Typography.subtitle2, {color: color.blueGray_06}]}>
@@ -149,9 +153,11 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
             <CustomButton
               text="케어 완료하기"
               borderRadius={5}
-              onPress={onPressComplete}
+              onPress={() => {
+                onPressComplete('complete');
+              }}
               backgroundColor={color.mint_05}
-              style={{width: '100%'}}
+              style={{flex: 1}}
             />
           ) : type === 'request' ? (
             <CustomButton
@@ -160,7 +166,9 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               backgroundColor={color.gray_00}
               style={styles.cancelBtnStyle}
               textStyle={{color: color.blueGray_03}}
-              onPress={() => {}}
+              onPress={() => {
+                onPressComplete('cancel');
+              }}
             />
           ) : type === 'complete' ? (
             <CustomButton
@@ -171,6 +179,29 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               textStyle={{color: color.mint_06}}
               onPress={() => {}}
             />
+          ) : type === 'new' ? (
+            <View style={styles.newBtnWrap}>
+              <CustomButton
+                text="매칭거절"
+                borderRadius={5}
+                backgroundColor={color.gray_00}
+                style={styles.refuseBtn}
+                textStyle={{color: color.blueGray_03}}
+                onPress={() => {
+                  onPressComplete('refuse');
+                }}
+              />
+              <View style={{width: 8}} />
+              <CustomButton
+                text="매칭수락"
+                borderRadius={5}
+                onPress={() => {
+                  onPressComplete('accept');
+                }}
+                backgroundColor={color.mint_05}
+                style={styles.refuseBtn}
+              />
+            </View>
           ) : null}
         </View>
       </ScrollView>
@@ -183,14 +214,26 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               Typography.subtitle2,
               {color: color.blueGray_06, marginTop: 40},
             ]}>
-            케어 완료
+            {btnType === 'complete'
+              ? '케어 완료'
+              : btnType === 'accept'
+              ? '매칭수락'
+              : btnType === 'refuse'
+              ? '매칭거절'
+              : '매칭취소'}
           </Text>
           <Text
             style={[
               Typography.body1,
               {color: color.blueGray_05, marginTop: 8},
             ]}>
-            케어를 완료하시겠습니까?
+            {btnType === 'complete'
+              ? '케어를 완료하시겠습니까?'
+              : btnType === 'accept'
+              ? '매칭을 수락하시겠습니까?'
+              : btnType === 'refuse'
+              ? '매칭을 거절하시겠습니까?'
+              : '매칭을 취소하시겠습니까?'}
           </Text>
           <View style={styles.modalBtnWrap}>
             <TouchableOpacity
@@ -200,18 +243,45 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
                 setIsModalShown(false);
               }}>
               <Text style={[Typography.subtitle3, {color: color.blueGray_05}]}>
-                취소
+                {btnType === 'cancel' ? '닫기' : '취소'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.modalBtn}
               activeOpacity={1}
               onPress={() => {
-                navigation.navigate('ReviewStarScreen');
+                switch (btnType) {
+                  case 'complete':
+                    navigation.navigate('ReviewStarScreen');
+                    break;
+                  case 'accept':
+                    break;
+                  case 'refuse':
+                    break;
+                  case 'cancel':
+                    break;
+                  default:
+                    break;
+                }
                 setIsModalShown(false);
               }}>
-              <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
-                완료
+              <Text
+                style={[
+                  Typography.subtitle3,
+                  {
+                    color:
+                      btnType === 'complete' || btnType === 'accept'
+                        ? color.mint_05
+                        : color.red_02,
+                  },
+                ]}>
+                {btnType === 'complete'
+                  ? '완료'
+                  : btnType === 'accept'
+                  ? '수락'
+                  : btnType === 'refuse'
+                  ? '거절'
+                  : '취소'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -243,7 +313,7 @@ const dstyles = (type: string) =>
   StyleSheet.create({
     text: {
       color:
-        type === 'care'
+        type === 'care' || type === 'new'
           ? color.mint_05
           : type === 'request'
           ? color.blueGray_06
@@ -332,12 +402,12 @@ const styles = StyleSheet.create({
   cancelBtnStyle: {
     borderWidth: 1,
     borderColor: color.blueGray_00,
-    width: '100%',
+    flex: 1,
   },
   completeBtnStyle: {
     borderWidth: 1,
     borderColor: color.mint_02,
-    width: '100%',
+    flex: 1,
   },
   modalBtnWrap: {
     flexDirection: 'row',
@@ -350,7 +420,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 14,
-    width: '50%',
+    flex: 1,
+  },
+  newBtnWrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  refuseBtn: {
+    borderWidth: 1,
+    borderColor: color.blueGray_00,
+    flex: 1,
   },
 });
 export default MatchingHistoryDetailScreen;
