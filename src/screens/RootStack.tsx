@@ -6,6 +6,7 @@ import {
 import ExpertDetailScreen from './ExpertDetail/ExpertDetailScreen';
 import MainTab from './MainTab';
 import LocationScreen from '../screens/Matching/LocationScreen';
+import ReviewDetailScreen from './ExpertDetail/ReviewDetailScreen';
 import MatchingHistoryDetailScreen from './MatchingHistory/MatchingHistoryDetailScreen';
 import ReviewStarScreen from './MatchingHistory/ReviewStarScreen';
 
@@ -13,6 +14,7 @@ type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
   ExpertDetailScreen: undefined;
+  ReviewDetailScreen: undefined;
   MatchingHistoryDetailScreen: {
     type: string;
   };
@@ -30,6 +32,7 @@ const RootStack = () => {
       <Stack.Screen name="MainTab" component={MainTab} />
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
       <Stack.Screen name="ExpertDetailScreen" component={ExpertDetailScreen} />
+      <Stack.Screen name="ReviewDetailScreen" component={ReviewDetailScreen} />
       <Stack.Screen
         name="MatchingHistoryDetailScreen"
         component={MatchingHistoryDetailScreen}
