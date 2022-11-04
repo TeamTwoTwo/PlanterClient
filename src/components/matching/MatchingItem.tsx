@@ -1,58 +1,70 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Platform, Pressable, Image} from 'react-native';
 import {color, Typography} from '../../utils/utils';
 import Plant from '../../assets/icon/ic-plant-badge.svg';
 import Star from '../../assets/icon/ic-star.svg';
 
 interface PropTypes {
+  id: number;
   name: string;
-  job: string;
-  distance: string;
-  info: string;
-  grade: string;
-  bodyText: string;
-  money: string;
-  day: string;
+  category: number;
+  profileImg: string;
+  distance: number;
+  isPhoto: boolean;
+  rate: number;
+  description: string;
+  minPrice: number;
   onPress: () => void;
 }
 
 const MatchingItem = ({
+  id,
   name,
-  job,
+  category,
+  profileImg,
   distance,
-  info,
-  grade,
-  bodyText,
-  money,
-  day,
+  isPhoto,
+  rate,
+  description,
+  minPrice,
   onPress,
 }: PropTypes) => {
   return (
     <Pressable style={[styles.box, styles.shadow]} onPress={onPress}>
       <View>
-        <View style={styles.profile} />
+        <Image style={styles.profile} source={{uri: profileImg}} />
       </View>
       <View style={styles.content}>
         <View style={styles.line}>
           <Text style={[Typography.subtitle3, styles.name]}>{name}</Text>
           <Plant />
-          <Text style={styles.job}>{job}</Text>
+          {category === 0 && <Text style={styles.job}>식물 집사</Text>}
+          {category === 1 && <Text style={styles.job}>꽃집</Text>}
+          {category === 2 && <Text style={styles.job}>식물 전문가</Text>}
+          {category === 3 && <Text style={styles.job}>식물 케어 서비스</Text>}
         </View>
         <View style={styles.line}>
           <Text style={[Typography.caption1, styles.info]}>
-            {distance} · {info} ·
+            {distance}km ·{' '}
           </Text>
+          {isPhoto ? (
+            <Text style={[Typography.caption1, styles.info]}>사진 제공 · </Text>
+          ) : (
+            <Text style={[Typography.caption1, styles.info]}>
+              사진 미제공 ·{' '}
+            </Text>
+          )}
           <Star />
-          <Text style={[Typography.caption1, styles.info]}>{grade}</Text>
+          <Text style={[Typography.caption1, styles.info]}> {rate}</Text>
         </View>
         <View style={styles.bodyLine}>
-          <Text style={[Typography.body2, styles.bodyText]}>{bodyText}</Text>
+          <Text style={[Typography.body2, styles.bodyText]}>{description}</Text>
         </View>
         <View style={styles.moneyLine}>
           <Text style={[Typography.subtitle4, {color: color.blueGray_06}]}>
-            {money}~
+            {minPrice}원~
           </Text>
-          <Text style={[Typography.body2, styles.day]}>/{day}</Text>
+          <Text style={[Typography.body2, styles.day]}>/1일</Text>
         </View>
       </View>
     </Pressable>
@@ -91,7 +103,6 @@ const styles = StyleSheet.create({
   profile: {
     width: 80,
     height: 80,
-    backgroundColor: '#f2f2f2',
     borderRadius: 50,
   },
   content: {

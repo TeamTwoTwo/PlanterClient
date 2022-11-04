@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color, Typography} from '../../utils/utils';
+import {color, Typography, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackNavigationProp} from '../RootStack';
 import Place from '../../assets/icon/ic-place.svg';
@@ -24,6 +24,7 @@ import {MainTabNavigationProp} from '../MainTab';
 import {removeData} from '../../utils/AsyncStorage';
 import {useRecoilState} from 'recoil';
 import {LoginStatusState} from '../../recoil/atoms/loginStatus';
+import axios from 'axios';
 
 interface Dummy {
   id: number;
@@ -33,13 +34,13 @@ interface Dummy {
 interface UserData {
   id: number;
   name: string;
-  job: string;
-  distance: string;
-  info: string;
-  grade: string;
-  bodyText: string;
-  money: string;
-  day: string;
+  category: number;
+  profileImg: string;
+  distance: number;
+  isPhoto: boolean;
+  rate: number;
+  description: string;
+  minPrice: number;
 }
 
 const HomeScreen = () => {
@@ -48,6 +49,7 @@ const HomeScreen = () => {
   const [photoCheck, setPhotoCheck] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<string>('가까운순');
+  const [userData, setUserData] = useState<UserData[]>();
 
   const onAddList = (text: string): void => {
     setCheckList([...checkList, text]);
@@ -61,50 +63,23 @@ const HomeScreen = () => {
     setPhotoCheck(!photoCheck);
   };
 
+  useEffect(() => {
+    axios
+      .get(url.dev + 'plant-managers')
+      .then(res => {
+        console.log(res.data.result);
+        setUserData(res.data.result);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
+
   const dummy: Dummy[] = [
     {id: 1, text: '식물 집사'},
     {id: 2, text: '꽃집'},
     {id: 3, text: '식물 전문가'},
     {id: 4, text: '식물 케어 서비스'},
-  ];
-
-  const userData: UserData[] = [
-    {
-      id: 1,
-      name: '김보경',
-      job: '식물집사',
-      distance: '335km',
-      info: '사진 제공',
-      grade: '4.8',
-      bodyText:
-        '식물을 사랑한 지 12년차 된 식물집사입니다. 내 식물이라고 생각하고',
-      money: '5000원',
-      day: '1일',
-    },
-    {
-      id: 2,
-      name: '김보경',
-      job: '식물집사',
-      distance: '335km',
-      info: '사진 제공',
-      grade: '4.8',
-      bodyText:
-        '식물을 사랑한 지 12년차 된 식물집사입니다. 내 식물이라고 생각하고',
-      money: '5000원',
-      day: '1일',
-    },
-    {
-      id: 3,
-      name: '김보경',
-      job: '식물집사',
-      distance: '335km',
-      info: '사진 제공',
-      grade: '4.8',
-      bodyText:
-        '식물을 사랑한 지 12년차 된 식물집사입니다. 내 식물이라고 생각하고',
-      money: '5000원',
-      day: '1일',
-    },
   ];
 
   const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);
@@ -237,13 +212,13 @@ const HomeScreen = () => {
           renderItem={({item}: {item: UserData}) => (
             <MatchingItem
               name={item.name}
-              job={item.job}
+              category={item.category}
               distance={item.distance}
-              info={item.info}
-              grade={item.grade}
-              bodyText={item.bodyText}
-              money={item.money}
-              day={item.day}
+              profileImg={item.profileImg}
+              isPhoto={item.isPhoto}
+              rate={item.rate}
+              description={item.description}
+              minPrice={item.minPrice}
               onPress={() => {
                 navigation.navigate('ExpertDetailScreen');
               }}
