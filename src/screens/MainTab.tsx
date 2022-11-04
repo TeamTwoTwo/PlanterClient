@@ -18,6 +18,7 @@ import Community from '../assets/icon/ic-community.svg';
 import MyPage from '../assets/icon/ic-mypage.svg';
 import {StyleSheet} from 'react-native';
 import {RootStackNavigationProp} from './RootStack';
+import MatchingHistoryListScreen from './MatchingHistory/MatchingHistoryListScreen';
 
 type MainTabParamList = {
   Matching: undefined;
@@ -61,7 +62,7 @@ const MainTab = () => {
       />
       <Tab.Screen
         name="MatchingHistory"
-        component={HomeScreen}
+        component={MatchingHistoryListScreen}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? <FocusedHistory /> : <History />,

@@ -32,7 +32,7 @@ const Review = ({onPress}: Props) => {
             <Text style={[Typography.caption2, {color: color.blueGray_02}]}>
               2022. 10. 12{'  '}|{'  '}
             </Text>
-            <Star />
+            <Star fill="#FFC42C" />
             <Text
               style={[
                 Typography.caption2,
