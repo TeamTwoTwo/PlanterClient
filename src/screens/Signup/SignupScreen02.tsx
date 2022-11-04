@@ -52,12 +52,13 @@ const SignupScreen02 = () => {
   const [certifyNumCheckStatus, setCertifyNumCheckStatus] =
     useState<boolean>(true);
   const [phoneNumCheckStatus, setPhoneNumCheckStatus] = useState<boolean>(true);
-  const [phoneNumErrorMsg, setPhoneNumErrorMsg] =
-    useState<string>('휴대폰번호 형식을 확인해주세요.');
 
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const [showTimer, setShowTimer] = useState<boolean>(false);
   const resetTimer = useRef<TimerProps>({reset: false});
+
+  const [isPhoneNumDuplicated, setIsPhoneNumDuplicated] =
+    useState<boolean>(false);
 
   useEffect(() => {
     Keyboard.dismiss();
@@ -194,9 +195,29 @@ const SignupScreen02 = () => {
 
   const phoneNumCheckFunc = () => {
     if (phoneNumRegExp(phoneNum) || phoneNum.length === 0) {
-      setPhoneNumCheckStatus(true);
-    } else if (!phoneNumRegExp(phoneNum)) {
+      if (phoneNumRegExp(phoneNum)) {
+        axios
+          .get(url.dev + `auth/check-duplication?phone=${phoneNum}`)
+          .then(res => {
+            if (!res.data.isSuccess) {
+              setPhoneNumCheckStatus(false);
+              setIsPhoneNumDuplicated(true);
+              return;
+            } else {
+              setPhoneNumCheckStatus(true);
+              setIsPhoneNumDuplicated(false);
+            }
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      } else {
+        setPhoneNumCheckStatus(true);
+        setIsPhoneNumDuplicated(false);
+      }
+    } else {
       setPhoneNumCheckStatus(false);
+      setIsPhoneNumDuplicated(false);
     }
   };
 
@@ -245,7 +266,11 @@ const SignupScreen02 = () => {
                         clearText={() => {
                           setPhoneNum('');
                         }}
-                        errorText={phoneNumErrorMsg}
+                        errorText={
+                          isPhoneNumDuplicated
+                            ? '중복된 휴대폰번호입니다.'
+                            : '휴대폰번호 형식을 확인해주세요.'
+                        }
                         checkStatus={phoneNumCheckStatus}
                       />
                     </View>

@@ -10,13 +10,14 @@ import {
   ScrollView,
 } from 'react-native';
 import CustomInput from '../../components/common/CustomInput';
-import {color} from '../../utils/utils';
+import {color, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import CustomButton from '../../components/common/CustomButton';
 import {useSetRecoilState} from 'recoil';
 import {signupState} from '../../recoil/atoms/signup';
 import FindHeader from '../../components/common/FindHeader';
+import axios from 'axios';
 
 interface CheckStatusProps {
   email: boolean;
@@ -57,6 +58,8 @@ const SignupScreen01 = () => {
   const [checkPassword, setCheckPassword] = useState<string>('');
   const [step, setStep] = useState<number>(1); // 다음 버튼을 위한 입력 단계
   const [checkStatus, dispatch] = useReducer(reducer, initialState);
+
+  const [isEmailDuplicated, setIsEmailDuplicated] = useState<boolean>(false);
 
   const setCheckStatus = (type: string, status: boolean) =>
     dispatch({type, status});
@@ -119,9 +122,29 @@ const SignupScreen01 = () => {
   // 이메일 형식 체크 함수
   const emailCheckFunc = () => {
     if (emailRegExp(email) || email.length === 0) {
-      setCheckStatus('email', true);
+      if (emailRegExp(email)) {
+        axios
+          .get(url.dev + `auth/check-duplication?email=${email}`)
+          .then(res => {
+            if (!res.data.isSuccess) {
+              setCheckStatus('email', false);
+              setIsEmailDuplicated(true);
+              return;
+            } else {
+              setCheckStatus('email', true);
+              setIsEmailDuplicated(false);
+            }
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      } else {
+        setCheckStatus('email', true);
+        setIsEmailDuplicated(false);
+      }
     } else {
       setCheckStatus('email', false);
+      setIsEmailDuplicated(false);
     }
   };
 
@@ -193,7 +216,11 @@ const SignupScreen01 = () => {
                   <CustomInput
                     label="이메일"
                     placeholder="이메일"
-                    errorText="이메일 주소를 확인해주세요."
+                    errorText={
+                      isEmailDuplicated
+                        ? '중복된 이메일입니다.'
+                        : '이메일 주소를 확인해주세요.'
+                    }
                     type="email-address"
                     onChangeText={setEmail}
                     value={email}

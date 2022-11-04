@@ -155,7 +155,6 @@ const TermsOfServiceScreen = () => {
             text="다음"
             backgroundColor={color.mint_05}
             disabled={!agree.all ? true : false}
-            width="100%"
             borderRadius={6}
             onPress={() => {
               navigation.navigate('Signup01');
