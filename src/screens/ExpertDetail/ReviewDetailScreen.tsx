@@ -56,6 +56,9 @@ const ReviewDetailScreen = () => {
       <ImageDetail
         visible={isReviewImageVisible}
         setVisible={setIsReviewImageVisible}
+        images={[
+          'https://baris-bucket.s3.ap-northeast-2.amazonaws.com/images.jpeg',
+        ]}
       />
     </SafeAreaView>
   );
