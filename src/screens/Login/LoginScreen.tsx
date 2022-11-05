@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {color, screen, url} from '../../utils/utils';
+import {color, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {
   View,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Apple from '../../assets/icon/ic-apple.svg';
@@ -54,8 +55,9 @@ const LoginScreen = () => {
       axios
         .post(url.dev + 'auth/login', {email, password})
         .then(res => {
+          console.log(res);
           console.log(res.data.result);
-          if (res.status === 200) {
+          if (res.data.isSuccess) {
             const {
               name,
               nickname,
@@ -82,6 +84,8 @@ const LoginScreen = () => {
             setData('userInfo', signupInfo);
             setData('auth', authInfo);
             setLoginStatus({isLogined: true});
+          } else {
+            Alert.alert(res.data.message);
           }
         })
         .finally(() => {
@@ -103,6 +107,7 @@ const LoginScreen = () => {
             placeholderTextColor="#AEAEAE"
             onChangeText={setEmail}
             autoCapitalize="none"
+            autoCorrect={false}
           />
           <TextInput
             style={styles.pwInput}
