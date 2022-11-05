@@ -23,7 +23,7 @@ import Cost from '../../assets/icon/ic-cost.svg';
 import ChatBubble from '../../assets/icon/ic-chat-bubble.svg';
 import Star from '../../assets/icon/ic-star.svg';
 import Message from '../../assets/icon/ic-message.svg';
-import NaverMapView, {Marker} from 'react-native-nmap';
+import NaverMapView from 'react-native-nmap';
 import Review from '../../components/ExpertDetail/Review';
 import CustomButton from '../../components/common/CustomButton';
 import ImageDetail from '../../components/common/ImageDetail';
@@ -43,6 +43,9 @@ const ExpertDetailScreen = () => {
   const [isReviewImageVisible, setIsReviewImageVisible] =
     useState<boolean>(false);
 
+  const [markerWidth, setMarkerWidth] = useState<number>(0);
+  const [markerHeight, setMarkerHeight] = useState<number>(0);
+
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (e.nativeEvent.contentOffset.y > 55) {
       if (!isHeaderWhite) {
@@ -53,6 +56,14 @@ const ExpertDetailScreen = () => {
         setIsHeaderWhite(false);
       }
     }
+  };
+
+  const onLayout = (e: {
+    nativeEvent: {layout: {width: number; height: number}};
+  }) => {
+    const {width, height} = e.nativeEvent.layout;
+    setMarkerWidth(width);
+    setMarkerHeight(height);
   };
 
   const onPressReviewDetail = () => {
@@ -204,19 +215,18 @@ const ExpertDetailScreen = () => {
                 서울특별시 종로구 세종대로 172
               </Text>
             </View>
-            <View>
-              {/* <WebView
-                style={styles.webview}
-                source={{uri: 'http://localhost:3000'}}
-              /> */}
+            <View style={styles.mapWrap}>
               <NaverMapView
                 style={styles.mapView}
                 center={{...P0, zoom: 16}}
-                scrollGesturesEnabled={false}>
+                scrollGesturesEnabled={false}
+              />
+              <View style={dstyles(markerWidth, markerHeight).marker}>
                 <Image
+                  onLayout={onLayout}
                   source={require('../../assets/img/img-map-marker.png')}
                 />
-              </NaverMapView>
+              </View>
             </View>
           </View>
           <View style={styles.contentView}>
@@ -309,6 +319,16 @@ const mainStyles = (isHeaderWhite: boolean) =>
       paddingHorizontal: 20,
       transform: [{translateY: -47.5}],
       marginTop: isHeaderWhite ? 180 : 80,
+    },
+  });
+
+const dstyles = (width: number, height: number) =>
+  StyleSheet.create({
+    marker: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: [{translateX: -width * 0.5}, {translateY: -height * 0.5}],
     },
   });
 
@@ -445,6 +465,9 @@ const styles = StyleSheet.create({
   },
   contentFooterView: {
     paddingTop: 20,
+  },
+  mapWrap: {
+    position: 'relative',
   },
   mapView: {
     height: 170,
