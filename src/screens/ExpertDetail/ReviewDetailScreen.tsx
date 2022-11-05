@@ -1,23 +1,52 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {View, TouchableOpacity, StyleSheet, Text, FlatList} from 'react-native';
-import {color, screen, Typography} from '../../utils/utils';
+import {color, screen, Typography, url} from '../../utils/utils';
 import {MainTabNavigationProp} from '../MainTab';
 import {useNavigation} from '@react-navigation/native';
 import BackBlack from '../../assets/icon/ic-back-arrow-black.svg';
 import Meatball from '../../assets/icon/ic-meatball.svg';
 import Review from '../../components/ExpertDetail/Review';
 import ImageDetail from '../../components/common/ImageDetail';
+import {getData} from '../../utils/AsyncStorage';
+import axios from 'axios';
 
-let mock: number[] = [];
-for (let i = 0; i < 10; i++) {
-  mock.push(i);
+export interface ReviewInfoTypes {
+  reviewId: number;
+  profileImg: string;
+  name: string;
+  date: string;
+  rate: number;
+  contents: string;
+  images: string[];
 }
 
 const ReviewDetailScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isReviewImageVisible, setIsReviewImageVisible] =
     useState<boolean>(false);
+  const [info, setInfo] = useState<ReviewInfoTypes[]>();
+  const [reviewImgs, setReviewImgs] = useState<string[] | undefined>();
+
+  useEffect(() => {
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + 'reviews', {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.isSuccess) {
+            setInfo(res.data.result);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -39,16 +68,17 @@ const ReviewDetailScreen = () => {
       </View>
       <View style={styles.main}>
         <FlatList
-          data={mock}
+          data={info}
           renderItem={({item}) => (
             <Review
               onPress={() => {
                 setIsReviewImageVisible(true);
               }}
+              info={item}
             />
           )}
           showsVerticalScrollIndicator={false}
-          keyExtractor={item => `img ${item}`}
+          keyExtractor={(item, idx) => `img ${item} ${idx}`}
           ItemSeparatorComponent={() => <View style={{height: 40}} />}
           ListFooterComponent={() => <View style={{marginBottom: 90}} />}
         />
