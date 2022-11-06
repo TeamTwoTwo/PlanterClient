@@ -12,14 +12,14 @@ interface PropTypes {
   title: string;
   meatball?: boolean;
   message?: boolean;
-  onModal?: () => void;
+  onPressMeatball?: () => void;
 }
 
 const MatchingHeader = ({
   title,
   meatball = false,
   message = false,
-  onModal,
+  onPressMeatball,
 }: PropTypes) => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const onGoBack = () => {
@@ -40,7 +40,7 @@ const MatchingHeader = ({
         <TouchableOpacity
           style={[styles.btn, {marginRight: -8}]}
           activeOpacity={0.5}
-          onPress={onModal}>
+          onPress={onPressMeatball}>
           <Meatball fill={color.gray_08} />
         </TouchableOpacity>
       ) : (

@@ -31,14 +31,18 @@ const MessageDetailScreen = () => {
     setModalHeight(height);
   };
 
-  const onModal = (): void => {
+  const onPressMeatball = (): void => {
     setIsModalShown(true);
   };
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={{paddingHorizontal: 24}}>
-        <MatchingHeader title="김보경" meatball onModal={onModal} />
+        <MatchingHeader
+          title="김보경"
+          meatball
+          onPressMeatball={onPressMeatball}
+        />
       </View>
       <MyMessage
         receive
@@ -54,7 +58,7 @@ const MessageDetailScreen = () => {
           <Plus />
         </Pressable>
       </View>
-      <Modal visible={isModalShown} setVisible={setIsModalShown} overlay cancle>
+      <Modal visible={isModalShown} setVisible={setIsModalShown} overlay cancel>
         <View
           style={modalStyles(modalWidth, modalHeight).modal}
           onLayout={onLayout}>
