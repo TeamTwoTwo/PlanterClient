@@ -130,9 +130,12 @@ const HomeScreen = () => {
           }}>
           <Text>logout</Text>
         </TouchableOpacity>
-        <View>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('MessageScreen');
+          }}>
           <Message stroke={'black'} />
-        </View>
+        </Pressable>
       </View>
       <View style={styles.filter}>
         <FlatList

@@ -6,9 +6,16 @@ interface Props {
   setVisible: Dispatch<SetStateAction<boolean>>;
   overlay?: boolean;
   children: React.ReactNode;
+  cancel?: boolean;
 }
 
-const Modal = ({visible, setVisible, overlay = false, children}: Props) => {
+const Modal = ({
+  visible,
+  setVisible,
+  overlay = false,
+  children,
+  cancel = false,
+}: Props) => {
   return (
     <_Modal
       animationType="none"
@@ -23,7 +30,9 @@ const Modal = ({visible, setVisible, overlay = false, children}: Props) => {
           backgroundColor: overlay ? 'rgba(0,0,0,0.5)' : 'transparent',
         }}
         onPress={() => {
-          setVisible(false);
+          if (cancel === false) {
+            setVisible(false);
+          }
         }}
       />
       {children}

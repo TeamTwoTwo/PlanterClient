@@ -4,16 +4,24 @@ import {useNavigation} from '@react-navigation/native';
 import BackArrow from '../../assets/icon/ic-back-arrow-black.svg';
 import {color, Typography} from '../../utils/utils';
 import {RootStackNavigationProp} from '../../screens/RootStack';
+import {MainTabNavigationProp} from '../../screens/MainTab';
 import Meatball from '../../assets/icon/ic-meatball.svg';
 
 // <MatchingHeader title="~~" meatball /> 이렇게만 써도 true, meatball 안 쓰면 default false
 interface PropTypes {
   title: string;
   meatball?: boolean;
+  message?: boolean;
+  onPressMeatball?: () => void;
 }
 
-const MatchingHeader = ({title, meatball = false}: PropTypes) => {
-  const navigation = useNavigation<RootStackNavigationProp>();
+const MatchingHeader = ({
+  title,
+  meatball = false,
+  message = false,
+  onPressMeatball,
+}: PropTypes) => {
+  const navigation = useNavigation<MainTabNavigationProp>();
   const onGoBack = () => {
     navigation.pop();
   };
@@ -31,7 +39,8 @@ const MatchingHeader = ({title, meatball = false}: PropTypes) => {
       {meatball ? (
         <TouchableOpacity
           style={[styles.btn, {marginRight: -8}]}
-          activeOpacity={0.5}>
+          activeOpacity={0.5}
+          onPress={onPressMeatball}>
           <Meatball fill={color.gray_08} />
         </TouchableOpacity>
       ) : (
