@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography} from '../../utils/utils';
-import MessageHeader from '../../components/Message/MessageHeader';
 import MessageItem from '../../components/Message/MessageItem';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
+import MatchingHeader from '../../components/matching/MatchingHeader';
 
 const MessageScreen = () => {
   const [state, setState] = useState<number>(1);
@@ -13,7 +13,7 @@ const MessageScreen = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <MessageHeader title="쪽지함" />
+      <MatchingHeader title="쪽지함" />
       {state === 0 ? (
         <View style={styles.contentWrap}>
           <View style={styles.img} />

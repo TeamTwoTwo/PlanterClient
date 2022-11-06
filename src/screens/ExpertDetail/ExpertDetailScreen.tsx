@@ -28,12 +28,14 @@ import Review from '../../components/ExpertDetail/Review';
 import CustomButton from '../../components/common/CustomButton';
 import ImageDetail from '../../components/common/ImageDetail';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackNavigationProp} from '../RootStack';
+import {MainTabNavigationProp} from '../MainTab';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {getBottomSpace} from 'react-native-iphone-x-helper';
 
 let mock = [1, 2, 3];
 
 const ExpertDetailScreen = () => {
-  const navigation = useNavigation<RootStackNavigationProp>();
+  const navigation = useNavigation<MainTabNavigationProp>();
   const P0 = {latitude: 37.564362, longitude: 126.977011};
   const [isHeaderWhite, setIsHeaderWhite] = useState<boolean>(false);
   const [isExpertImageVisible, setIsExpertImageVisible] =
@@ -53,8 +55,12 @@ const ExpertDetailScreen = () => {
     }
   };
 
+  const onPressReviewDetail = () => {
+    navigation.navigate('ReviewDetailScreen');
+  };
+
   return (
-    <View style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['bottom']}>
       <StatusBar barStyle={isHeaderWhite ? 'dark-content' : 'light-content'} />
       <View style={styles.header}>
         <TouchableOpacity
@@ -73,8 +79,7 @@ const ExpertDetailScreen = () => {
       <ScrollView
         onScroll={onScroll}
         scrollEventThrottle={1}
-        showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
+        showsVerticalScrollIndicator={false}>
         <View style={styles.expertImgWrap}>
           {!isHeaderWhite && (
             <LinearGradient
@@ -200,8 +205,17 @@ const ExpertDetailScreen = () => {
               </Text>
             </View>
             <View>
-              <NaverMapView style={styles.mapView} center={{...P0, zoom: 16}}>
-                <Marker coordinate={P0} pinColor={color.mint_05} />
+              {/* <WebView
+                style={styles.webview}
+                source={{uri: 'http://localhost:3000'}}
+              /> */}
+              <NaverMapView
+                style={styles.mapView}
+                center={{...P0, zoom: 16}}
+                scrollGesturesEnabled={false}>
+                <Image
+                  source={require('../../assets/img/img-map-marker.png')}
+                />
               </NaverMapView>
             </View>
           </View>
@@ -218,7 +232,7 @@ const ExpertDetailScreen = () => {
                 </Text>
               </View>
               <View style={styles.reviewHeader}>
-                <Star />
+                <Star fill="#FFC42C" />
                 <Text
                   style={[
                     Typography.body2,
@@ -244,32 +258,37 @@ const ExpertDetailScreen = () => {
             </View>
           </View>
           <View style={styles.moreReviewBtnView}>
-            <TouchableOpacity style={styles.moreReviewBtn} activeOpacity={1}>
+            <TouchableOpacity
+              style={styles.moreReviewBtn}
+              activeOpacity={1}
+              onPress={onPressReviewDetail}>
               <Text style={[Typography.body2, {color: color.blueGray_03}]}>
-                리뷰 더보기
+                리뷰 전체보기
               </Text>
             </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
-      <LinearGradient
-        colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
-        style={styles.footerGradation}
-        start={{x: 0, y: 0}}
-        end={{x: 0, y: 1}}
-      />
       <View style={styles.footerWrap}>
+        <LinearGradient
+          colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+          style={styles.footerGradation}
+          start={{x: 0, y: 0}}
+          end={{x: 0, y: 1}}
+        />
         <View style={styles.footer}>
           <TouchableOpacity style={styles.msgBtn} activeOpacity={1}>
-            <Message />
+            <Message stroke={color.mint_06} />
           </TouchableOpacity>
-          <CustomButton
-            backgroundColor={color.mint_05}
-            text="매칭 요청"
-            onPress={() => {}}
-            width={(screen.width * 275) / 375}
-            borderRadius={6}
-          />
+          <View style={{width: (screen.width * 275) / 375}}>
+            <CustomButton
+              backgroundColor={color.mint_05}
+              text="매칭 요청"
+              onPress={() => {}}
+              borderRadius={6}
+              style={{flex: 1}}
+            />
+          </View>
         </View>
       </View>
       <ImageDetail
@@ -280,7 +299,7 @@ const ExpertDetailScreen = () => {
         visible={isReviewImageVisible}
         setVisible={setIsReviewImageVisible}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -315,11 +334,6 @@ const styles = StyleSheet.create({
   meatballBtn: {
     marginRight: 6,
     padding: 14,
-  },
-  scrollView: {
-    position: 'absolute',
-    top: 0,
-    height: '100%',
   },
   expertImgWrap: {
     position: 'relative',
@@ -434,6 +448,8 @@ const styles = StyleSheet.create({
   },
   mapView: {
     height: 170,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   reviewHeader: {
     flexDirection: 'row',
@@ -441,7 +457,7 @@ const styles = StyleSheet.create({
   },
   moreReviewBtnView: {
     marginTop: 32,
-    marginBottom: 160,
+    marginBottom: 80,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -455,23 +471,18 @@ const styles = StyleSheet.create({
   },
   footerWrap: {
     paddingHorizontal: 20,
-    paddingBottom: screen.statusBarHeight,
-    backgroundColor: color.gray_00,
+    height: (screen.width * 52) / 375 + 73,
     position: 'absolute',
-    bottom: 0,
+    bottom: getBottomSpace(),
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   footerGradation: {
-    marginTop:
-      typeof screen.statusBarHeight === 'number'
-        ? screen.height -
-          (73 + screen.statusBarHeight + (screen.width * 52) / 375)
-        : 0,
     height: 73,
-    zIndex: 3,
+    zIndex: 5,
   },
   msgBtn: {
     width: (screen.width * 52) / 375,

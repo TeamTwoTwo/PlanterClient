@@ -42,7 +42,7 @@ const MatchingItem = ({
           <Text style={[Typography.caption1, styles.info]}>
             {distance} · {info} ·
           </Text>
-          <Star />
+          <Star fill="#FFC42C" />
           <Text style={[Typography.caption1, styles.info]}>{grade}</Text>
         </View>
         <View style={styles.bodyLine}>

@@ -1,24 +1,43 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, FlatList, Image, Pressable} from 'react-native';
 import {color, Typography} from '../../utils/utils.ts';
+import Receive from '../../assets/icon/ic-receive.svg';
 import Send from '../../assets/icon/ic-send.svg';
 import ImageDetail from '../../components/common/ImageDetail';
 
+interface PropTypes {
+  receive?: boolean;
+  send?: boolean;
+  message?: string;
+  image?: boolean;
+}
+
 let data = [1, 2, 3, 4, 5];
 
-const SendMessage = () => {
+const MyMessage = ({
+  receive = false,
+  send = false,
+  message,
+  image = false,
+}: PropTypes) => {
   const [isImageVisible, setIsImageVisible] = useState<boolean>(false);
   return (
     <View style={styles.wrap}>
       <View style={styles.block}>
-        <View style={styles.statusWrap}>
-          <Send />
-          <Text style={styles.status}>보낸 쪽지</Text>
-        </View>
-        <Text style={styles.message}>
-          감사합니다! 수요일에 사진 보내드릴게요
-        </Text>
-        {data && data.length > 0 && (
+        {receive && (
+          <View style={styles.statusWrap}>
+            <Receive />
+            <Text style={styles.status}>받은 쪽지</Text>
+          </View>
+        )}
+        {send && (
+          <View style={styles.statusWrap}>
+            <Send />
+            <Text style={styles.send}>보낸 쪽지</Text>
+          </View>
+        )}
+        <Text style={styles.message}>{message}</Text>
+        {image && data.length > 0 && (
           <View style={{marginTop: 6, height: 76}}>
             <FlatList
               horizontal
@@ -36,7 +55,7 @@ const SendMessage = () => {
             />
           </View>
         )}
-        {data && data.length > 4 && (
+        {image && data.length > 4 && (
           <View style={styles.overlist}>
             <Text style={[Typography.subtitle3, styles.number]}>
               +{data.length - 4}
@@ -57,7 +76,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   status: {
-    color: color.blueGray_06,
+    color: color.mint_05,
     fontSize: 14,
     fontWeight: '600',
     lineHeight: 22,
@@ -79,6 +98,12 @@ const styles = StyleSheet.create({
   time: {
     marginTop: 4,
     color: color.blueGray_02,
+  },
+  send: {
+    color: color.blueGray_06,
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 22,
   },
   img: {
     width: 76,
@@ -105,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SendMessage;
+export default MyMessage;

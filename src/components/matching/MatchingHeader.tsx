@@ -7,24 +7,45 @@ import {RootStackNavigationProp} from '../../screens/RootStack';
 import {MainTabNavigationProp} from '../../screens/MainTab';
 import Meatball from '../../assets/icon/ic-meatball.svg';
 
+// <MatchingHeader title="~~" meatball /> 이렇게만 써도 true, meatball 안 쓰면 default false
 interface PropTypes {
   title: string;
+  meatball?: boolean;
+  message?: boolean;
+  onModal?: () => void;
 }
 
-const MatchingHeader = ({title}: PropTypes) => {
+const MatchingHeader = ({
+  title,
+  meatball = false,
+  message = false,
+  onModal,
+}: PropTypes) => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const onGoBack = () => {
     navigation.pop();
   };
   return (
     <View style={styles.block}>
-      <TouchableOpacity activeOpacity={1} onPress={onGoBack}>
-        <BackArrow size={20} />
+      <TouchableOpacity
+        style={[styles.btn, {marginLeft: -8}]}
+        activeOpacity={0.5}
+        onPress={onGoBack}>
+        <BackArrow />
       </TouchableOpacity>
       <View>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <Meatball fill={color.gray_08} />
+      {meatball ? (
+        <TouchableOpacity
+          style={[styles.btn, {marginRight: -8}]}
+          activeOpacity={0.5}
+          onPress={onModal}>
+          <Meatball fill={color.gray_08} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.empty} />
+      )}
     </View>
   );
 };
@@ -43,9 +64,13 @@ const styles = StyleSheet.create({
     color: color.blueGray_06,
     lineHeight: 24,
   },
-  side: {
+  btn: {
+    padding: 8,
+  },
+  empty: {
     width: 20,
     height: 20,
+    marginRight: 8,
   },
 });
 

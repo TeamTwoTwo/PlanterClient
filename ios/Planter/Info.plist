@@ -54,10 +54,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
-  	<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
-  	<key>NSCameraUsageDescription</key>
-  	<string>$(PRODUCT_NAME) would like to use your camera</string>
-  	<key>NSPhotoLibraryAddUsageDescription</key>
-  	<string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+  	<string>Planter가 사용자의 사진에 접근하려고 합니다. </string>
 </dict>
 </plist>
