@@ -25,6 +25,7 @@ import {removeData} from '../../utils/AsyncStorage';
 import {useRecoilState} from 'recoil';
 import {LoginStatusState} from '../../recoil/atoms/loginStatus';
 import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
 
 interface Dummy {
   id: number;
@@ -64,15 +65,21 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(url.dev + 'plant-managers')
-      .then(res => {
-        console.log(res.data.result);
-        setUserData(res.data.result);
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + 'plant-managers', {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          console.log(res.data.result);
+          setUserData(res.data.result);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
   }, []);
 
   const dummy: Dummy[] = [
