@@ -44,14 +44,17 @@ const MatchingItem = ({
           {category === 3 && <Text style={styles.job}>식물 케어 서비스</Text>}
         </View>
         <View style={styles.line}>
-          <Text style={[Typography.caption1, styles.info]}>
-            {distance}km ·{' '}
-          </Text>
           {isPhoto ? (
-            <Text style={[Typography.caption1, styles.info]}>사진 제공 · </Text>
+            <Text style={[Typography.caption1, styles.info]}>{distance}km</Text>
           ) : (
             <Text style={[Typography.caption1, styles.info]}>
-              사진 미제공 ·{' '}
+              {distance}km ·{' '}
+            </Text>
+          )}
+          {isPhoto && (
+            <Text style={[Typography.caption1, styles.info]}>
+              {' '}
+              · 사진 제공 ·{' '}
             </Text>
           )}
           <Star />
@@ -62,9 +65,9 @@ const MatchingItem = ({
         </View>
         <View style={styles.moneyLine}>
           <Text style={[Typography.subtitle4, {color: color.blueGray_06}]}>
-            {minPrice}원~
+            {minPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원~
           </Text>
-          <Text style={[Typography.body2, styles.day]}>/1일</Text>
+          <Text style={[Typography.body2, styles.day]}>/ 1일</Text>
         </View>
       </View>
     </Pressable>
