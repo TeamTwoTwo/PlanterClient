@@ -46,7 +46,7 @@ interface UserData {
 
 const HomeScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
-  const [checkList, setCheckList] = useState<string[]>(['식물 집사']);
+  const [checkList, setCheckList] = useState<string[]>([]);
   const [photoCheck, setPhotoCheck] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<string>('가까운순');
@@ -86,7 +86,7 @@ const HomeScreen = () => {
     {id: 1, text: '식물 집사'},
     {id: 2, text: '꽃집'},
     {id: 3, text: '식물 전문가'},
-    {id: 4, text: '식물 케어 서비스'},
+    {id: 4, text: '식물케어 서비스'},
   ];
 
   const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);

@@ -1,8 +1,11 @@
 import React from 'react';
 import {View, Text, StyleSheet, Platform, Pressable, Image} from 'react-native';
 import {color, Typography} from '../../utils/utils';
-import Plant from '../../assets/icon/ic-plant-badge.svg';
+import Butler from '../../assets/icon/ic-butler-badge.svg';
 import Star from '../../assets/icon/ic-star.svg';
+import Expert from '../../assets/icon/ic-expert-badge.svg';
+import Flower from '../../assets/icon/ic-flower-badge.svg';
+import Care from '../../assets/icon/ic-care-badge.svg';
 
 interface PropTypes {
   id: number;
@@ -16,6 +19,8 @@ interface PropTypes {
   minPrice: number;
   onPress: () => void;
 }
+
+let maxlimit = 10;
 
 const MatchingItem = ({
   id,
@@ -36,12 +41,35 @@ const MatchingItem = ({
       </View>
       <View style={styles.content}>
         <View style={styles.line}>
-          <Text style={[Typography.subtitle3, styles.name]}>{name}</Text>
-          <Plant />
-          {category === 0 && <Text style={styles.job}>식물 집사</Text>}
-          {category === 1 && <Text style={styles.job}>꽃집</Text>}
-          {category === 2 && <Text style={styles.job}>식물 전문가</Text>}
-          {category === 3 && <Text style={styles.job}>식물 케어 서비스</Text>}
+          <Text style={[Typography.subtitle3, styles.name]}>
+            {name.length > maxlimit
+              ? name.slice(0, maxlimit + 1) + ' ...'
+              : name}
+          </Text>
+          {category === 0 && (
+            <View style={styles.line}>
+              <Butler />
+              <Text style={styles.job}>식물 집사</Text>
+            </View>
+          )}
+          {category === 1 && (
+            <View style={styles.line}>
+              <Flower />
+              <Text style={styles.job}>꽃집</Text>
+            </View>
+          )}
+          {category === 2 && (
+            <View style={styles.line}>
+              <Expert />
+              <Text style={styles.job}>식물 전문가</Text>
+            </View>
+          )}
+          {category === 3 && (
+            <View style={styles.line}>
+              <Care />
+              <Text style={styles.job}>식물케어 서비스</Text>
+            </View>
+          )}
         </View>
         <View style={styles.line}>
           {isPhoto ? (
@@ -128,7 +156,7 @@ const styles = StyleSheet.create({
     color: color.blueGray_05,
   },
   info: {
-    color: color.gray_04,
+    color: color.blueGray_01,
   },
   bodyLine: {
     marginTop: 8,
