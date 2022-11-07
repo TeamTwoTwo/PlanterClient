@@ -232,6 +232,7 @@ const HomeScreen = () => {
             />
           )}
           keyExtractor={(item: UserData) => item.id.toString()}
+          ListFooterComponent={<View style={styles.last} />}
         />
       </View>
     </SafeAreaView>
@@ -308,6 +309,9 @@ const styles = StyleSheet.create({
   filterLine: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  last: {
+    marginTop: 70,
   },
 });
 
