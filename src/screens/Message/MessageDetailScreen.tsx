@@ -1,13 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color, screen, Typography} from '../../utils/utils.ts';
+import {color, screen, Typography, url} from '../../utils/utils.ts';
 import Plus from '../../assets/icon/ic-plus.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
@@ -16,12 +17,24 @@ import SendMessage from '../../components/Message/SendMessage';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import MyMessage from '../../components/Message/MyMessage';
 import Modal from '../../components/common/Modal';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
 
-const MessageDetailScreen = () => {
+interface messageData {
+  messageId: number;
+  isSend: boolean;
+  contents: string;
+  images: string[];
+  sentAt: string;
+}
+
+const MessageDetailScreen = ({route}: any) => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
+  const [messageDetail, setMessageDetail] = useState<messageData[]>();
+  const {plantManagerId, name} = route.params.item;
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -35,20 +48,47 @@ const MessageDetailScreen = () => {
     setIsModalShown(true);
   };
 
+  useEffect(() => {
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + `plant-managers/${plantManagerId}/messages`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          // console.log(res.data.result);
+          setMessageDetail(res.data.result);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  }, [plantManagerId]);
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={{paddingHorizontal: 24}}>
         <MatchingHeader
-          title="김보경"
+          title={name}
           meatball
           onPressMeatball={onPressMeatball}
         />
       </View>
-      <MyMessage
-        receive
-        message="몬스테라는 크기가 있다보니 제가 직접 그 장소로 가겠습니다! 괜찮으세요?"
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={messageDetail}
+        renderItem={({item}: {item: messageData}) => (
+          <MyMessage
+            contents={item.contents}
+            sentAt={item.sentAt}
+            isSend={item.isSend}
+            images={item.images}
+          />
+        )}
+        keyExtractor={(item: messageData) => item.messageId}
+        ItemSeparatorComponent={<View style={styles.line} />}
       />
-      <MyMessage send message="감사합니다! 수요일에 사진 보내드릴게요" image />
       <View style={styles.wrap}>
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
@@ -152,6 +192,10 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     marginTop: 32,
     paddingBottom: 22,
+  },
+  line: {
+    borderTopWidth: 1,
+    borderColor: color.blueGray_00,
   },
 });
 

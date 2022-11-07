@@ -32,7 +32,7 @@ const MessageScreen = () => {
           },
         })
         .then(res => {
-          console.log(res.data);
+          // console.log(res.data);
           setMessageList(res.data.result);
         })
         .catch(e => {
@@ -51,7 +51,9 @@ const MessageScreen = () => {
           renderItem={({item}: {item: messageData}) => (
             <MessageItem
               onPress={() => {
-                navigation.navigate('MessageDetailScreen');
+                navigation.navigate('MessageDetailScreen', {
+                  item: item,
+                });
               }}
               name={item.name}
               contents={item.contents}

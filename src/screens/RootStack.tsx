@@ -13,12 +13,24 @@ import ReviewDetailScreen from './ExpertDetail/ReviewDetailScreen';
 import MatchingHistoryDetailScreen from './MatchingHistory/MatchingHistoryDetailScreen';
 import ReviewStarScreen from './MatchingHistory/ReviewStarScreen';
 
+type messageData = {
+  plantManagereId: number;
+  profileImg: string;
+  name: string;
+  category: number;
+  contents: string;
+  sentAt: string;
+  isUnread: boolean;
+};
+
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
   ExpertDetailScreen: undefined;
   MessageScreen: undefined;
-  MessageDetailScreen: undefined;
+  MessageDetailScreen: {
+    item: messageData;
+  };
   WriteScreen: undefined;
   ReviewDetailScreen: undefined;
   MatchingHistoryDetailScreen: {
