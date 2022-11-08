@@ -31,7 +31,7 @@ const ReviewDetailScreen = () => {
   useEffect(() => {
     getData('auth').then(auth => {
       axios
-        .get(url.dev + 'reviews', {
+        .get(url.dev + 'plant-managers/2/reviews', {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
@@ -47,6 +47,13 @@ const ReviewDetailScreen = () => {
         });
     });
   }, []);
+
+  useEffect(() => {
+    console.log(reviewImgs);
+    if (reviewImgs !== undefined) {
+      setIsReviewImageVisible(true);
+    }
+  }, [reviewImgs]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -72,7 +79,7 @@ const ReviewDetailScreen = () => {
           renderItem={({item}) => (
             <Review
               onPress={() => {
-                setIsReviewImageVisible(true);
+                setReviewImgs(item.images);
               }}
               info={item}
             />
@@ -86,9 +93,7 @@ const ReviewDetailScreen = () => {
       <ImageDetail
         visible={isReviewImageVisible}
         setVisible={setIsReviewImageVisible}
-        images={[
-          'https://baris-bucket.s3.ap-northeast-2.amazonaws.com/images.jpeg',
-        ]}
+        images={reviewImgs}
       />
     </SafeAreaView>
   );
