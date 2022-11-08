@@ -9,6 +9,9 @@ import LocationScreen from '../screens/Matching/LocationScreen';
 import ReviewDetailScreen from './ExpertDetail/ReviewDetailScreen';
 import MatchingHistoryDetailScreen from './MatchingHistory/MatchingHistoryDetailScreen';
 import ReviewStarScreen from './MatchingHistory/ReviewStarScreen';
+import MatchingRequestScreen02 from './MatchingRequest/MatchingRequestScreen02';
+import MatchingRequestScreen01 from './MatchingRequest/MatchingRequestScreen01';
+import MatchingRequestScreen03 from './MatchingRequest/MatchingRequestScreen03';
 
 type RootStackParamList = {
   MainTab: undefined;
@@ -19,6 +22,9 @@ type RootStackParamList = {
     type: string;
   };
   ReviewStarScreen: undefined;
+  MatchingRequestScreen01: undefined;
+  MatchingRequestScreen02: undefined;
+  MatchingRequestScreen03: undefined;
 };
 
 export type RootStackNavigationProp =
@@ -38,6 +44,18 @@ const RootStack = () => {
         component={MatchingHistoryDetailScreen}
       />
       <Stack.Screen name="ReviewStarScreen" component={ReviewStarScreen} />
+      <Stack.Screen
+        name="MatchingRequestScreen01"
+        component={MatchingRequestScreen01}
+      />
+      <Stack.Screen
+        name="MatchingRequestScreen02"
+        component={MatchingRequestScreen02}
+      />
+      <Stack.Screen
+        name="MatchingRequestScreen03"
+        component={MatchingRequestScreen03}
+      />
     </Stack.Navigator>
   );
 };
