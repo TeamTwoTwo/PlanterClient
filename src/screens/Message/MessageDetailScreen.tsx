@@ -129,6 +129,7 @@ const MessageDetailScreen = ({route}: any) => {
         )}
         keyExtractor={(item: messageData) => item.messageId}
         ItemSeparatorComponent={<View style={styles.line} />}
+        ListFooterComponent={<View style={{marginTop: 90}} />}
       />
       <View style={styles.wrap}>
         <Pressable
