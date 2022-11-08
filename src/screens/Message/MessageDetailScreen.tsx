@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -28,6 +28,10 @@ interface messageData {
   sentAt: string;
 }
 
+interface ButtonRefProps {
+  isLoading: boolean;
+}
+
 const MessageDetailScreen = ({route}: any) => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
@@ -35,6 +39,9 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
   const {plantManagerId, name} = route.params.item;
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -46,6 +53,40 @@ const MessageDetailScreen = ({route}: any) => {
 
   const onPressMeatball = (): void => {
     setIsModalShown(true);
+  };
+
+  const onDeleteMessage = (): void => {
+    if (buttonRef.current.isLoading) {
+      return;
+    }
+
+    buttonRef.current.isLoading = true;
+
+    getData('auth').then(auth => {
+      axios
+        .patch(
+          url.dev + `plant-managers/${plantManagerId}/messages/status`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          console.log(res.data);
+          setIsModalShown(false);
+          if (res.data.isSuccess) {
+            navigation.navigate('MessageScreen');
+          }
+        })
+        .finally(() => {
+          buttonRef.current.isLoading = false;
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
   };
 
   useEffect(() => {
@@ -64,7 +105,7 @@ const MessageDetailScreen = ({route}: any) => {
           console.error(e);
         });
     });
-  }, [plantManagerId]);
+  }, [plantManagerId, messageDetail]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -107,11 +148,11 @@ const MessageDetailScreen = ({route}: any) => {
               스팸 신고하기
             </Text>
           </View>
-          <View style={styles.secondSelecBox}>
+          <Pressable style={styles.secondSelecBox} onPress={onDeleteMessage}>
             <Text style={[Typography.subtitle3, {color: color.red_02}]}>
               쪽지 삭제하기
             </Text>
-          </View>
+          </Pressable>
           <Pressable
             style={styles.cancleBox}
             onPress={() => {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -14,13 +14,19 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {color, Typography} from '../../utils/utils.ts';
+import {color, Typography, url} from '../../utils/utils.ts';
 import Close from '../../assets/icon/ic-close.svg';
 import {MainTabNavigationProp} from '../../screens/MainTab';
 import {useNavigation} from '@react-navigation/native';
 import Gallery from '../../assets/icon/ic-gallery.svg';
 import Delete from '../../assets/icon/ic-img-delete.svg';
 import Toast from '../../components/common/Toast';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
+
+interface ButtonRefProps {
+  isLoading: boolean;
+}
 
 const WriteScreen = () => {
   const [message, setMessage] = useState<string>('');
@@ -28,6 +34,10 @@ const WriteScreen = () => {
   const [images, setImages] = useState();
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
+
   const onGoBack = () => {
     navigation.pop();
   };
@@ -60,8 +70,12 @@ const WriteScreen = () => {
           // 취소했을 경우
           return;
         }
-        console.log(res.assets);
-        setImages(res.assets);
+        res.assets[0].name = res.assets[0].fileName;
+        delete res.assets[0].fileName;
+        delete res.assets[0].fileSize;
+        delete res.assets[0].height;
+        delete res.assets[0].width;
+        setImages(res.assets[0]);
       },
     );
   };
@@ -71,11 +85,41 @@ const WriteScreen = () => {
   };
 
   const onSend = (): void => {
+    const formData = new FormData();
+    formData.append('contents', message);
+    formData.append('images', images);
+
     if (isFull) {
-      Keyboard.dismiss();
-      if (!toastStatus) {
-        setToastStatus(true);
+      if (buttonRef.current.isLoading) {
+        return;
       }
+
+      buttonRef.current.isLoading = true;
+      Keyboard.dismiss();
+
+      getData('auth').then(auth => {
+        axios
+          .post(url.dev + 'messages', formData, {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then(res => {
+            console.log(res.data);
+            if (res.data.isSuccess) {
+              if (!toastStatus) {
+                setToastStatus(true);
+              }
+            }
+          })
+          .finally(() => {
+            buttonRef.current.isLoading = false;
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      });
     }
   };
 
@@ -135,10 +179,10 @@ const WriteScreen = () => {
             <Gallery />
           </Pressable>
           <View style={styles.numberWrap}>
-            <Text style={([Typography.body2], {color: color.blueGray_06})}>
+            <Text style={[Typography.body2, {color: color.blueGray_06}]}>
               {images ? images.length : 0}
             </Text>
-            <Text style={([Typography.body2], {color: color.blueGray_06})}>
+            <Text style={[Typography.body2, {color: color.blueGray_06}]}>
               /10
             </Text>
           </View>

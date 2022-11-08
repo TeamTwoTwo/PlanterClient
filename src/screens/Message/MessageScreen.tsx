@@ -10,7 +10,7 @@ import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
 
 interface messageData {
-  plantManagereId: number;
+  plantManagerId: number;
   profileImg: string;
   name: string;
   category: number;
@@ -39,12 +39,12 @@ const MessageScreen = () => {
           console.error(e);
         });
     });
-  }, []);
+  }, [messageList]);
 
   return (
     <SafeAreaView style={styles.safe}>
       <MatchingHeader title="쪽지함" />
-      {messageList ? (
+      {messageList && messageList.length > 0 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
           data={messageList}
@@ -63,7 +63,7 @@ const MessageScreen = () => {
               category={item.category}
             />
           )}
-          keyExtractor={(item: messageData) => item.plantManagereId}
+          keyExtractor={(item: messageData) => item.plantManagerId.toString()}
         />
       ) : (
         <View style={styles.contentWrap}>
