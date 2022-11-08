@@ -13,7 +13,7 @@ const FindHeader = () => {
   return (
     <View style={styles.block}>
       <TouchableOpacity activeOpacity={1} onPress={onGoBack}>
-        <Back width={9} height={13} />
+        <Back width={9} height={13} stroke="black" />
       </TouchableOpacity>
     </View>
   );
