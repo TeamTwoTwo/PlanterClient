@@ -111,6 +111,7 @@ const ReviewWriteScreen = ({route}: any) => {
                 if (!toastStatus) {
                   setToastStatus(true);
                 }
+                navigation.navigate('Matching');
                 navigation.navigate('ExpertDetailScreen', {
                   plantManagerId: res.data.result.plantManagerId,
                 });

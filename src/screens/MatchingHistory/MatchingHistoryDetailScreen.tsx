@@ -130,6 +130,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
   };
 
   const onPressShowReview = () => {
+    navigation.navigate('Matching');
     matchingInfo &&
       navigation.navigate('ExpertDetailScreen', {
         plantManagerId: matchingInfo?.plantManagerId,
