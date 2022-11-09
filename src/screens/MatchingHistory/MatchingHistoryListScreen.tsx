@@ -1,20 +1,53 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import {color, Typography} from '../../utils/utils';
+import {color, Typography, url} from '../../utils/utils';
 import Message from '../../assets/icon/ic-message.svg';
 import MatchingHistoryItem from '../../components/matchingHistory/MatchingHistoryItem';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../MainTab';
 import {ScrollView} from 'react-native-virtualized-view';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
 
 const mockReq = ['care', 'complete', 'cancel', 'request'];
 const mockRcv = ['care', 'complete', 'cancel', 'new'];
+
+export interface ReqType {
+  matchingId: number;
+  plantManagerId: number;
+  profileImg: string;
+  name: string;
+  category: number;
+  requestAt: string;
+  status: string;
+}
 
 const MatchingHistoryListScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isSelectedReq, setIsSelectedReq] = useState<boolean>(true);
   const [isSelectedRcv, setIsSelectedRcv] = useState<boolean>(false);
+  const [reqList, setReqList] = useState<ReqType[] | undefined>();
+
+  useEffect(() => {
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + 'matchings', {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          if (res.data.isSuccess) {
+            console.log(res);
+            setReqList(res.data.result);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -56,37 +89,42 @@ const MatchingHistoryListScreen = () => {
               </Text>
             </View>
             <View style={styles.matchingListWrap}>
-              {isSelectedReq ? (
-                <FlatList
-                  data={mockReq}
-                  renderItem={({item}) => (
-                    <MatchingHistoryItem
-                      type={item}
-                      onPress={() => {
-                        navigation.navigate('MatchingHistoryDetailScreen', {
-                          type: item,
-                        });
-                      }}
-                    />
-                  )}
-                  keyExtractor={item => `img ${item}`}
-                />
-              ) : (
-                <FlatList
-                  data={mockRcv}
-                  renderItem={({item}) => (
-                    <MatchingHistoryItem
-                      type={item}
-                      onPress={() => {
-                        navigation.navigate('MatchingHistoryDetailScreen', {
-                          type: item,
-                        });
-                      }}
-                    />
-                  )}
-                  keyExtractor={item => `img ${item}`}
-                />
-              )}
+              {
+                isSelectedReq ? (
+                  <FlatList
+                    data={reqList}
+                    renderItem={({item}) =>
+                      item.status === 'care' || item.status === 'request' ? (
+                        <MatchingHistoryItem
+                          info={item}
+                          onPress={() => {
+                            navigation.navigate('MatchingHistoryDetailScreen', {
+                              matchingId: item.matchingId,
+                            });
+                          }}
+                        />
+                      ) : null
+                    }
+                    keyExtractor={item =>
+                      `matching ${item.matchingId.toString()}`
+                    }
+                  />
+                ) : null
+                // <FlatList
+                //   data={mockRcv}
+                //   renderItem={({item}) => (
+                //     <MatchingHistoryItem
+                //       info={item}
+                //       onPress={() => {
+                //         navigation.navigate('MatchingHistoryDetailScreen', {
+                //           type: item,
+                //         });
+                //       }}
+                //     />
+                //   )}
+                //   keyExtractor={item => `img ${item}`}
+                // />
+              }
             </View>
           </View>
           <View style={styles.lowerListWrap}>
@@ -96,37 +134,42 @@ const MatchingHistoryListScreen = () => {
               </Text>
             </View>
             <View style={styles.matchingListWrap}>
-              {isSelectedReq ? (
-                <FlatList
-                  data={mockReq}
-                  renderItem={({item}) => (
-                    <MatchingHistoryItem
-                      type={item}
-                      onPress={() => {
-                        navigation.navigate('MatchingHistoryDetailScreen', {
-                          type: item,
-                        });
-                      }}
-                    />
-                  )}
-                  keyExtractor={item => `img ${item}`}
-                />
-              ) : (
-                <FlatList
-                  data={mockRcv}
-                  renderItem={({item}) => (
-                    <MatchingHistoryItem
-                      type={item}
-                      onPress={() => {
-                        navigation.navigate('MatchingHistoryDetailScreen', {
-                          type: item,
-                        });
-                      }}
-                    />
-                  )}
-                  keyExtractor={item => `img ${item}`}
-                />
-              )}
+              {
+                isSelectedReq ? (
+                  <FlatList
+                    data={reqList}
+                    renderItem={({item}) =>
+                      item.status === 'cancel' || item.status === 'complete' ? (
+                        <MatchingHistoryItem
+                          info={item}
+                          onPress={() => {
+                            navigation.navigate('MatchingHistoryDetailScreen', {
+                              matchingId: item.matchingId,
+                            });
+                          }}
+                        />
+                      ) : null
+                    }
+                    keyExtractor={item =>
+                      `matching ${item.matchingId.toString()}`
+                    }
+                  />
+                ) : null
+                // <FlatList
+                //   data={mockRcv}
+                //   renderItem={({item}) => (
+                //     <MatchingHistoryItem
+                //       info={item}
+                //       onPress={() => {
+                //         navigation.navigate('MatchingHistoryDetailScreen', {
+                //           type: item,
+                //         });
+                //       }}
+                //     />
+                //   )}
+                //   keyExtractor={item => `img ${item}`}
+                // />
+              }
             </View>
           </View>
         </View>

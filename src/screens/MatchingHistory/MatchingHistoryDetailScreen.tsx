@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   View,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {color, screen, Typography} from '../../utils/utils';
+import {color, screen, Typography, url} from '../../utils/utils';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import Badge from '../../assets/icon/ic-plant-badge.svg';
 import Message from '../../assets/icon/ic-message.svg';
@@ -17,19 +17,74 @@ import CustomButton from '../../components/common/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../MainTab';
 import Modal from '../../components/common/Modal';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
 
 const mock = [
   {name: '스파티필름', num: 1, price: 5000, type: '식물관리'},
   {name: '몬스테라', num: 2, price: 10000, type: '가지치기'},
 ];
 
+const category = ['식물 집사', '꽃집', '식물 전문가', '식물 케어 서비스'];
+const pickupType = [
+  '제가 매칭 상대의 주소에 갈게요',
+  '매칭 상대가 제 주소로 와주세요',
+];
+
+interface ServiceDetailType {
+  plantName: string;
+  plantCount: number;
+  price: number;
+  careName: string;
+}
+
+interface MatchingInfoType {
+  matchingId: number;
+  plantManagerId: number;
+  profileImg: string;
+  name: string;
+  category: number;
+  requestAt: string;
+  status: string;
+  service: ServiceDetailType[];
+  totalPrice: number;
+  startDate: string;
+  endDate: string;
+  totalDate: string;
+  pickupType: number;
+  reviewId: number;
+}
+
 const MatchingHistoryDetailScreen = ({route}: any) => {
-  const {type} = route?.params;
+  const {matchingId} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [btnType, setBtnType] = useState<string>();
+  const [matchingInfo, setMatchingInfo] = useState<MatchingInfoType>();
+  const [type, setType] = useState<string>('');
+
+  useEffect(() => {
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + `matchings/${matchingId}`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          if (res.data.isSuccess) {
+            console.log(res);
+            setMatchingInfo(res.data.result);
+            setType(res.data.result.status);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  }, [matchingId]);
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -42,6 +97,36 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
   const onPressComplete = (btype: string) => {
     setIsModalShown(true);
     setBtnType(btype);
+  };
+
+  const changeStatus = (status: string) => {
+    if (matchingInfo !== undefined) {
+      getData('auth').then(auth => {
+        axios
+          .patch(
+            url.dev + `matchings/${matchingId}`,
+            {status},
+            {
+              headers: {
+                Authorization: `Bearer ${auth.token}`,
+              },
+            },
+          )
+          .then(res => {
+            if (res.data.isSuccess) {
+              console.log(res);
+              navigation.navigate('ReviewStarScreen', {
+                matchingId,
+                name: matchingInfo?.name,
+                profileImg: matchingInfo?.profileImg,
+              });
+            }
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      });
+    }
   };
 
   return (
@@ -57,7 +142,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
         <View style={styles.profileWrap}>
           <View style={styles.imgWrap}>
             <Image
-              source={require('../../assets/img/img-expert-profile.png')}
+              source={{uri: matchingInfo?.profileImg}}
               style={styles.profileImg}
             />
             <TouchableOpacity style={styles.msgBtn} activeOpacity={0.5}>
@@ -78,15 +163,15 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
             </Text>
             <View style={styles.nameWrap}>
               <Text style={[Typography.subtitle2, {color: color.blueGray_06}]}>
-                김보경
+                {matchingInfo?.name}
               </Text>
               <View style={styles.badgeWrap}>{<Badge />}</View>
               <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-                식물 집사
+                {matchingInfo && category[matchingInfo.category]}
               </Text>
             </View>
             <Text style={[Typography.body2, {color: color.blueGray_02}]}>
-              요정일시 2022.10.24
+              요청일시 {matchingInfo?.requestAt}
             </Text>
           </View>
         </View>
@@ -98,23 +183,23 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
             <View style={styles.serviceTypeListWrap}>
               <FlatList
                 scrollEnabled={false}
-                data={mock}
+                data={matchingInfo?.service}
                 renderItem={({item}) => (
                   <View>
                     <View style={styles.serviceTypeItem}>
                       <Text
                         style={[Typography.body1, {color: color.blueGray_06}]}>
-                        {item.name}&nbsp;x&nbsp;{item.num}개
+                        {item.plantName}&nbsp;x&nbsp;{item.plantCount}개
                       </Text>
                       <Text
                         style={[Typography.body1, {color: color.blueGray_06}]}>
-                        {(item.price * item.num).toLocaleString()}원
+                        {(item.price * item.plantCount).toLocaleString()}원
                       </Text>
                     </View>
                     <View>
                       <Text
                         style={(Typography.body2, {color: color.blueGray_02})}>
-                        {item.type}
+                        {item.careName}
                       </Text>
                     </View>
                   </View>
@@ -128,7 +213,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               총 금액
             </Text>
             <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-              25,000원
+              {matchingInfo?.totalPrice.toLocaleString()}원
             </Text>
           </View>
           <View style={styles.mainItemWrap}>
@@ -136,7 +221,8 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               매칭 날짜
             </Text>
             <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-              10.12 ~ 10.14 총 3일
+              {matchingInfo?.startDate} ~ {matchingInfo?.endDate} 총&nbsp;
+              {matchingInfo && matchingInfo?.totalDate}일
             </Text>
           </View>
           <View style={styles.mainItemWrap}>
@@ -144,7 +230,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               픽업 형태
             </Text>
             <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-              제가 매칭 상대의 주소에 갈게요
+              {matchingInfo && pickupType[matchingInfo?.pickupType]}
             </Text>
           </View>
         </View>
@@ -172,7 +258,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
             />
           ) : type === 'complete' ? (
             <CustomButton
-              text="남긴 리뷰 보기"
+              text={matchingInfo?.reviewId ? '남긴 리뷰 보기' : '리뷰 쓰기'}
               borderRadius={5}
               backgroundColor={color.gray_00}
               style={styles.completeBtnStyle}
@@ -252,13 +338,14 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               onPress={() => {
                 switch (btnType) {
                   case 'complete':
-                    navigation.navigate('ReviewStarScreen');
+                    changeStatus('complete');
                     break;
                   case 'accept':
                     break;
                   case 'refuse':
                     break;
                   case 'cancel':
+                    changeStatus('cancel');
                     break;
                   default:
                     break;
