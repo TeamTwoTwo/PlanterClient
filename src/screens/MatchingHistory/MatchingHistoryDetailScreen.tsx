@@ -129,6 +129,20 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
     }
   };
 
+  const onPressShowReview = () => {
+    navigation.navigate('ExpertDetailScreen');
+    navigation.navigate('ReviewDetailScreen');
+  };
+
+  const onPressWriteReview = () => {
+    matchingInfo &&
+      navigation.navigate('ReviewStarScreen', {
+        matchingId,
+        name: matchingInfo?.name,
+        profileImg: matchingInfo?.profileImg,
+      });
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <MatchingHeader
@@ -263,7 +277,9 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               backgroundColor={color.gray_00}
               style={styles.completeBtnStyle}
               textStyle={{color: color.mint_06}}
-              onPress={() => {}}
+              onPress={
+                matchingInfo?.reviewId ? onPressShowReview : onPressWriteReview
+              }
             />
           ) : type === 'new' ? (
             <View style={styles.newBtnWrap}>
