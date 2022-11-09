@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
 import {color, Typography, url} from '../../utils/utils';
 import Message from '../../assets/icon/ic-message.svg';
 import MatchingHistoryItem from '../../components/matchingHistory/MatchingHistoryItem';
@@ -28,8 +35,10 @@ const MatchingHistoryListScreen = () => {
   const [isSelectedReq, setIsSelectedReq] = useState<boolean>(true);
   const [isSelectedRcv, setIsSelectedRcv] = useState<boolean>(false);
   const [reqList, setReqList] = useState<ReqType[] | undefined>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  useEffect(() => {
+  const getReqList = () => {
+    setRefreshing(true);
     getData('auth').then(auth => {
       axios
         .get(url.dev + 'matchings', {
@@ -41,13 +50,22 @@ const MatchingHistoryListScreen = () => {
           if (res.data.isSuccess) {
             console.log(res);
             setReqList(res.data.result);
+            setRefreshing(false);
           }
         })
         .catch(e => {
           console.error(e);
         });
     });
+  };
+
+  useEffect(() => {
+    getReqList();
   }, []);
+
+  useEffect(() => {
+    console.log(reqList);
+  }, [reqList]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -80,7 +98,10 @@ const MatchingHistoryListScreen = () => {
           <Message stroke={'black'} />
         </TouchableOpacity>
       </View>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={getReqList} />
+        }>
         <View style={styles.main}>
           <View style={styles.upperListWrap}>
             <View style={styles.textWrap}>
@@ -105,9 +126,8 @@ const MatchingHistoryListScreen = () => {
                         />
                       ) : null
                     }
-                    keyExtractor={item =>
-                      `matching ${item.matchingId.toString()}`
-                    }
+                    keyExtractor={(item, idx) => item.matchingId.toString()}
+                    listKey="reqList"
                   />
                 ) : null
                 // <FlatList
@@ -150,9 +170,8 @@ const MatchingHistoryListScreen = () => {
                         />
                       ) : null
                     }
-                    keyExtractor={item =>
-                      `matching ${item.matchingId.toString()}`
-                    }
+                    keyExtractor={(item, idx) => item.matchingId.toString()}
+                    listKey="reqList"
                   />
                 ) : null
                 // <FlatList
