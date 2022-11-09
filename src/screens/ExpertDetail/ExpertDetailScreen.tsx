@@ -61,7 +61,8 @@ interface CoordType {
   longitude: number;
 }
 
-const ExpertDetailScreen = () => {
+const ExpertDetailScreen = ({route}: any) => {
+  const {plantManagerId} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isHeaderWhite, setIsHeaderWhite] = useState<boolean>(false);
   const [isExpertImageVisible, setIsExpertImageVisible] =
@@ -82,7 +83,7 @@ const ExpertDetailScreen = () => {
   useEffect(() => {
     getData('auth').then(auth => {
       axios
-        .get(url.dev + 'plant-managers/2', {
+        .get(url.dev + `plant-managers/${plantManagerId}`, {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
@@ -99,6 +100,7 @@ const ExpertDetailScreen = () => {
           console.error(e);
         });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -122,7 +124,7 @@ const ExpertDetailScreen = () => {
   };
 
   const onPressReviewDetail = () => {
-    navigation.navigate('ReviewDetailScreen');
+    navigation.navigate('ReviewDetailScreen', {plantManagerId});
   };
 
   return (

@@ -21,7 +21,8 @@ export interface ReviewInfoTypes {
   images: string[];
 }
 
-const ReviewDetailScreen = () => {
+const ReviewDetailScreen = ({route}: any) => {
+  const {plantManagerId} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isReviewImageVisible, setIsReviewImageVisible] =
     useState<boolean>(false);
@@ -31,7 +32,7 @@ const ReviewDetailScreen = () => {
   useEffect(() => {
     getData('auth').then(auth => {
       axios
-        .get(url.dev + 'plant-managers/2/reviews', {
+        .get(url.dev + `plant-managers/${plantManagerId}/reviews`, {
           headers: {
             Authorization: `Bearer ${auth.token}`,
           },
@@ -46,6 +47,7 @@ const ReviewDetailScreen = () => {
           console.error(e);
         });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

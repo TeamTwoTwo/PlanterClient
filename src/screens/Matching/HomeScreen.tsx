@@ -248,7 +248,7 @@ const HomeScreen = () => {
               money={item.money}
               day={item.day}
               onPress={() => {
-                navigation.navigate('ExpertDetailScreen');
+                navigation.navigate('ExpertDetailScreen', {plantManagerId: 2});
               }}
             />
           )}

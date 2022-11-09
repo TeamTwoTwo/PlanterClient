@@ -111,8 +111,12 @@ const ReviewWriteScreen = ({route}: any) => {
                 if (!toastStatus) {
                   setToastStatus(true);
                 }
-                navigation.navigate('ExpertDetailScreen');
-                navigation.navigate('ReviewDetailScreen');
+                navigation.navigate('ExpertDetailScreen', {
+                  plantManagerId: res.data.result.plantManagerId,
+                });
+                navigation.navigate('ReviewDetailScreen', {
+                  plantManagerId: res.data.result.plantManagerId,
+                });
               }
             })
             .catch(e => {

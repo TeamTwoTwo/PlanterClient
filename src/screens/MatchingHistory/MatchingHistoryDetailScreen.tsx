@@ -130,8 +130,14 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
   };
 
   const onPressShowReview = () => {
-    navigation.navigate('ExpertDetailScreen');
-    navigation.navigate('ReviewDetailScreen');
+    matchingInfo &&
+      navigation.navigate('ExpertDetailScreen', {
+        plantManagerId: matchingInfo?.plantManagerId,
+      });
+    matchingInfo &&
+      navigation.navigate('ReviewDetailScreen', {
+        plantManagerId: matchingInfo?.plantManagerId,
+      });
   };
 
   const onPressWriteReview = () => {

@@ -17,11 +17,11 @@ import ReviewWriteScreen from './Review/ReviewWriteScreen';
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
-  ExpertDetailScreen: undefined;
+  ExpertDetailScreen: {plantManagerId: number};
   MessageScreen: undefined;
   MessageDetailScreen: undefined;
   WriteScreen: undefined;
-  ReviewDetailScreen: undefined;
+  ReviewDetailScreen: {plantManagerId: number};
   MatchingHistoryDetailScreen: {
     matchingId: number;
   };
