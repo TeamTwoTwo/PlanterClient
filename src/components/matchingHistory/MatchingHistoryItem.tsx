@@ -64,7 +64,7 @@ const MatchingHistoryItem = ({info, onPress}: Props) => {
                       : color.blueGray_02,
                 },
               ]}>
-              요정일시 {info?.requestAt}
+              요청일시 {info?.requestAt}
             </Text>
           </View>
         </View>
