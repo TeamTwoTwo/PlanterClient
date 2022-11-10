@@ -93,7 +93,7 @@ const MatchingItem = ({
         </View>
         <View style={styles.moneyLine}>
           <Text style={[Typography.subtitle4, {color: color.blueGray_06}]}>
-            {minPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원~
+            {minPrice.toLocaleString()}원~
           </Text>
           <Text style={[Typography.body2, styles.day]}>/ 1일</Text>
         </View>

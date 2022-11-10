@@ -2,10 +2,14 @@ import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {color} from '../../utils/utils';
 
-const Toast = () => {
+interface PropTypes {
+  text: string;
+}
+
+const Toast = ({text}: PropTypes) => {
   return (
     <View style={styles.wrap}>
-      <Text style={styles.text}>인증번호가 전송되었습니다.</Text>
+      <Text style={styles.text}>{text}</Text>
     </View>
   );
 };
