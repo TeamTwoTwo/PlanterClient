@@ -24,7 +24,7 @@ const MessageScreen = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
 
-  const getReqList = (): void => {
+  const onGetMessageList = (): void => {
     setRefreshing(true);
     getData('auth').then(auth => {
       axios
@@ -46,7 +46,7 @@ const MessageScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      getReqList(); // 화면이 포커스 됐을 때
+      onGetMessageList(); // 화면이 포커스 됐을 때
       return () => {
         console.log('나가욥'); // 화면 포커스 아웃 됐을 때
       };
@@ -77,7 +77,7 @@ const MessageScreen = () => {
           )}
           keyExtractor={(item: messageData) => item.plantManagerId.toString()}
           refreshing={refreshing}
-          onRefresh={getReqList}
+          onRefresh={onGetMessageList}
         />
       ) : (
         <View style={styles.contentWrap}>
