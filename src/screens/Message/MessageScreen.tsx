@@ -1,33 +1,90 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import React, {useState, useCallback} from 'react';
+import {View, Text, StyleSheet, Pressable, FlatList} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color, Typography} from '../../utils/utils';
+import {color, Typography, url} from '../../utils/utils';
 import MessageItem from '../../components/Message/MessageItem';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
 import MatchingHeader from '../../components/matching/MatchingHeader';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
+
+interface messageData {
+  plantManagerId: number;
+  profileImg: string;
+  name: string;
+  category: number;
+  contents: string;
+  sentAt: string;
+  isUnread: boolean;
+}
 
 const MessageScreen = () => {
-  const [state, setState] = useState<number>(1);
+  const [messageList, setMessageList] = useState<messageData[]>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
+
+  const onGetMessageList = (): void => {
+    setRefreshing(true);
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + 'messages', {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          // console.log(res.data);
+          setMessageList(res.data.result);
+          setRefreshing(false);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      onGetMessageList(); // 화면이 포커스 됐을 때
+      return () => {
+        console.log('나가욥'); // 화면 포커스 아웃 됐을 때
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.safe}>
       <MatchingHeader title="쪽지함" />
-      {state === 0 ? (
+      {messageList && messageList.length > 0 ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={messageList}
+          renderItem={({item}: {item: messageData}) => (
+            <MessageItem
+              onPress={() => {
+                navigation.navigate('MessageDetailScreen', {
+                  item: item,
+                });
+              }}
+              name={item.name}
+              contents={item.contents}
+              profileImg={item.profileImg}
+              sentAt={item.sentAt}
+              isUnread={item.isUnread}
+              category={item.category}
+            />
+          )}
+          keyExtractor={(item: messageData) => item.plantManagerId.toString()}
+          refreshing={refreshing}
+          onRefresh={onGetMessageList}
+        />
+      ) : (
         <View style={styles.contentWrap}>
           <View style={styles.img} />
           <Text stylee={[Typography.body1, {color: color.blueGray_06}]}>
             받은 쪽지가 없습니다.
           </Text>
-        </View>
-      ) : (
-        <View>
-          <MessageItem
-            onPress={() => {
-              navigation.navigate('MessageDetailScreen');
-            }}
-          />
         </View>
       )}
     </SafeAreaView>

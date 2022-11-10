@@ -11,26 +11,33 @@ import {
   Image,
   FlatList,
   Keyboard,
+  Platform,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {color, Typography} from '../../utils/utils.ts';
-import Close from '../../assets/icon/ic-close.svg';
+import ImagePicker, {Image as IImage} from 'react-native-image-crop-picker';
+import {color, screen, Typography, url} from '../../utils/utils';
+import Back from '../../assets/icon/ic-back-arrow-black.svg';
 import {MainTabNavigationProp} from '../../screens/MainTab';
 import {useNavigation} from '@react-navigation/native';
 import Gallery from '../../assets/icon/ic-gallery.svg';
 import Delete from '../../assets/icon/ic-img-delete.svg';
 import Toast from '../../components/common/Toast';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
 
-const WriteScreen = () => {
+const WriteScreen = ({route}: any) => {
   const [message, setMessage] = useState<string>('');
   const [isFull, setIsFull] = useState<boolean>(false);
-  const [images, setImages] = useState();
+  const [imageFiles, setImageFiles] = useState<IImage[]>([]);
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
+  const {plantManagerId} = route?.params;
   const onGoBack = () => {
     navigation.pop();
   };
+
+  console.log(plantManagerId);
 
   useEffect(() => {
     if (message.length === 0) {
@@ -47,98 +54,156 @@ const WriteScreen = () => {
   }, [toastStatus]);
 
   const onSelectImage = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        maxWidth: 512,
-        maxHeight: 512,
-        // includeBase64: Platform.OS === 'android',
-        selectionLimit: 10,
-      },
-      res => {
-        if (res.didCancel) {
-          // 취소했을 경우
-          return;
+    ImagePicker.openPicker({
+      width: 76,
+      height: 76,
+      multiple: true,
+      waitAnimationEnd: false,
+      includeExif: true,
+      forceJpg: true, //ios live photo를 jpg로 바꿔줌
+      compressImageQuality: 1, //이미지 압축 0~1
+      mediaType: 'photo',
+      includeBase64: true,
+      maxFiles: 0,
+    })
+      .then(res => {
+        console.log('이미지를 선택했어요');
+        console.log(res);
+        if (res.length > 10) {
+          Alert.alert('사진은 최대 10장까지 첨부할 수 있습니다.');
+          let list = res.slice(0, 10);
+          setImageFiles(list);
+        } else {
+          setImageFiles(res);
         }
-        console.log(res.assets);
-        setImages(res.assets);
-      },
-    );
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   const onDelete = (uri: string): void => {
-    setImages(images.filter(img => img.uri !== uri));
+    setImageFiles(imageFiles?.filter(img => img.path !== uri));
   };
 
   const onSend = (): void => {
     if (isFull) {
-      Keyboard.dismiss();
-      if (!toastStatus) {
-        setToastStatus(true);
-      }
+      const formData = new FormData();
+      formData.append('plantManagerId', plantManagerId);
+      formData.append('contents', message);
+      imageFiles.forEach(e => {
+        formData.append('images', {
+          name: 'name',
+          type: 'image/jpeg',
+          uri: e.path,
+        });
+      });
+      console.log(formData);
+
+      getData('auth')
+        .then(auth => {
+          axios
+            .post(url.dev + 'messages', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data; boundary="boundary"',
+                Authorization: `Bearer ${auth.token}`,
+              },
+              transformRequest: (data, headers) => {
+                return data;
+              },
+            })
+            .then(res => {
+              console.log('쪽지전송');
+              console.log(res.data);
+              if (res.data.isSuccess) {
+                Keyboard.dismiss();
+                if (!toastStatus) {
+                  setToastStatus(true);
+                }
+                navigation.navigate('MessageScreen');
+              }
+            })
+            .catch(e => {
+              console.error(e);
+            });
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   };
 
+  useEffect(() => {
+    console.log(imageFiles);
+  }, [imageFiles]);
+
   return (
     <SafeAreaView style={styles.safe}>
-      <KeyboardAvoidingView style={styles.keyboard}>
+      <KeyboardAvoidingView
+        style={styles.keyboard}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.header}>
           <TouchableOpacity activeOpacity={1} onPress={onGoBack}>
-            <Close stroke="black" />
+            <Back />
           </TouchableOpacity>
           <View>
             <Text style={styles.title}>쪽지 쓰기</Text>
           </View>
-          <View>
-            <Text style={textStyles(isFull).send} onPress={onSend}>
-              전송
-            </Text>
-          </View>
+          <Pressable onPress={onSend}>
+            <Text style={textStyles(isFull).send}>전송</Text>
+          </Pressable>
         </View>
         <ScrollView
           style={styles.textWrap}
           showsVerticalScrollIndicator={false}
           nestedScrollEnabled>
-          {images && images.length > 0 && (
+          {imageFiles && imageFiles.length > 0 && (
             <View style={styles.imgWrap}>
               <FlatList
+                scrollEnabled={false}
                 showsHorizontalScrollIndicator={false}
                 nestedScrollEnabled
                 horizontal
-                data={images.slice(0, 10)}
+                data={imageFiles.slice(0, 10)}
                 renderItem={({item}) => (
                   <View style={styles.img}>
                     <Pressable
                       style={styles.delete}
-                      onPress={() => onDelete(item.uri)}>
+                      onPress={() => onDelete(item.path)}>
                       <Delete />
                     </Pressable>
-                    <Image style={styles.img} source={{uri: item.uri}} />
+                    <Image style={styles.img} source={{uri: item.path}} />
                   </View>
                 )}
-                keyExtractor={item => item.uri}
+                keyExtractor={(item, idx) => `img ${idx.toString()}`}
               />
             </View>
           )}
-          <TextInput
-            style={[Typography.body1, {paddingHorizontal: 24}]}
-            placeholder="쪽지 내용을 작성해주세요."
-            multiline
-            textAlignVertical="top"
-            placeholderTextColor={color.blueGray_01}
-            value={message}
-            onChangeText={setMessage}
-          />
+          <View style={{minHeight: screen.height - 96}}>
+            <TextInput
+              style={[Typography.body1, {paddingHorizontal: 24}]}
+              placeholder="쪽지 내용을 작성해주세요."
+              multiline
+              textAlignVertical="top"
+              placeholderTextColor={color.blueGray_01}
+              value={message}
+              onChangeText={setMessage}
+              selectionColor={color.mint_05}
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
+            />
+          </View>
         </ScrollView>
         <View style={styles.galleryWrap}>
           <Pressable style={{padding: 8}} onPress={onSelectImage}>
             <Gallery />
           </Pressable>
           <View style={styles.numberWrap}>
-            <Text style={([Typography.body2], {color: color.blueGray_06})}>
-              {images ? images.length : 0}
+            <Text style={[Typography.body2, {color: color.blueGray_06}]}>
+              {imageFiles ? imageFiles.length : 0}
             </Text>
-            <Text style={([Typography.body2], {color: color.blueGray_06})}>
+            <Text style={[Typography.body2, {color: color.blueGray_06}]}>
               /10
             </Text>
           </View>
@@ -187,8 +252,6 @@ const styles = StyleSheet.create({
     height: 20,
   },
   galleryWrap: {
-    position: 'absolute',
-    bottom: 0,
     borderTopWidth: 1,
     borderColor: color.blueGray_00,
     width: '100%',
@@ -202,7 +265,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textWrap: {
-    // paddingHorizontal: 24,
+    flex: 1,
   },
   numberWrap: {
     flexDirection: 'row',

@@ -1,41 +1,86 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
 import {color, Typography} from '../../utils/utils';
 import PlantBadge from '../../assets/icon/ic-plant-badge.svg';
+import Butler from '../../assets/icon/ic-butler-badge.svg';
+import Expert from '../../assets/icon/ic-expert-badge.svg';
+import Flower from '../../assets/icon/ic-flower-badge.svg';
+import Care from '../../assets/icon/ic-care-badge.svg';
 
 interface PropTypes {
   onPress: () => void;
+  name: string;
+  contents: string;
+  profileImg: string;
+  sentAt: string;
+  isUnread: boolean;
+  category: number;
 }
 
-const MessageItem = ({onPress}: PropTypes) => {
+const MessageItem = ({
+  onPress,
+  name,
+  contents,
+  profileImg,
+  sentAt,
+  isUnread,
+  category,
+}: PropTypes) => {
   return (
     <Pressable style={styles.wrap} onPress={onPress}>
-      <View style={styles.alram} />
+      {isUnread && <View style={styles.alram} />}
       <View>
-        <Image
-          style={styles.profileImg}
-          source={require('../../assets/img/img-expert-profile.png')}
-        />
+        <Image style={styles.profileImg} source={{uri: profileImg}} />
       </View>
       <View style={styles.bodyWrap}>
         <View style={styles.nameLine}>
-          <Text style={[Typography.subtitle3, styles.name]}>김보경</Text>
-          <PlantBadge />
-          <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-            식물 집사
-          </Text>
+          <Text style={[Typography.subtitle3, styles.name]}>{name}</Text>
+          {category === 0 && (
+            <>
+              <Butler />
+              <Text style={[Typography.body2, {color: color.blueGray_05}]}>
+                식물 집사
+              </Text>
+            </>
+          )}
+          {category === 1 && (
+            <>
+              <Flower />
+              <Text style={[Typography.body2, {color: color.blueGray_05}]}>
+                꽃집
+              </Text>
+            </>
+          )}
+          {category === 2 && (
+            <>
+              <Expert />
+              <Text style={[Typography.body2, {color: color.blueGray_05}]}>
+                식물 전문가
+              </Text>
+            </>
+          )}
+          {category === 3 && (
+            <>
+              <Care />
+              <Text style={[Typography.body2, {color: color.blueGray_05}]}>
+                식물케어 서비스
+              </Text>
+            </>
+          )}
         </View>
         <View style={styles.messageLine}>
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"
-            style={[Typography.body1, {color: color.blueGray_06}]}>
-            몬스테라는 크기가 있다보니 제가 직접 그 장소로 가겠습니다!
-            괜찮으세요?
+            style={[
+              Typography.body1,
+              {color: isUnread ? color.blueGray_06 : color.blueGray_04},
+            ]}>
+            {contents}
           </Text>
         </View>
         <Text style={[Typography.body2, {color: color.blueGray_02}]}>
-          오후 09:03
+          {sentAt}
         </Text>
       </View>
     </Pressable>

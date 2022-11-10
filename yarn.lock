@@ -764,11 +764,6 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     "to-fast-properties" "^2.0.0"
 
-"@baronha/react-native-multiple-image-picker@^0.4.13":
-  "integrity" "sha512-/jzT5oJgLpQUJWfoRuLYwxy5ajL5Iz+H2wB6exJz6hcAIIfQclIxisLtGdvpYrXtXvUSrjLSZJ0Hyo9my63NcA=="
-  "resolved" "https://registry.npmjs.org/@baronha/react-native-multiple-image-picker/-/react-native-multiple-image-picker-0.4.13.tgz"
-  "version" "0.4.13"
-
 "@bcoe/v8-coverage@^0.2.3":
   "integrity" "sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw=="
   "resolved" "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
@@ -6502,7 +6497,11 @@
   "resolved" "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz"
   "version" "0.70.3"
 
+<<<<<<< HEAD
+"react-native-image-crop-picker@^0.38.1":
+=======
 "react-native-image-crop-picker@0.38.1":
+>>>>>>> develop
   "integrity" "sha512-cF5UQnWplzHCeiCO+aiGS/0VomWaLmFf3nSsgTMPfY+8+99h8N/eHQvVdSF7RsGw50B8394wGeGyqHjjp8YRWw=="
   "resolved" "https://registry.npmjs.org/react-native-image-crop-picker/-/react-native-image-crop-picker-0.38.1.tgz"
   "version" "0.38.1"

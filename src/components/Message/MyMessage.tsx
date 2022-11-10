@@ -6,68 +6,101 @@ import Send from '../../assets/icon/ic-send.svg';
 import ImageDetail from '../../components/common/ImageDetail';
 
 interface PropTypes {
-  receive?: boolean;
-  send?: boolean;
-  message?: string;
+  isSend: boolean;
+  contents: string;
   image?: boolean;
+  sentAt: string;
+  images: string[];
 }
 
-let data = [1, 2, 3, 4, 5];
-
 const MyMessage = ({
-  receive = false,
-  send = false,
-  message,
+  contents,
   image = false,
+  sentAt,
+  isSend,
+  images,
 }: PropTypes) => {
   const [isImageVisible, setIsImageVisible] = useState<boolean>(false);
+  const [viewWidth, setviewWidth] = useState<number>(0);
+
+  const onLayout = (e: {nativeEvent: {layout: {width: number}}}) => {
+    const {width} = e.nativeEvent.layout;
+    setviewWidth(width);
+  };
+
   return (
     <View style={styles.wrap}>
       <View style={styles.block}>
-        {receive && (
+        {isSend ? (
+          <View style={styles.statusWrap}>
+            <Send />
+            <Text style={styles.send}>보낸 쪽지</Text>
+          </View>
+        ) : (
           <View style={styles.statusWrap}>
             <Receive />
             <Text style={styles.status}>받은 쪽지</Text>
           </View>
         )}
-        {send && (
-          <View style={styles.statusWrap}>
-            <Send />
-            <Text style={styles.send}>보낸 쪽지</Text>
-          </View>
-        )}
-        <Text style={styles.message}>{message}</Text>
-        {image && data.length > 0 && (
-          <View style={{marginTop: 6, height: 76}}>
+        <Text style={styles.message}>{contents}</Text>
+        {images && images.length > 0 && (
+          <View style={{marginTop: 6}} onLayout={onLayout}>
             <FlatList
               horizontal
-              showsScrollIndicator={false}
-              data={data.slice(0, 4)}
-              renderItem={({item}) => (
+              showsHorizontalScrollIndicator={false}
+              scrollEnabled={false}
+              data={images.slice(0, 4)}
+              renderItem={({item, index}: string) => (
                 <Pressable
                   onPress={() => {
                     setIsImageVisible(true);
                   }}>
-                  <View style={styles.img} />
+                  <Image
+                    style={viewStyles(viewWidth).img}
+                    source={{uri: item}}
+                  />
+                  {images && index === 3 && images.length > 4 && (
+                    <View style={viewStyles(viewWidth).overlist}>
+                      <Text style={[Typography.subtitle3, styles.number]}>
+                        +{images.length - 4}
+                      </Text>
+                    </View>
+                  )}
                 </Pressable>
               )}
-              keyExtractor={item => item.toString()}
+              keyExtractor={item => `img ${item}`}
+              ItemSeparatorComponent={<View style={{marginRight: 5}} />}
             />
           </View>
         )}
-        {image && data.length > 4 && (
-          <View style={styles.overlist}>
-            <Text style={[Typography.subtitle3, styles.number]}>
-              +{data.length - 4}
-            </Text>
-          </View>
-        )}
-        <Text style={[Typography.body2, styles.time]}>오후 08:40</Text>
+
+        <Text style={[Typography.body2, styles.time]}>{sentAt}</Text>
       </View>
       <ImageDetail visible={isImageVisible} setVisible={setIsImageVisible} />
     </View>
   );
 };
+
+const viewStyles = (viewWidth: number) =>
+  StyleSheet.create({
+    img: {
+      width: viewWidth / 4 - 4,
+      height: viewWidth / 4 - 4,
+      borderRadius: 4,
+      borderWidth: 1,
+    },
+    overlist: {
+      position: 'absolute',
+      right: 0,
+      width: viewWidth / 4 - 4,
+      height: viewWidth / 4 - 4,
+      borderRadius: 4,
+      backgroundColor: 'black',
+      opacity: 0.5,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
 
 const styles = StyleSheet.create({
   wrap: {
@@ -114,13 +147,12 @@ const styles = StyleSheet.create({
   },
   overlist: {
     position: 'absolute',
-    right: 62,
-    top: 60,
+    right: 0,
     width: 76,
     height: 76,
     borderRadius: 4,
     backgroundColor: 'black',
-    opacity: 0.7,
+    opacity: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
