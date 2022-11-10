@@ -21,6 +21,17 @@ const MyMessage = ({
   images,
 }: PropTypes) => {
   const [isImageVisible, setIsImageVisible] = useState<boolean>(false);
+  const [viewWidth, setviewWidth] = useState<number>(0);
+  const [viewHeight, setviewHeight] = useState<number>(0);
+
+  const onLayout = (e: {
+    nativeEvent: {layout: {width: number; height: number}};
+  }) => {
+    const {width, height} = e.nativeEvent.layout;
+    setviewWidth(width);
+    setviewHeight(height);
+  };
+
   return (
     <View style={styles.wrap}>
       <View style={styles.block}>
@@ -37,7 +48,7 @@ const MyMessage = ({
         )}
         <Text style={styles.message}>{contents}</Text>
         {images && images.length > 0 && (
-          <View style={{marginTop: 6, height: 76, width: 325.5}}>
+          <View style={{marginTop: 6, height: 85}} onLayout={onLayout}>
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -48,13 +59,17 @@ const MyMessage = ({
                   onPress={() => {
                     setIsImageVisible(true);
                   }}>
-                  <Image style={styles.img} source={{uri: item}} />
+                  <Image
+                    style={viewStyles(viewWidth, viewHeight).img}
+                    source={{uri: item}}
+                  />
                 </Pressable>
               )}
               keyExtractor={item => `img ${item}`}
+              ItemSeparatorComponent={<View style={{marginRight: 5}} />}
             />
             {images && images.length > 4 && (
-              <View style={styles.overlist}>
+              <View style={viewStyles(viewWidth, viewHeight).overlist}>
                 <Text style={[Typography.subtitle3, styles.number]}>
                   +{images.length - 4}
                 </Text>
@@ -69,6 +84,27 @@ const MyMessage = ({
     </View>
   );
 };
+
+const viewStyles = (viewWidth: number, viewHeight: number) =>
+  StyleSheet.create({
+    img: {
+      width: viewWidth / 4 - 4,
+      height: viewHeight,
+      borderRadius: 4,
+      borderWidth: 1,
+    },
+    overlist: {
+      position: 'absolute',
+      right: 0,
+      width: viewWidth / 4 - 4,
+      height: viewHeight,
+      borderRadius: 4,
+      backgroundColor: 'black',
+      opacity: 0.5,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
 
 const styles = StyleSheet.create({
   wrap: {
@@ -120,7 +156,7 @@ const styles = StyleSheet.create({
     height: 76,
     borderRadius: 4,
     backgroundColor: 'black',
-    opacity: 0.7,
+    opacity: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
