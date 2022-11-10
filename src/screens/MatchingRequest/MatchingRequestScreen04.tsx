@@ -42,9 +42,13 @@ const MatchingRequestScreen04 = () => {
     getData('auth')
       .then(auth => {
         axios
-          .get(url.dev + 'plant-managers/2/option', {
-            headers: {Authorization: `Bearer ${auth.token}`},
-          })
+          .get(
+            url.dev +
+              `plant-managers/${matchingRequestInfo.plantManagerId}/option`,
+            {
+              headers: {Authorization: `Bearer ${auth.token}`},
+            },
+          )
           .then(res => {
             console.log(res.data.result);
             if (res.data.isSuccess) {
@@ -58,6 +62,7 @@ const MatchingRequestScreen04 = () => {
       .catch(e => {
         console.error(e);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

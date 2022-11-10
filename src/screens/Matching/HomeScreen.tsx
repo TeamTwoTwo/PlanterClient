@@ -246,7 +246,9 @@ const HomeScreen = () => {
               description={item.description}
               minPrice={item.minPrice}
               onPress={() => {
-                navigation.navigate('ExpertDetailScreen', {plantManagerId: 2});
+                navigation.navigate('ExpertDetailScreen', {
+                  plantManagerId: item.id,
+                });
               }}
             />
           )}

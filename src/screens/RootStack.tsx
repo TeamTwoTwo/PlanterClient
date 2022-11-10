@@ -52,7 +52,7 @@ type RootStackParamList = {
     matchingId: number;
     rating: number;
   };
-  MatchingRequestScreen01: undefined;
+  MatchingRequestScreen01: {plantManagerId: number};
   MatchingRequestScreen02: undefined;
   MatchingRequestScreen03: undefined;
   MatchingRequestScreen04: undefined;

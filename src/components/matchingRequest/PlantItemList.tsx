@@ -88,7 +88,7 @@ const PlantItemList = ({
     setMatchingRequestInfo({
       ...MatchingRequestInfo,
       service: plantList,
-      plantManagerId: 2,
+      plantManagerId,
     });
     navigation.navigate('MatchingRequestScreen02');
   };

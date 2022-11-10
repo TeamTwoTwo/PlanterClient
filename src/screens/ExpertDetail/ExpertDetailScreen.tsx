@@ -16,7 +16,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Back from '../../assets/icon/ic-back-arrow.svg';
 import BackBlack from '../../assets/icon/ic-back-arrow-black.svg';
 import Meatball from '../../assets/icon/ic-meatball.svg';
-import PlantBadge from '../../assets/icon/ic-plant-badge.svg';
 import Camera from '../../assets/icon/ic-camera.svg';
 import Badge from '../../assets/icon/ic-badge.svg';
 import Cost from '../../assets/icon/ic-cost.svg';
@@ -129,6 +128,14 @@ const ExpertDetailScreen = ({route}: any) => {
 
   const onPressReviewDetail = () => {
     navigation.navigate('ReviewDetailScreen', {plantManagerId});
+  };
+
+  const onPressRequest = () => {
+    if (info) {
+      navigation.navigate('MatchingRequestScreen01', {
+        plantManagerId: info?.id,
+      });
+    }
   };
 
   return (
@@ -377,9 +384,7 @@ const ExpertDetailScreen = ({route}: any) => {
             <CustomButton
               backgroundColor={color.mint_05}
               text="매칭 요청"
-              onPress={() => {
-                navigation.navigate('MatchingRequestScreen01');
-              }}
+              onPress={onPressRequest}
               borderRadius={6}
               style={{flex: 1}}
             />
