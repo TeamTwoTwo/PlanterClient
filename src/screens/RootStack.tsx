@@ -6,6 +6,9 @@ import {
 import ExpertDetailScreen from './ExpertDetail/ExpertDetailScreen';
 import MainTab from './MainTab';
 import LocationScreen from '../screens/Matching/LocationScreen';
+import MessageScreen from '../screens/Message/MessageScreen';
+import MessageDetailScreen from '../screens/Message/MessageDetailScreen';
+import WriteScreen from '../screens/Message/WriteScreen';
 import ReviewDetailScreen from './ExpertDetail/ReviewDetailScreen';
 import MatchingHistoryDetailScreen from './MatchingHistory/MatchingHistoryDetailScreen';
 import ReviewStarScreen from './MatchingHistory/ReviewStarScreen';
@@ -13,16 +16,42 @@ import MatchingRequestScreen02 from './MatchingRequest/MatchingRequestScreen02';
 import MatchingRequestScreen01 from './MatchingRequest/MatchingRequestScreen01';
 import MatchingRequestScreen03 from './MatchingRequest/MatchingRequestScreen03';
 import MatchingRequestScreen04 from './MatchingRequest/MatchingRequestScreen04';
+import ReviewWriteScreen from './Review/ReviewWriteScreen';
+
+type messageData = {
+  plantManagereId: number;
+  profileImg: string;
+  name: string;
+  category: number;
+  contents: string;
+  sentAt: string;
+  isUnread: boolean;
+};
 
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
-  ExpertDetailScreen: undefined;
-  ReviewDetailScreen: undefined;
-  MatchingHistoryDetailScreen: {
-    type: string;
+  ExpertDetailScreen: {plantManagerId: number};
+  MessageScreen: undefined;
+  MessageDetailScreen: {
+    item: messageData;
   };
-  ReviewStarScreen: undefined;
+  WriteScreen: {
+    plantManagerId: number;
+  };
+  ReviewDetailScreen: {plantManagerId: number};
+  MatchingHistoryDetailScreen: {
+    matchingId: number;
+  };
+  ReviewStarScreen: {
+    matchingId: number;
+    name: string;
+    profileImg: string;
+  };
+  ReviewWriteScreen: {
+    matchingId: number;
+    rating: number;
+  };
   MatchingRequestScreen01: undefined;
   MatchingRequestScreen02: undefined;
   MatchingRequestScreen03: undefined;
@@ -40,6 +69,12 @@ const RootStack = () => {
       <Stack.Screen name="MainTab" component={MainTab} />
       <Stack.Screen name="LocationScreen" component={LocationScreen} />
       <Stack.Screen name="ExpertDetailScreen" component={ExpertDetailScreen} />
+      <Stack.Screen name="MessageScreen" component={MessageScreen} />
+      <Stack.Screen
+        name="MessageDetailScreen"
+        component={MessageDetailScreen}
+      />
+      <Stack.Screen name="WriteScreen" component={WriteScreen} />
       <Stack.Screen name="ReviewDetailScreen" component={ReviewDetailScreen} />
       <Stack.Screen
         name="MatchingHistoryDetailScreen"
@@ -62,6 +97,7 @@ const RootStack = () => {
         name="MatchingRequestScreen04"
         component={MatchingRequestScreen04}
       />
+      <Stack.Screen name="ReviewWriteScreen" component={ReviewWriteScreen} />
     </Stack.Navigator>
   );
 };

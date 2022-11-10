@@ -9,28 +9,25 @@ import {
 } from 'react-native';
 import {color, Typography} from '../../utils/utils';
 import Star from '../../assets/icon/ic-star.svg';
-
-let mock = [1, 2, 3, 4, 5, 6, 7];
+import {ReviewInfoTypes} from '../../screens/ExpertDetail/ReviewDetailScreen';
 
 interface Props {
   onPress: () => void;
+  info?: ReviewInfoTypes | undefined;
 }
 
-const Review = ({onPress}: Props) => {
+const Review = ({onPress, info}: Props) => {
   return (
     <View>
       <View style={styles.header}>
-        <Image
-          style={styles.profileImg}
-          source={require('../../assets/img/img-expert-profile.png')}
-        />
+        <Image style={styles.profileImg} source={{uri: info?.profileImg}} />
         <View style={styles.headerTextView}>
           <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-            유지민
+            {info?.name}
           </Text>
           <View style={[styles.header]}>
             <Text style={[Typography.caption2, {color: color.blueGray_02}]}>
-              2022. 10. 12{'  '}|{'  '}
+              {info?.date}&nbsp;|&nbsp;
             </Text>
             <Star fill="#FFC42C" />
             <Text
@@ -38,32 +35,27 @@ const Review = ({onPress}: Props) => {
                 Typography.caption2,
                 {color: color.blueGray_02, marginLeft: 2},
               ]}>
-              4.8
+              {info?.rate.toFixed(1)}
             </Text>
           </View>
         </View>
       </View>
       <View style={styles.content}>
         <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-          식물을 사랑한 지 12년차 된 식물집사입니다. 내 식물이라고 생각하고
-          식물을 사랑한 지 12년차 된 식물집사입니다. 내 식물이라고 생각하고 내
-          식물이라고 생각합니다.
+          {info?.contents}
         </Text>
       </View>
       <View style={styles.imgView}>
         <FlatList
-          data={mock}
+          data={info?.images}
           horizontal
           showsHorizontalScrollIndicator={false}
           renderItem={({item}) => (
             <TouchableOpacity activeOpacity={1} onPress={onPress}>
-              <Image
-                source={require('../../assets/img/img-expert-img.png')}
-                style={styles.img}
-              />
+              <Image source={{uri: item}} style={styles.img} />
             </TouchableOpacity>
           )}
-          keyExtractor={item => `img ${item}`}
+          keyExtractor={(item, idx) => `img ${item} ${idx}`}
           ItemSeparatorComponent={() => <View style={{width: 8}} />}
         />
       </View>

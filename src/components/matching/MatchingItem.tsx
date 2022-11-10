@@ -1,58 +1,101 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Platform, Pressable, Image} from 'react-native';
 import {color, Typography} from '../../utils/utils';
-import Plant from '../../assets/icon/ic-plant-badge.svg';
+import Butler from '../../assets/icon/ic-butler-badge.svg';
 import Star from '../../assets/icon/ic-star.svg';
+import Expert from '../../assets/icon/ic-expert-badge.svg';
+import Flower from '../../assets/icon/ic-flower-badge.svg';
+import Care from '../../assets/icon/ic-care-badge.svg';
 
 interface PropTypes {
+  id: number;
   name: string;
-  job: string;
-  distance: string;
-  info: string;
-  grade: string;
-  bodyText: string;
-  money: string;
-  day: string;
+  category: number;
+  profileImg: string;
+  distance: number;
+  isPhoto: boolean;
+  rate: number;
+  description: string;
+  minPrice: number;
   onPress: () => void;
 }
 
+let maxlimit = 10;
+
 const MatchingItem = ({
+  id,
   name,
-  job,
+  category,
+  profileImg,
   distance,
-  info,
-  grade,
-  bodyText,
-  money,
-  day,
+  isPhoto,
+  rate,
+  description,
+  minPrice,
   onPress,
 }: PropTypes) => {
   return (
     <Pressable style={[styles.box, styles.shadow]} onPress={onPress}>
       <View>
-        <View style={styles.profile} />
+        <Image style={styles.profile} source={{uri: profileImg}} />
       </View>
       <View style={styles.content}>
         <View style={styles.line}>
-          <Text style={[Typography.subtitle3, styles.name]}>{name}</Text>
-          <Plant />
-          <Text style={styles.job}>{job}</Text>
+          <Text style={[Typography.subtitle3, styles.name]}>
+            {name.length > maxlimit
+              ? name.slice(0, maxlimit + 1) + ' ...'
+              : name}
+          </Text>
+          {category === 0 && (
+            <View style={styles.line}>
+              <Butler />
+              <Text style={styles.job}>식물 집사</Text>
+            </View>
+          )}
+          {category === 1 && (
+            <View style={styles.line}>
+              <Flower />
+              <Text style={styles.job}>꽃집</Text>
+            </View>
+          )}
+          {category === 2 && (
+            <View style={styles.line}>
+              <Expert />
+              <Text style={styles.job}>식물 전문가</Text>
+            </View>
+          )}
+          {category === 3 && (
+            <View style={styles.line}>
+              <Care />
+              <Text style={styles.job}>식물케어 서비스</Text>
+            </View>
+          )}
         </View>
         <View style={styles.line}>
-          <Text style={[Typography.caption1, styles.info]}>
-            {distance} · {info} ·
-          </Text>
-          <Star fill="#FFC42C" />
-          <Text style={[Typography.caption1, styles.info]}>{grade}</Text>
+          {isPhoto ? (
+            <Text style={[Typography.caption1, styles.info]}>{distance}km</Text>
+          ) : (
+            <Text style={[Typography.caption1, styles.info]}>
+              {distance}km ·{' '}
+            </Text>
+          )}
+          {isPhoto && (
+            <Text style={[Typography.caption1, styles.info]}>
+              {' '}
+              · 사진 제공 ·{' '}
+            </Text>
+          )}
+          <Star />
+          <Text style={[Typography.caption1, styles.info]}> {rate}</Text>
         </View>
         <View style={styles.bodyLine}>
-          <Text style={[Typography.body2, styles.bodyText]}>{bodyText}</Text>
+          <Text style={[Typography.body2, styles.bodyText]}>{description}</Text>
         </View>
         <View style={styles.moneyLine}>
           <Text style={[Typography.subtitle4, {color: color.blueGray_06}]}>
-            {money}~
+            {minPrice.toLocaleString()}원~
           </Text>
-          <Text style={[Typography.body2, styles.day]}>/{day}</Text>
+          <Text style={[Typography.body2, styles.day]}>/ 1일</Text>
         </View>
       </View>
     </Pressable>
@@ -91,7 +134,6 @@ const styles = StyleSheet.create({
   profile: {
     width: 80,
     height: 80,
-    backgroundColor: '#f2f2f2',
     borderRadius: 50,
   },
   content: {
@@ -114,7 +156,7 @@ const styles = StyleSheet.create({
     color: color.blueGray_05,
   },
   info: {
-    color: color.gray_04,
+    color: color.blueGray_01,
   },
   bodyLine: {
     marginTop: 8,
