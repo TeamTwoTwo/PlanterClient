@@ -9,6 +9,8 @@ import {color, screen, Typography} from '../../utils/utils';
 import {MainTabNavigationProp} from '../MainTab';
 import CalendarPicker from 'react-native-calendar-picker';
 import Back from '../../assets/icon/ic-back.svg';
+import {useRecoilState} from 'recoil';
+import {MatchingRequestInfoState} from '../../recoil/atoms/matchingRequest';
 
 const arr = ['일', '월', '화', '수', '목', '금', '토'];
 const monthArr = [
@@ -34,6 +36,9 @@ interface SelectedDateType {
 }
 
 const MatchingRequestScreen02 = () => {
+  const [MatchingRequestInfo, setMatchingRequestInfo] = useRecoilState(
+    MatchingRequestInfoState,
+  );
   const navigation = useNavigation<MainTabNavigationProp>();
   const minDate = new Date();
   const [viewWidth, setViewWidth] = useState<number>(0);
@@ -47,7 +52,31 @@ const MatchingRequestScreen02 = () => {
   }, [selectedStartDate, selectedEndDate]);
 
   const onNavigate = () => {
-    navigation.navigate('MatchingRequestScreen03');
+    if (selectedStartDate && selectedEndDate) {
+      let startDate = `${selectedStartDate?.year}-${
+        selectedStartDate?.month + 1 < 10
+          ? '0' + selectedStartDate?.month + 1
+          : selectedStartDate?.month + 1
+      }-${
+        selectedStartDate?.day < 10
+          ? '0' + selectedStartDate?.day
+          : selectedStartDate?.day
+      }`;
+      let endDate = `${selectedEndDate?.year}-${
+        selectedEndDate?.month + 1 < 10
+          ? '0' + selectedEndDate?.month + 1
+          : selectedEndDate?.month + 1
+      }-${
+        selectedEndDate?.day < 10
+          ? '0' + selectedEndDate?.day
+          : selectedEndDate?.day
+      }`;
+
+      console.log(startDate);
+      console.log(endDate);
+      setMatchingRequestInfo({...MatchingRequestInfo, startDate, endDate});
+      navigation.navigate('MatchingRequestScreen03');
+    }
   };
 
   const onLayout = (e: {nativeEvent: {layout: {width: number}}}) => {

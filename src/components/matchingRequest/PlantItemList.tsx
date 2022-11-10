@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -7,29 +7,57 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {PlantItemType} from '../../screens/MatchingRequest/MatchingRequestScreen01';
+import {
+  OptionListType,
+  PlantItemType,
+} from '../../screens/MatchingRequest/MatchingRequestScreen01';
 import {color, screen, Typography} from '../../utils/utils';
 import PlantItem from './PlantItem';
 import Add from '../../assets/icon/ic-add.svg';
 import CustomButton from '../common/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
+import {useRecoilState} from 'recoil';
+import {MatchingRequestInfoState} from '../../recoil/atoms/matchingRequest';
 
-const PlantItemList = () => {
+interface Props {
+  optionList: OptionListType[];
+  plantList: PlantItemType[];
+  setPlantList: Dispatch<SetStateAction<PlantItemType[]>>;
+  plantManagerId: number;
+}
+
+const PlantItemList = ({
+  optionList,
+  plantList,
+  setPlantList,
+  plantManagerId,
+}: Props) => {
+  const [MatchingRequestInfo, setMatchingRequestInfo] = useRecoilState(
+    MatchingRequestInfoState,
+  );
   const navigation = useNavigation<MainTabNavigationProp>();
-  const [plantList, setPlantList] = useState<PlantItemType[]>([
-    {name: '', caring: false, pruning: false, supplements: false},
-  ]);
+
   const [canNext, setCanNext] = useState<boolean>(false);
 
   useEffect(() => {
     console.log(plantList);
-    let tmp = true;
+    let tmp = true; // 다음 버튼 활성화 유무
     plantList?.forEach((data, idx) => {
-      if (
-        data.name === '' ||
-        (!data.caring && !data.pruning && !data.supplements)
-      ) {
+      let optionNonCheck = false;
+      // ㄴ true -> 옵션이 하나도 체크되지 않음
+      let cnt = 0;
+      // 각 아이템의 옵션 리스트를 돌면서 체크되지 않은 옵션의 갯수를 체크
+      data.optionId.forEach(option => {
+        if (!option) {
+          cnt++;
+        }
+      });
+      // 옵션 리스트가 모두 체크되지 않았다면 optionNonCheck = true
+      if (cnt === data.optionId.length) {
+        optionNonCheck = true;
+      }
+      if (data.plantName === '' || optionNonCheck) {
         setCanNext(false);
         tmp = false;
         return;
@@ -42,12 +70,11 @@ const PlantItemList = () => {
   }, [plantList]);
 
   let plantItem: PlantItemType = {
-    name: '',
-    caring: false,
-    pruning: false,
-    supplements: false,
+    plantName: '',
+    optionId: new Array(optionList?.length).fill(null),
   };
   const addPlant = () => {
+    console.log(plantItem);
     let list = [...plantList, plantItem];
     setPlantList(list);
   };
@@ -58,6 +85,11 @@ const PlantItemList = () => {
   };
 
   const onNavigate = () => {
+    setMatchingRequestInfo({
+      ...MatchingRequestInfo,
+      service: plantList,
+      plantManagerId: 2,
+    });
     navigation.navigate('MatchingRequestScreen02');
   };
 
@@ -70,6 +102,7 @@ const PlantItemList = () => {
             renderItem={({item, index}) => (
               <PlantItem
                 idx={index}
+                optionList={optionList}
                 plantItem={item}
                 plantList={plantList}
                 setPlantList={setPlantList}

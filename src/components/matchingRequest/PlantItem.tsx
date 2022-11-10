@@ -9,10 +9,14 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomInput from '../common/CustomInput';
 import Check from '../../assets/icon/ic-check.svg';
 import {color, Typography} from '../../utils/utils';
-import {PlantItemType} from '../../screens/MatchingRequest/MatchingRequestScreen01';
+import {
+  OptionListType,
+  PlantItemType,
+} from '../../screens/MatchingRequest/MatchingRequestScreen01';
 
 interface Props {
   idx: number;
+  optionList: OptionListType[];
   plantItem: PlantItemType;
   plantList: PlantItemType[];
   setPlantList: Dispatch<SetStateAction<PlantItemType[]>>;
@@ -21,20 +25,16 @@ interface Props {
 
 const PlantItem = ({
   idx,
+  optionList,
   plantItem,
   plantList,
   setPlantList,
   removePlant,
 }: Props) => {
-  //   useEffect(() => {
-  //     onChangeText();
-  //     // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   }, [name]);
-
   const onChangeText = (e: string) => {
     const changed = {
       ...plantItem,
-      name: e,
+      plantName: e,
     };
     let list = [...plantList];
     list[idx] = changed;
@@ -44,37 +44,21 @@ const PlantItem = ({
   const clearText = () => {
     const changed = {
       ...plantItem,
-      name: '',
+      plantName: '',
     };
     let list = [...plantList];
     list[idx] = changed;
     setPlantList(list);
   };
 
-  const onCheckCaring = () => {
+  // 옵션 id에 따라 체크값 상태 관리
+  // 클릭한 옵션만 상태를 반대로 변경
+  const onCheckOption = (optionId: number) => {
     const changed = {
       ...plantItem,
-      caring: !plantItem.caring,
-    };
-    let list = [...plantList];
-    list[idx] = changed;
-    setPlantList(list);
-  };
-
-  const onCheckPruning = () => {
-    const changed = {
-      ...plantItem,
-      pruning: !plantItem.pruning,
-    };
-    let list = [...plantList];
-    list[idx] = changed;
-    setPlantList(list);
-  };
-
-  const onCheckSupplements = () => {
-    const changed = {
-      ...plantItem,
-      supplements: !plantItem.supplements,
+      optionId: plantItem.optionId.map((data, i) =>
+        optionId === i + 1 ? (data ? null : optionId) : data,
+      ),
     };
     let list = [...plantList];
     list[idx] = changed;
@@ -99,78 +83,38 @@ const PlantItem = ({
         <CustomInput
           label="식물이름"
           placeholder="식물이름"
-          value={plantItem.name}
+          value={plantItem.plantName}
           onChangeText={onChangeText}
           clearText={clearText}
         />
       </View>
       <View style={styles.optionView}>
-        <View style={styles.optionWrap}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.checkBtn}
-            onPress={onCheckCaring}>
-            {plantItem.caring ? (
-              <Check width={20} height={20} fill={color.mint_05} />
-            ) : (
-              <View style={styles.empty} />
-            )}
-          </TouchableOpacity>
-          <View style={styles.optionNameWrap}>
-            <Text style={[Typography.body1, {color: color.blueGray_06}]}>
-              식물관리
-            </Text>
+        {optionList.map((data, i) => (
+          <View style={styles.optionWrap}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={styles.checkBtn}
+              onPress={() => {
+                onCheckOption(data.optionId);
+              }}>
+              {plantItem.optionId[data.optionId - 1] ? (
+                <Check width={20} height={20} fill={color.mint_05} />
+              ) : (
+                <View style={styles.empty} />
+              )}
+            </TouchableOpacity>
+            <View style={styles.optionNameWrap}>
+              <Text style={[Typography.body1, {color: color.blueGray_06}]}>
+                {data.name}
+              </Text>
+            </View>
+            <View>
+              <Text style={[Typography.body1, {color: color.blueGray_06}]}>
+                {data.price.toLocaleString()}원/1개
+              </Text>
+            </View>
           </View>
-          <View>
-            <Text style={[Typography.body1, {color: color.blueGray_06}]}>
-              5,000원/1개
-            </Text>
-          </View>
-        </View>
-        <View style={styles.optionWrap}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.checkBtn}
-            onPress={onCheckPruning}>
-            {plantItem.pruning ? (
-              <Check width={20} height={20} fill={color.mint_05} />
-            ) : (
-              <View style={styles.empty} />
-            )}
-          </TouchableOpacity>
-          <View style={styles.optionNameWrap}>
-            <Text style={[Typography.body1, {color: color.blueGray_06}]}>
-              가지치기
-            </Text>
-          </View>
-          <View>
-            <Text style={[Typography.body1, {color: color.blueGray_06}]}>
-              10,000원/1개
-            </Text>
-          </View>
-        </View>
-        <View style={styles.optionWrap}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.checkBtn}
-            onPress={onCheckSupplements}>
-            {plantItem.supplements ? (
-              <Check width={20} height={20} fill={color.mint_05} />
-            ) : (
-              <View style={styles.empty} />
-            )}
-          </TouchableOpacity>
-          <View style={styles.optionNameWrap}>
-            <Text style={[Typography.body1, {color: color.blueGray_06}]}>
-              영양제
-            </Text>
-          </View>
-          <View>
-            <Text style={[Typography.body1, {color: color.blueGray_06}]}>
-              3,000원/1개
-            </Text>
-          </View>
-        </View>
+        ))}
       </View>
     </View>
   );

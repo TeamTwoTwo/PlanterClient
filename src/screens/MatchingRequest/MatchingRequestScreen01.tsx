@@ -1,18 +1,55 @@
-import React from 'react';
+import axios from 'axios';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import PlantItemList from '../../components/matchingRequest/PlantItemList';
-import {color, screen} from '../../utils/utils';
+import {getData} from '../../utils/AsyncStorage';
+import {color, screen, url} from '../../utils/utils';
 
 export interface PlantItemType {
-  name: string;
-  caring: boolean;
-  pruning: boolean;
-  supplements: boolean;
+  plantName: string;
+  optionId: (number | null)[];
 }
 
-const MatchingRequestScreen01 = () => {
+export interface OptionListType {
+  optionId: number;
+  name: string;
+  price: number;
+}
+
+const MatchingRequestScreen01 = ({route}: any) => {
+  const plantManagerId = route?.params;
+  const [optionList, setOptionList] = useState<OptionListType[]>([]);
+  const [plantList, setPlantList] = useState<PlantItemType[]>([]);
+
+  useEffect(() => {
+    getData('auth')
+      .then(auth => {
+        axios
+          .get(url.dev + 'plant-managers/2/option', {
+            headers: {Authorization: `Bearer ${auth.token}`},
+          })
+          .then(res => {
+            console.log(res.data.result);
+            if (res.data.isSuccess) {
+              setOptionList(res.data.result);
+              setPlantList([
+                {
+                  plantName: '',
+                  optionId: new Array(res.data.result?.length).fill(null),
+                },
+              ]);
+            }
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.padding}>
@@ -23,7 +60,12 @@ const MatchingRequestScreen01 = () => {
           <View style={styles.progressBarInner} />
         </View>
       </View>
-      <PlantItemList />
+      <PlantItemList
+        optionList={optionList}
+        plantList={plantList}
+        setPlantList={setPlantList}
+        plantManagerId={plantManagerId}
+      />
     </SafeAreaView>
   );
 };

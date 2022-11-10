@@ -1,13 +1,26 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useRecoilState} from 'recoil';
 import CustomButton from '../../components/common/CustomButton';
 import MatchingHeader from '../../components/matching/MatchingHeader';
+import {MatchingRequestInfoState} from '../../recoil/atoms/matchingRequest';
 import {color, screen, Typography} from '../../utils/utils';
+import {MainTabNavigationProp} from '../MainTab';
 
 const MatchingRequestScreen03 = () => {
+  const [MatchingRequestInfo, setMatchingRequestInfo] = useRecoilState(
+    MatchingRequestInfoState,
+  );
+  const navigation = useNavigation<MainTabNavigationProp>();
   const [go, setGo] = useState<boolean>(false);
   const [come, setCome] = useState<boolean>(false);
+
+  const onNavigate = () => {
+    setMatchingRequestInfo({...MatchingRequestInfo, pickUpType: go ? 0 : 1});
+    navigation.navigate('MatchingRequestScreen04');
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -29,7 +42,11 @@ const MatchingRequestScreen03 = () => {
           <View style={dstyles(go).item}>
             <View style={styles.illust} />
             <View style={styles.textWrap}>
-              <Text style={[Typography.subtitle3, {color: color.blueGray_02}]}>
+              <Text
+                style={[
+                  Typography.subtitle3,
+                  {color: go ? color.blueGray_06 : color.blueGray_02},
+                ]}>
                 제가 매칭 상대의 주소에 갈게요
               </Text>
             </View>
@@ -45,7 +62,11 @@ const MatchingRequestScreen03 = () => {
           <View style={dstyles(come).item}>
             <View style={styles.illust} />
             <View style={styles.textWrap}>
-              <Text style={[Typography.subtitle3, {color: color.blueGray_02}]}>
+              <Text
+                style={[
+                  Typography.subtitle3,
+                  {color: come ? color.blueGray_06 : color.blueGray_02},
+                ]}>
                 매칭 상대가 제 주소로 와주세요
               </Text>
             </View>
@@ -55,7 +76,7 @@ const MatchingRequestScreen03 = () => {
       <View>
         <CustomButton
           text="다음"
-          onPress={() => {}}
+          onPress={onNavigate}
           backgroundColor={color.mint_05}
           style={{width: screen.width}}
           disabled={!go && !come ? true : false}
