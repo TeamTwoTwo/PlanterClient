@@ -22,14 +22,10 @@ const MyMessage = ({
 }: PropTypes) => {
   const [isImageVisible, setIsImageVisible] = useState<boolean>(false);
   const [viewWidth, setviewWidth] = useState<number>(0);
-  const [viewHeight, setviewHeight] = useState<number>(0);
 
-  const onLayout = (e: {
-    nativeEvent: {layout: {width: number; height: number}};
-  }) => {
-    const {width, height} = e.nativeEvent.layout;
+  const onLayout = (e: {nativeEvent: {layout: {width: number}}}) => {
+    const {width} = e.nativeEvent.layout;
     setviewWidth(width);
-    setviewHeight(height);
   };
 
   return (
@@ -48,33 +44,33 @@ const MyMessage = ({
         )}
         <Text style={styles.message}>{contents}</Text>
         {images && images.length > 0 && (
-          <View style={{marginTop: 6, height: 85}} onLayout={onLayout}>
+          <View style={{marginTop: 6}} onLayout={onLayout}>
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
               scrollEnabled={false}
               data={images.slice(0, 4)}
-              renderItem={({item}: string) => (
+              renderItem={({item, index}: string) => (
                 <Pressable
                   onPress={() => {
                     setIsImageVisible(true);
                   }}>
                   <Image
-                    style={viewStyles(viewWidth, viewHeight).img}
+                    style={viewStyles(viewWidth).img}
                     source={{uri: item}}
                   />
+                  {images && index === 3 && images.length > 4 && (
+                    <View style={viewStyles(viewWidth).overlist}>
+                      <Text style={[Typography.subtitle3, styles.number]}>
+                        +{images.length - 4}
+                      </Text>
+                    </View>
+                  )}
                 </Pressable>
               )}
               keyExtractor={item => `img ${item}`}
               ItemSeparatorComponent={<View style={{marginRight: 5}} />}
             />
-            {images && images.length > 4 && (
-              <View style={viewStyles(viewWidth, viewHeight).overlist}>
-                <Text style={[Typography.subtitle3, styles.number]}>
-                  +{images.length - 4}
-                </Text>
-              </View>
-            )}
           </View>
         )}
 
@@ -85,11 +81,11 @@ const MyMessage = ({
   );
 };
 
-const viewStyles = (viewWidth: number, viewHeight: number) =>
+const viewStyles = (viewWidth: number) =>
   StyleSheet.create({
     img: {
       width: viewWidth / 4 - 4,
-      height: viewHeight,
+      height: viewWidth / 4 - 4,
       borderRadius: 4,
       borderWidth: 1,
     },
@@ -97,7 +93,7 @@ const viewStyles = (viewWidth: number, viewHeight: number) =>
       position: 'absolute',
       right: 0,
       width: viewWidth / 4 - 4,
-      height: viewHeight,
+      height: viewWidth / 4 - 4,
       borderRadius: 4,
       backgroundColor: 'black',
       opacity: 0.5,
