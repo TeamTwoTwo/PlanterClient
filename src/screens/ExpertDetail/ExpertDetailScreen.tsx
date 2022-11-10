@@ -33,6 +33,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {getBottomSpace} from 'react-native-iphone-x-helper';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
+import Butler from '../../assets/icon/ic-butler-badge.svg';
+import Expert from '../../assets/icon/ic-expert-badge.svg';
+import Flower from '../../assets/icon/ic-flower-badge.svg';
+import Care from '../../assets/icon/ic-care-badge.svg';
 
 let mock = [1, 2, 3];
 
@@ -201,7 +205,15 @@ const ExpertDetailScreen = ({route}: any) => {
               <Text style={[Typography.subtitle2, styles.name]}>
                 {info?.name}
               </Text>
-              <PlantBadge />
+              {info?.category === 0 ? (
+                <Butler />
+              ) : info?.category === 1 ? (
+                <Flower />
+              ) : info?.category === 2 ? (
+                <Expert />
+              ) : (
+                <Care />
+              )}
               <Text style={[Typography.body2, styles.type]}>
                 {info?.category === 0
                   ? '식물 집사'
@@ -209,7 +221,7 @@ const ExpertDetailScreen = ({route}: any) => {
                   ? '꽃집'
                   : info?.category === 2
                   ? '식물 전문가'
-                  : '식물 케어 서비스'}
+                  : '식물케어 서비스'}
               </Text>
               <Text style={[Typography.caption1, styles.distance]}>
                 {info?.distance}km
