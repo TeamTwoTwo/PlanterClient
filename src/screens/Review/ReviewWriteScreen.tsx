@@ -12,6 +12,7 @@ import {
   FlatList,
   Keyboard,
   Platform,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ImagePicker, {Image as IImage} from 'react-native-image-crop-picker';
@@ -61,10 +62,17 @@ const ReviewWriteScreen = ({route}: any) => {
       compressImageQuality: 1, //이미지 압축 0~1
       mediaType: 'photo',
       includeBase64: true,
+      maxFiles: 0,
     })
       .then(res => {
         console.log(res);
-        setImageFiles(res);
+        if (res.length > 3) {
+          Alert.alert('사진은 최대 3장까지 첨부할 수 있습니다.');
+          let list = res.slice(0, 3);
+          setImageFiles(list);
+        } else {
+          setImageFiles(res);
+        }
       })
       .catch(e => {
         console.error(e);
