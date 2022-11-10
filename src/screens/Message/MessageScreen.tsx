@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {View, Text, StyleSheet, Pressable, FlatList} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography, url} from '../../utils/utils';
 import MessageItem from '../../components/Message/MessageItem';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import axios from 'axios';
@@ -21,9 +21,11 @@ interface messageData {
 
 const MessageScreen = () => {
   const [messageList, setMessageList] = useState<messageData[]>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
 
-  useEffect(() => {
+  const getReqList = (): void => {
+    setRefreshing(true);
     getData('auth').then(auth => {
       axios
         .get(url.dev + 'messages', {
@@ -34,12 +36,22 @@ const MessageScreen = () => {
         .then(res => {
           // console.log(res.data);
           setMessageList(res.data.result);
+          setRefreshing(false);
         })
         .catch(e => {
           console.error(e);
         });
     });
-  }, [messageList]);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getReqList(); // 화면이 포커스 됐을 때
+      return () => {
+        console.log('나가욥'); // 화면 포커스 아웃 됐을 때
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -64,6 +76,8 @@ const MessageScreen = () => {
             />
           )}
           keyExtractor={(item: messageData) => item.plantManagerId.toString()}
+          refreshing={refreshing}
+          onRefresh={getReqList}
         />
       ) : (
         <View style={styles.contentWrap}>

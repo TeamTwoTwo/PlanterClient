@@ -105,7 +105,7 @@ const MessageDetailScreen = ({route}: any) => {
           console.error(e);
         });
     });
-  }, [plantManagerId, messageDetail]);
+  }, [plantManagerId]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -135,7 +135,9 @@ const MessageDetailScreen = ({route}: any) => {
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
           onPress={() => {
-            navigation.navigate('WriteScreen');
+            navigation.navigate('WriteScreen', {
+              plantManagerId: plantManagerId,
+            });
           }}>
           <Plus />
         </Pressable>

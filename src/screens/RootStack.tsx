@@ -31,7 +31,9 @@ type RootStackParamList = {
   MessageDetailScreen: {
     item: messageData;
   };
-  WriteScreen: undefined;
+  WriteScreen: {
+    plantManagerId: number;
+  };
   ReviewDetailScreen: undefined;
   MatchingHistoryDetailScreen: {
     type: string;
