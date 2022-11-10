@@ -9,7 +9,8 @@ import {MainTabNavigationProp} from '../MainTab';
 
 const starList: number[] = [1, 2, 3, 4, 5];
 
-const ReviewStarScreen = () => {
+const ReviewStarScreen = ({route}: any) => {
+  const {matchingId, name, profileImg} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
   const [rating, setRating] = useState<number>(0);
 
@@ -17,7 +18,9 @@ const ReviewStarScreen = () => {
     setRating(num);
   };
 
-  const onPressNext = () => {};
+  const onPressNext = () => {
+    navigation.navigate('ReviewWriteScreen', {matchingId, rating});
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -37,13 +40,10 @@ const ReviewStarScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.main}>
-        <Image
-          source={require('../../assets/img/img-expert-profile.png')}
-          style={styles.profileImg}
-        />
+        <Image source={{uri: profileImg}} style={styles.profileImg} />
         <View style={styles.textWrap}>
           <Text style={[Typography.subtitle2, {color: color.blueGray_06}]}>
-            김보경님의 케어는 어떠셨나요?
+            {name}님의 케어는 어떠셨나요?
           </Text>
         </View>
         <View style={styles.starWrap}>

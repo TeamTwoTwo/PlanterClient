@@ -12,19 +12,28 @@ import WriteScreen from '../screens/Message/WriteScreen';
 import ReviewDetailScreen from './ExpertDetail/ReviewDetailScreen';
 import MatchingHistoryDetailScreen from './MatchingHistory/MatchingHistoryDetailScreen';
 import ReviewStarScreen from './MatchingHistory/ReviewStarScreen';
+import ReviewWriteScreen from './Review/ReviewWriteScreen';
 
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
-  ExpertDetailScreen: undefined;
+  ExpertDetailScreen: {plantManagerId: number};
   MessageScreen: undefined;
   MessageDetailScreen: undefined;
   WriteScreen: undefined;
-  ReviewDetailScreen: undefined;
+  ReviewDetailScreen: {plantManagerId: number};
   MatchingHistoryDetailScreen: {
-    type: string;
+    matchingId: number;
   };
-  ReviewStarScreen: undefined;
+  ReviewStarScreen: {
+    matchingId: number;
+    name: string;
+    profileImg: string;
+  };
+  ReviewWriteScreen: {
+    matchingId: number;
+    rating: number;
+  };
 };
 
 export type RootStackNavigationProp =
@@ -50,6 +59,7 @@ const RootStack = () => {
         component={MatchingHistoryDetailScreen}
       />
       <Stack.Screen name="ReviewStarScreen" component={ReviewStarScreen} />
+      <Stack.Screen name="ReviewWriteScreen" component={ReviewWriteScreen} />
     </Stack.Navigator>
   );
 };

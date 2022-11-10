@@ -1,20 +1,24 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Modal, TouchableOpacity} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import {IImageInfo} from 'react-native-image-zoom-viewer/built/image-viewer.type';
 import Close from '../../assets/icon/ic-close.svg';
 import {screen} from '../../utils/utils';
-
-const images = [
-  {url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'},
-  {url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'},
-  {url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'},
-];
 
 interface Props {
   visible: boolean;
   setVisible: (prop: boolean) => void;
+  images: string[] | undefined;
 }
-const ImageDetail = ({visible, setVisible}: Props) => {
+const ImageDetail = ({visible, setVisible, images}: Props) => {
+  const [imgList, setImgList] = useState<IImageInfo[]>();
+
+  useEffect(() => {
+    let arr: IImageInfo[] = [];
+    images?.forEach(data => arr.push({url: data}));
+    setImgList(arr);
+  }, [images]);
+
   return (
     <Modal visible={visible}>
       <>
@@ -26,7 +30,7 @@ const ImageDetail = ({visible, setVisible}: Props) => {
           <Close stroke="white" />
         </TouchableOpacity>
         <ImageViewer
-          imageUrls={images}
+          imageUrls={imgList}
           enableSwipeDown
           onSwipeDown={() => {
             setVisible(false);
