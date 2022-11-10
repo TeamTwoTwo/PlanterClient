@@ -40,7 +40,8 @@ const MyMessage = ({
           <View style={{marginTop: 6, height: 76, width: 325.5}}>
             <FlatList
               horizontal
-              showsScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              scrollEnabled={false}
               data={images.slice(0, 4)}
               renderItem={({item}: string) => (
                 <Pressable
