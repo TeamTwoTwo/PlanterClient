@@ -365,7 +365,9 @@ const ExpertDetailScreen = ({route}: any) => {
             <CustomButton
               backgroundColor={color.mint_05}
               text="매칭 요청"
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('MatchingRequestScreen01');
+              }}
               borderRadius={6}
               style={{flex: 1}}
             />
