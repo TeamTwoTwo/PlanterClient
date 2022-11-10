@@ -115,11 +115,15 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
           .then(res => {
             if (res.data.isSuccess) {
               console.log(res);
-              navigation.navigate('ReviewStarScreen', {
-                matchingId,
-                name: matchingInfo?.name,
-                profileImg: matchingInfo?.profileImg,
-              });
+              if (status === 'complete') {
+                navigation.navigate('ReviewStarScreen', {
+                  matchingId,
+                  name: matchingInfo?.name,
+                  profileImg: matchingInfo?.profileImg,
+                });
+              } else {
+                navigation.navigate('MatchingHistory');
+              }
             }
           })
           .catch(e => {
