@@ -11,7 +11,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import {color, screen, Typography} from '../../utils/utils';
+import {color, screen, Typography, url} from '../../utils/utils';
 import LinearGradient from 'react-native-linear-gradient';
 import Back from '../../assets/icon/ic-back-arrow.svg';
 import BackBlack from '../../assets/icon/ic-back-arrow-black.svg';
@@ -23,7 +23,7 @@ import Cost from '../../assets/icon/ic-cost.svg';
 import ChatBubble from '../../assets/icon/ic-chat-bubble.svg';
 import Star from '../../assets/icon/ic-star.svg';
 import Message from '../../assets/icon/ic-message.svg';
-import NaverMapView, {Marker} from 'react-native-nmap';
+import NaverMapView from 'react-native-nmap';
 import Review from '../../components/ExpertDetail/Review';
 import CustomButton from '../../components/common/CustomButton';
 import ImageDetail from '../../components/common/ImageDetail';
@@ -31,17 +31,77 @@ import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../MainTab';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {getBottomSpace} from 'react-native-iphone-x-helper';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
 
 let mock = [1, 2, 3];
 
-const ExpertDetailScreen = () => {
+interface InfoTypes {
+  id: number;
+  name: string;
+  category: number;
+  profileImg: string;
+  distance: number;
+  isPhoto: boolean;
+  rate: number;
+  description: string;
+  caringPrice: number;
+  pruningPrice: number;
+  images: string[];
+  introduction: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  review: object[];
+  numOfReview: number;
+}
+
+interface CoordType {
+  latitude: number;
+  longitude: number;
+}
+
+const ExpertDetailScreen = ({route}: any) => {
+  const {plantManagerId} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
-  const P0 = {latitude: 37.564362, longitude: 126.977011};
   const [isHeaderWhite, setIsHeaderWhite] = useState<boolean>(false);
   const [isExpertImageVisible, setIsExpertImageVisible] =
     useState<boolean>(false);
   const [isReviewImageVisible, setIsReviewImageVisible] =
     useState<boolean>(false);
+
+  const [markerWidth, setMarkerWidth] = useState<number>(0);
+  const [markerHeight, setMarkerHeight] = useState<number>(0);
+  const [info, setInfo] = useState<InfoTypes>();
+  const [coord, setCoords] = useState<CoordType>({latitude: 0, longitude: 0});
+
+  // 리뷰 별로 이미지가 다르니까 리뷰 이미지를 클릭할 때마다 이 값 바꿔줌(review imageDetail에 props로 이 값 사용)
+  const [reviewImgs, setReviewImgs] = useState<string[] | undefined>(
+    info?.images,
+  );
+
+  useEffect(() => {
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + `plant-managers/${plantManagerId}`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.isSuccess) {
+            setInfo(res.data.result);
+            const {latitude, longitude} = res.data.result;
+            setCoords({latitude, longitude});
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (e.nativeEvent.contentOffset.y > 55) {
@@ -55,8 +115,16 @@ const ExpertDetailScreen = () => {
     }
   };
 
+  const onLayout = (e: {
+    nativeEvent: {layout: {width: number; height: number}};
+  }) => {
+    const {width, height} = e.nativeEvent.layout;
+    setMarkerWidth(width);
+    setMarkerHeight(height);
+  };
+
   const onPressReviewDetail = () => {
-    navigation.navigate('ReviewDetailScreen');
+    navigation.navigate('ReviewDetailScreen', {plantManagerId});
   };
 
   return (
@@ -91,11 +159,11 @@ const ExpertDetailScreen = () => {
           )}
           <View style={styles.expertImgView}>
             <FlatList
-              data={mock}
+              data={info?.images}
               horizontal
               pagingEnabled
               showsHorizontalScrollIndicator={false}
-              renderItem={({item}) => (
+              renderItem={({item, index}) => (
                 <TouchableOpacity
                   activeOpacity={1}
                   onPress={() => {
@@ -104,48 +172,59 @@ const ExpertDetailScreen = () => {
                   <View>
                     <Image
                       style={styles.expertImg}
-                      source={require('../../assets/img/img-expert-img.png')}
+                      source={{uri: item}}
+                      resizeMode="cover"
                     />
                     <View style={styles.numOfImgs}>
                       <Text style={[Typography.caption1, styles.numOfImgsText]}>
-                        {item}
+                        {index + 1}
                         <Text
                           style={[
                             Typography.caption2,
                             styles.numOfImgsTextSub,
                           ]}>
-                          {' '}
-                          / 3
+                          &nbsp;/&nbsp;{info?.images.length}
                         </Text>
                       </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
               )}
-              keyExtractor={item => `img ${item}`}
+              keyExtractor={(item, idx) => `img ${item} ${idx}`}
             />
           </View>
         </View>
         <View style={mainStyles(isHeaderWhite).main}>
           <View>
-            <Image
-              style={styles.profileImg}
-              source={require('../../assets/img/img-expert-profile.png')}
-            />
+            <Image style={styles.profileImg} source={{uri: info?.profileImg}} />
             <View style={styles.nameView}>
-              <Text style={[Typography.subtitle2, styles.name]}>김보경</Text>
+              <Text style={[Typography.subtitle2, styles.name]}>
+                {info?.name}
+              </Text>
               <PlantBadge />
-              <Text style={[Typography.body2, styles.type]}>식물 집사</Text>
-              <Text style={[Typography.caption1, styles.distance]}>335km</Text>
+              <Text style={[Typography.body2, styles.type]}>
+                {info?.category === 0
+                  ? '식물 집사'
+                  : info?.category === 1
+                  ? '꽃집'
+                  : info?.category === 2
+                  ? '식물 전문가'
+                  : '식물 케어 서비스'}
+              </Text>
+              <Text style={[Typography.caption1, styles.distance]}>
+                {info?.distance}km
+              </Text>
             </View>
-            <View style={styles.profileOptionView}>
+            <View style={[styles.profileOptionView, {marginRight: 6}]}>
+              {info?.isPhoto && (
+                <View style={styles.profileOption}>
+                  <Camera />
+                  <Text style={[Typography.caption1, styles.profileOptionText]}>
+                    사진 제공
+                  </Text>
+                </View>
+              )}
               <View style={styles.profileOption}>
-                <Camera />
-                <Text style={[Typography.caption1, styles.profileOptionText]}>
-                  사진 제공
-                </Text>
-              </View>
-              <View style={[styles.profileOption, {marginLeft: 6}]}>
                 <Badge />
                 <Text style={[Typography.caption1, styles.profileOptionText]}>
                   약용식물관리사자격증 소유
@@ -154,8 +233,7 @@ const ExpertDetailScreen = () => {
             </View>
             <View style={styles.introduceView}>
               <Text style={[Typography.body2, styles.introduceText]}>
-                식물을 사랑한 지 12년차 된 식물집사입니다. 내 식물이라고
-                생각하고 정성을 다해 돌봐드리겠습니다.
+                {info?.description}
               </Text>
             </View>
           </View>
@@ -171,7 +249,10 @@ const ExpertDetailScreen = () => {
                 관리 1일
               </Text>
               <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-                1개당 <Text style={[Typography.subtitle4]}>5,000원</Text>
+                1개당{' '}
+                <Text style={[Typography.subtitle4]}>
+                  {info?.caringPrice.toLocaleString()}원
+                </Text>
               </Text>
             </View>
             <View style={styles.costContentView}>
@@ -179,7 +260,10 @@ const ExpertDetailScreen = () => {
                 가지치기
               </Text>
               <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-                1개당 <Text style={[Typography.subtitle4]}>20,000원</Text>
+                1개당{' '}
+                <Text style={[Typography.subtitle4]}>
+                  {info?.pruningPrice.toLocaleString()}원
+                </Text>
               </Text>
             </View>
           </View>
@@ -192,31 +276,28 @@ const ExpertDetailScreen = () => {
             </View>
             <View style={styles.contentFooterView}>
               <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-                식물을 사랑한 지 12년차 된 식물집사입니다. 2010년 조경 기능사
-                자격증을 취득했습니다. 내 식물이라고 생각하고 정성을 다해
-                돌봐드리겠습니다.
+                {info?.introduction}
               </Text>
             </View>
           </View>
           <View style={[styles.contentView, {padding: 0}]}>
             <View style={(styles.contentHeaderView, {padding: 20})}>
               <Text style={[Typography.subtitle4, {color: color.blueGray_05}]}>
-                서울특별시 종로구 세종대로 172
+                {info?.address}
               </Text>
             </View>
-            <View>
-              {/* <WebView
-                style={styles.webview}
-                source={{uri: 'http://localhost:3000'}}
-              /> */}
+            <View style={styles.mapWrap}>
               <NaverMapView
                 style={styles.mapView}
-                center={{...P0, zoom: 16}}
-                scrollGesturesEnabled={false}>
+                center={{...coord, zoom: 16}}
+                scrollGesturesEnabled={false}
+              />
+              <View style={dstyles(markerWidth, markerHeight).marker}>
                 <Image
+                  onLayout={onLayout}
                   source={require('../../assets/img/img-map-marker.png')}
                 />
-              </NaverMapView>
+              </View>
             </View>
           </View>
           <View style={styles.contentView}>
@@ -228,7 +309,7 @@ const ExpertDetailScreen = () => {
               <View style={styles.reviewHeader}>
                 <ChatBubble />
                 <Text style={[Typography.subtitle2, styles.contentHeaderText]}>
-                  후기 42건
+                  후기 {info?.numOfReview.toLocaleString()}건
                 </Text>
               </View>
               <View style={styles.reviewHeader}>
@@ -238,7 +319,7 @@ const ExpertDetailScreen = () => {
                     Typography.body2,
                     {color: color.blueGray_05, marginLeft: 2},
                   ]}>
-                  평균 4.5
+                  평균 {info?.rate}
                 </Text>
               </View>
             </View>
@@ -294,10 +375,12 @@ const ExpertDetailScreen = () => {
       <ImageDetail
         visible={isExpertImageVisible}
         setVisible={setIsExpertImageVisible}
+        images={info?.images}
       />
       <ImageDetail
         visible={isReviewImageVisible}
         setVisible={setIsReviewImageVisible}
+        images={info?.images}
       />
     </SafeAreaView>
   );
@@ -309,6 +392,16 @@ const mainStyles = (isHeaderWhite: boolean) =>
       paddingHorizontal: 20,
       transform: [{translateY: -47.5}],
       marginTop: isHeaderWhite ? 180 : 80,
+    },
+  });
+
+const dstyles = (width: number, height: number) =>
+  StyleSheet.create({
+    marker: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: [{translateX: -width * 0.5}, {translateY: -height * 0.5}],
     },
   });
 
@@ -357,6 +450,7 @@ const styles = StyleSheet.create({
   },
   expertImg: {
     width: screen.width,
+    height: 180,
   },
   numOfImgs: {
     position: 'absolute',
@@ -445,6 +539,9 @@ const styles = StyleSheet.create({
   },
   contentFooterView: {
     paddingTop: 20,
+  },
+  mapWrap: {
+    position: 'relative',
   },
   mapView: {
     height: 170,

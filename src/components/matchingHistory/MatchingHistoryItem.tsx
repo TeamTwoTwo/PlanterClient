@@ -3,23 +3,26 @@ import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import {color, Typography} from '../../utils/utils';
 import Badge from '../../assets/icon/ic-plant-badge.svg';
 import GrayBadge from '../../assets/icon/ic-plant-badge-gray.svg';
+import {ReqType} from '../../screens/MatchingHistory/MatchingHistoryListScreen';
 
 interface Props {
-  type: string;
+  info: ReqType;
   onPress: () => void;
 }
 
-const MatchingHistoryItem = ({type, onPress}: Props) => {
+const category = ['식물 집사', '꽃집', '식물 전문가', '식물 케어 서비스'];
+
+const MatchingHistoryItem = ({info, onPress}: Props) => {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-      <View style={dstyles(type).wrap}>
+      <View style={dstyles(info?.status).wrap}>
         <View style={styles.profileWrap}>
           <View style={styles.profileImgWrap}>
             <Image
-              style={dstyles(type).profileImg}
-              source={require('../../assets/img/img-expert-profile.png')}
+              style={dstyles(info?.status).profileImg}
+              source={{uri: info?.profileImg}}
             />
-            {type === 'new' && <View style={styles.redPoint} />}
+            {info?.status === 'new' && <View style={styles.redPoint} />}
           </View>
           <View style={styles.profileTextWrap}>
             <View style={styles.nameWrap}>
@@ -28,23 +31,27 @@ const MatchingHistoryItem = ({type, onPress}: Props) => {
                   Typography.subtitle3,
                   {
                     color:
-                      type === 'cancel' ? color.blueGray_01 : color.blueGray_06,
+                      info?.status === 'cancel'
+                        ? color.blueGray_01
+                        : color.blueGray_06,
                   },
                 ]}>
-                김보경
+                {info?.name}
               </Text>
               <View style={styles.badgeWrap}>
-                {type === 'cancel' ? <GrayBadge /> : <Badge />}
+                {info?.status === 'cancel' ? <GrayBadge /> : <Badge />}
               </View>
               <Text
                 style={[
                   Typography.caption1,
                   {
                     color:
-                      type === 'cancel' ? color.blueGray_01 : color.blueGray_05,
+                      info?.status === 'cancel'
+                        ? color.blueGray_01
+                        : color.blueGray_05,
                   },
                 ]}>
-                식물 집사
+                {category[info?.category]}
               </Text>
             </View>
             <Text
@@ -52,22 +59,24 @@ const MatchingHistoryItem = ({type, onPress}: Props) => {
                 Typography.body2,
                 {
                   color:
-                    type === 'cancel' ? color.blueGray_01 : color.blueGray_02,
+                    info?.status === 'cancel'
+                      ? color.blueGray_01
+                      : color.blueGray_02,
                 },
               ]}>
-              요정일시 2022.10.24
+              요청일시 {info?.requestAt}
             </Text>
           </View>
         </View>
         <View>
-          <Text style={[Typography.subtitle4, dstyles(type).text]}>
-            {type === 'care'
+          <Text style={[Typography.subtitle4, dstyles(info?.status).text]}>
+            {info?.status === 'care'
               ? '케어 진행중'
-              : type === 'request'
+              : info?.status === 'request'
               ? '매칭 요청중'
-              : type === 'complete'
+              : info?.status === 'complete'
               ? '케어 완료'
-              : type === 'cancel'
+              : info?.status === 'cancel'
               ? '매칭 취소'
               : '새 매칭 요청'}
           </Text>
