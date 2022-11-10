@@ -104,6 +104,10 @@ const MatchingHistoryListScreen = () => {
     setNoMatchingViewHeight(height);
   };
 
+  const onPressMessage = () => {
+    navigation.navigate('MessageScreen');
+  };
+
   return (
     <SafeAreaView style={styles.safe} onLayout={onLayout}>
       <View style={styles.header}>
@@ -131,7 +135,10 @@ const MatchingHistoryListScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.msgBtn} activeOpacity={0.5}>
+        <TouchableOpacity
+          style={styles.msgBtn}
+          activeOpacity={0.5}
+          onPress={onPressMessage}>
           <Message stroke={'black'} />
         </TouchableOpacity>
       </View>
