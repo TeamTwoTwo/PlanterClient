@@ -4,7 +4,6 @@ import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import CustomButton from '../../components/common/CustomButton';
 import MatchingHeader from '../../components/matching/MatchingHeader';
-import Calendar from '../../components/matchingRequest/Calendar';
 import {color, screen, Typography} from '../../utils/utils';
 import {MainTabNavigationProp} from '../MainTab';
 import CalendarPicker from 'react-native-calendar-picker';
