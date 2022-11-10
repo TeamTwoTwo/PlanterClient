@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, FlatList, Image, Pressable} from 'react-native';
-import {color, Typography} from '../../utils/utils.ts';
+import {color, Typography} from '../../utils/utils';
 import Receive from '../../assets/icon/ic-receive.svg';
 import Send from '../../assets/icon/ic-send.svg';
 import ImageDetail from '../../components/common/ImageDetail';
@@ -50,7 +50,7 @@ const MyMessage = ({
               showsHorizontalScrollIndicator={false}
               scrollEnabled={false}
               data={images.slice(0, 4)}
-              renderItem={({item, index}: string) => (
+              renderItem={({item, index}) => (
                 <Pressable
                   onPress={() => {
                     setIsImageVisible(true);
@@ -69,14 +69,18 @@ const MyMessage = ({
                 </Pressable>
               )}
               keyExtractor={item => `img ${item}`}
-              ItemSeparatorComponent={<View style={{marginRight: 5}} />}
+              ItemSeparatorComponent={() => <View style={{marginRight: 5}} />}
             />
           </View>
         )}
 
         <Text style={[Typography.body2, styles.time]}>{sentAt}</Text>
       </View>
-      <ImageDetail visible={isImageVisible} setVisible={setIsImageVisible} />
+      <ImageDetail
+        images={images}
+        visible={isImageVisible}
+        setVisible={setIsImageVisible}
+      />
     </View>
   );
 };
@@ -86,8 +90,8 @@ const viewStyles = (viewWidth: number) =>
     img: {
       width: viewWidth / 4 - 4,
       height: viewWidth / 4 - 4,
-      borderRadius: 4,
-      borderWidth: 1,
+      borderRadius: 8,
+      // borderWidth: 1,
     },
     overlist: {
       position: 'absolute',

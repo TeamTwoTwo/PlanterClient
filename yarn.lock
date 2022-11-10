@@ -6592,11 +6592,7 @@
   "resolved" "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz"
   "version" "0.70.3"
 
-<<<<<<< HEAD
 "react-native-image-crop-picker@^0.38.1":
-=======
-"react-native-image-crop-picker@0.38.1":
->>>>>>> develop
   "integrity" "sha512-cF5UQnWplzHCeiCO+aiGS/0VomWaLmFf3nSsgTMPfY+8+99h8N/eHQvVdSF7RsGw50B8394wGeGyqHjjp8YRWw=="
   "resolved" "https://registry.npmjs.org/react-native-image-crop-picker/-/react-native-image-crop-picker-0.38.1.tgz"
   "version" "0.38.1"

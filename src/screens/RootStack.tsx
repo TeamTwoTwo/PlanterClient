@@ -19,7 +19,7 @@ import MatchingRequestScreen04 from './MatchingRequest/MatchingRequestScreen04';
 import ReviewWriteScreen from './Review/ReviewWriteScreen';
 
 type messageData = {
-  plantManagereId: number;
+  plantManagerId: number;
   profileImg: string;
   name: string;
   category: number;
