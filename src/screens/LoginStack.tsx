@@ -19,8 +19,12 @@ import FindAddress from './Signup/FindAddress';
 import SignupScreen04 from './Signup/SignupScreen04';
 import TermsOfServiceScreen from './Signup/TermsOfServiceScreen';
 import TOSDetail from './Signup/TOSDetail';
+import MainScreen from './Login/MainScreen';
+import LoginInputScreen from './Login/LoginInputScreen';
 
 type LoginStackParamList = {
+  MainScreen: undefined;
+  LoginInputScreen: undefined;
   LoginScreen: undefined;
   FirstScreen: undefined;
   IdDoneScreen: undefined;
@@ -45,6 +49,16 @@ const LoginStack = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        component={MainScreen}
+        name="MainScreen"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={LoginInputScreen}
+        name="LoginInputScreen"
+        options={{headerShown: false}}
+      />
       <Stack.Screen
         component={LoginScreen}
         name="LoginScreen"
