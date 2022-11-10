@@ -37,7 +37,7 @@ const MyMessage = ({
         )}
         <Text style={styles.message}>{contents}</Text>
         {images && images.length > 0 && (
-          <View style={{marginTop: 6, height: 76}}>
+          <View style={{marginTop: 6, height: 76, width: 325.5}}>
             <FlatList
               horizontal
               showsScrollIndicator={false}
@@ -52,15 +52,16 @@ const MyMessage = ({
               )}
               keyExtractor={item => `img ${item}`}
             />
+            {images && images.length > 4 && (
+              <View style={styles.overlist}>
+                <Text style={[Typography.subtitle3, styles.number]}>
+                  +{images.length - 4}
+                </Text>
+              </View>
+            )}
           </View>
         )}
-        {images && images.length > 4 && (
-          <View style={styles.overlist}>
-            <Text style={[Typography.subtitle3, styles.number]}>
-              +{images.length - 4}
-            </Text>
-          </View>
-        )}
+
         <Text style={[Typography.body2, styles.time]}>{sentAt}</Text>
       </View>
       <ImageDetail visible={isImageVisible} setVisible={setIsImageVisible} />
@@ -113,8 +114,7 @@ const styles = StyleSheet.create({
   },
   overlist: {
     position: 'absolute',
-    right: 62,
-    top: 60,
+    right: 0,
     width: 76,
     height: 76,
     borderRadius: 4,
