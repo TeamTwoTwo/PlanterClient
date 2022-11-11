@@ -6,6 +6,7 @@ import {
   Pressable,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, screen, Typography, url} from '../../utils/utils.ts';
@@ -105,6 +106,7 @@ const MessageDetailScreen = ({route}: any) => {
           console.log(res.data.result);
           setIsModalShown(false);
           if (res.data.isSuccess) {
+            Alert.alert('스팸 신고를 완료했습니다.');
             navigation.navigate('MessageScreen');
           }
         })

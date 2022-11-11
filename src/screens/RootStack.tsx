@@ -15,6 +15,7 @@ import ReviewStarScreen from './MatchingHistory/ReviewStarScreen';
 import ReviewWriteScreen from './Review/ReviewWriteScreen';
 import DropOutScreen from './MyPage/DropOutScreen';
 import ProfileScreen from './MyPage/ProfileScreen';
+import TOSDetail from './Signup/TOSDetail';
 
 type messageData = {
   plantManagereId: number;
@@ -52,6 +53,7 @@ type RootStackParamList = {
   };
   DropOutScreen: undefined;
   ProfileScreen: undefined;
+  TOSDetail: {number: number};
 };
 
 export type RootStackNavigationProp =
@@ -80,6 +82,7 @@ const RootStack = () => {
       <Stack.Screen name="ReviewWriteScreen" component={ReviewWriteScreen} />
       <Stack.Screen name="DropOutScreen" component={DropOutScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="TOSDetail" component={TOSDetail} />
     </Stack.Navigator>
   );
 };

@@ -9,7 +9,7 @@ const TOSDetail = ({route}: any) => {
   return (
     <SafeAreaView style={styles.safe}>
       <FindHeader />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>
           플랜터{' '}
           {number === 1
