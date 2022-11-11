@@ -1,13 +1,15 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import {color, Typography} from '../../utils/utils';
-import Badge from '../../assets/icon/ic-plant-badge.svg';
-import GrayBadge from '../../assets/icon/ic-plant-badge-gray.svg';
 import {ReqType} from '../../screens/MatchingHistory/MatchingHistoryListScreen';
 import Butler from '../../assets/icon/ic-butler-badge.svg';
 import Expert from '../../assets/icon/ic-expert-badge.svg';
 import Flower from '../../assets/icon/ic-flower-badge.svg';
 import Care from '../../assets/icon/ic-care-badge.svg';
+import ButlerGray from '../../assets/icon/ic-butler-gray-badge.svg';
+import ExpertGray from '../../assets/icon/ic-expert-gray-badge.svg';
+import FlowerGray from '../../assets/icon/ic-flower-gray-badge.svg';
+import CareGray from '../../assets/icon/ic-care-gray-badge.svg';
 
 interface Props {
   info: ReqType;
@@ -44,7 +46,15 @@ const MatchingHistoryItem = ({info, onPress}: Props) => {
               </Text>
               <View style={styles.badgeWrap}>
                 {info?.status === 'cancel' ? (
-                  <GrayBadge />
+                  info?.category === 0 ? (
+                    <ButlerGray />
+                  ) : info?.category === 1 ? (
+                    <FlowerGray />
+                  ) : info?.category === 2 ? (
+                    <ExpertGray />
+                  ) : (
+                    <CareGray />
+                  )
                 ) : info?.category === 0 ? (
                   <Butler />
                 ) : info?.category === 1 ? (

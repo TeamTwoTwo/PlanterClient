@@ -10,7 +10,10 @@ import {
 } from 'react-native';
 import {color, screen, Typography, url} from '../../utils/utils';
 import MatchingHeader from '../../components/matching/MatchingHeader';
-import Badge from '../../assets/icon/ic-plant-badge.svg';
+import Butler from '../../assets/icon/ic-butler-badge.svg';
+import Expert from '../../assets/icon/ic-expert-badge.svg';
+import Flower from '../../assets/icon/ic-flower-badge.svg';
+import Care from '../../assets/icon/ic-care-badge.svg';
 import Message from '../../assets/icon/ic-message.svg';
 import {ScrollView} from 'react-native-virtualized-view';
 import CustomButton from '../../components/common/CustomButton';
@@ -19,11 +22,6 @@ import {MainTabNavigationProp} from '../MainTab';
 import Modal from '../../components/common/Modal';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
-
-const mock = [
-  {name: '스파티필름', num: 1, price: 5000, type: '식물관리'},
-  {name: '몬스테라', num: 2, price: 10000, type: '가지치기'},
-];
 
 const category = ['식물 집사', '꽃집', '식물 전문가', '식물 케어 서비스'];
 const pickupType = [
@@ -201,7 +199,17 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               <Text style={[Typography.subtitle2, {color: color.blueGray_06}]}>
                 {matchingInfo?.name}
               </Text>
-              <View style={styles.badgeWrap}>{<Badge />}</View>
+              <View style={styles.badgeWrap}>
+                {matchingInfo?.category === 0 ? (
+                  <Butler />
+                ) : matchingInfo?.category === 1 ? (
+                  <Flower />
+                ) : matchingInfo?.category === 2 ? (
+                  <Expert />
+                ) : (
+                  <Care />
+                )}
+              </View>
               <Text style={[Typography.body2, {color: color.blueGray_05}]}>
                 {matchingInfo && category[matchingInfo.category]}
               </Text>
