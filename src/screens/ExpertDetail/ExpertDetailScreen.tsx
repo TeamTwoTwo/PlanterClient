@@ -160,6 +160,10 @@ const ExpertDetailScreen = ({route}: any) => {
     }
   };
 
+  const onPressMessage = () => {
+    navigation.navigate('WriteScreen', {plantManagerId});
+  };
+
   return (
     <SafeAreaView style={styles.safe} edges={['bottom']}>
       <StatusBar
@@ -434,7 +438,10 @@ const ExpertDetailScreen = ({route}: any) => {
           end={{x: 0, y: 1}}
         />
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.msgBtn} activeOpacity={1}>
+          <TouchableOpacity
+            style={styles.msgBtn}
+            activeOpacity={1}
+            onPress={onPressMessage}>
             <Message stroke={color.mint_06} />
           </TouchableOpacity>
           <View style={{width: (screen.width * 275) / 375}}>
