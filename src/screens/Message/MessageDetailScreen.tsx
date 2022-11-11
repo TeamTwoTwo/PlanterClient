@@ -39,7 +39,7 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {plantManagerId, name} = route?.params.item;
+  const {plantManagerId, name} = route?.params;
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
   });

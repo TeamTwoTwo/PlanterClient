@@ -64,7 +64,8 @@ const MessageScreen = () => {
             <MessageItem
               onPress={() => {
                 navigation.navigate('MessageDetailScreen', {
-                  item,
+                  plantManagerId: item.plantManagerId,
+                  name: item.name,
                 });
               }}
               name={item.name}

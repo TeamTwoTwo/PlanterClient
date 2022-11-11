@@ -154,6 +154,14 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
       });
   };
 
+  const onPressMessage = () => {
+    matchingInfo &&
+      navigation.navigate('MessageDetailScreen', {
+        plantManagerId: matchingInfo?.plantManagerId,
+        name: matchingInfo?.name,
+      });
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <MatchingHeader
@@ -170,7 +178,10 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               source={{uri: matchingInfo?.profileImg}}
               style={styles.profileImg}
             />
-            <TouchableOpacity style={styles.msgBtn} activeOpacity={0.5}>
+            <TouchableOpacity
+              style={styles.msgBtn}
+              activeOpacity={1}
+              onPress={onPressMessage}>
               <Message stroke={'black'} width={20} height={20} />
             </TouchableOpacity>
           </View>

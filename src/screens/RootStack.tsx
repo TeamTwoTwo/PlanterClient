@@ -21,23 +21,14 @@ import DropOutScreen from './MyPage/DropOutScreen';
 import ProfileScreen from './MyPage/ProfileScreen';
 import TOSDetail from './Signup/TOSDetail';
 
-type messageData = {
-  plantManagerId: number;
-  profileImg: string;
-  name: string;
-  category: number;
-  contents: string;
-  sentAt: string;
-  isUnread: boolean;
-};
-
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
   ExpertDetailScreen: {plantManagerId: number};
   MessageScreen: undefined;
   MessageDetailScreen: {
-    item: messageData;
+    plantManagerId: number;
+    name: string;
   };
   WriteScreen: {
     plantManagerId: number;
