@@ -50,16 +50,18 @@ const Review = ({onPress, info}: Props) => {
           </Text>
           <View style={[styles.header]}>
             <Text style={[Typography.caption2, {color: color.blueGray_02}]}>
-              {info?.date}&nbsp;|&nbsp;
+              {info?.date}
             </Text>
+            <View style={styles.separator} />
             <Star fill="#FFC42C" />
             <Text
               style={[
                 Typography.caption2,
                 {color: color.blueGray_02, marginLeft: 2},
               ]}>
-              {info?.rate.toFixed(1)}&nbsp;|&nbsp;
+              {info?.rate.toFixed(1)}
             </Text>
+            <View style={styles.separator} />
             <TouchableOpacity activeOpacity={0.5} onPress={onPressReport}>
               <Text style={[Typography.caption2, {color: color.blueGray_02}]}>
                 신고
@@ -187,6 +189,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 14,
     flex: 1,
+  },
+  separator: {
+    borderWidth: 1,
+    borderColor: color.blueGray_00,
+    height: 9.5,
+    marginHorizontal: 6,
   },
 });
 export default Review;
