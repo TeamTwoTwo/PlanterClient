@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   illust: {
     width: 240,
     height: 140,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: 'white',
   },
   textWrap: {
     marginTop: 12,
