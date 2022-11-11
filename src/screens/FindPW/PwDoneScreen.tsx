@@ -11,7 +11,7 @@ const PwDoneScreen = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
 
   const onPress = (): void => {
-    navigation.navigate('LoginScreen');
+    navigation.popToTop();
   };
   return (
     <SafeAreaView style={styles.block}>

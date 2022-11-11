@@ -6,14 +6,14 @@ import {
   Pressable,
   TouchableOpacity,
   FlatList,
+  Platform,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color, screen, Typography, url} from '../../utils/utils.ts';
+import {color, screen, Typography, url} from '../../utils/utils';
 import Plus from '../../assets/icon/ic-plus.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
-import ReceiveMessage from '../../components/Message/ReceiveMessage';
-import SendMessage from '../../components/Message/SendMessage';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import MyMessage from '../../components/Message/MyMessage';
 import Modal from '../../components/common/Modal';
@@ -38,7 +38,7 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
-  const {plantManagerId, name} = route.params.item;
+  const {plantManagerId, name} = route?.params.item;
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
   });
@@ -89,6 +89,32 @@ const MessageDetailScreen = ({route}: any) => {
     });
   };
 
+  const onReport = (): void => {
+    getData('auth').then(auth => {
+      axios
+        .post(
+          url.dev + 'reports',
+          {plantManagerId: plantManagerId},
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          console.log(res.data.result);
+          setIsModalShown(false);
+          if (res.data.isSuccess) {
+            Alert.alert('스팸 신고를 완료했습니다.');
+            navigation.navigate('MessageScreen');
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
   useEffect(() => {
     getData('auth').then(auth => {
       axios
@@ -127,8 +153,8 @@ const MessageDetailScreen = ({route}: any) => {
             images={item.images}
           />
         )}
-        keyExtractor={(item: messageData) => item.messageId}
-        ItemSeparatorComponent={<View style={styles.line} />}
+        keyExtractor={(item: messageData) => item.messageId.toString()}
+        ItemSeparatorComponent={() => <View style={styles.line} />}
         ListFooterComponent={<View style={{marginTop: 90}} />}
       />
       <View style={styles.wrap}>
@@ -146,11 +172,11 @@ const MessageDetailScreen = ({route}: any) => {
         <View
           style={modalStyles(modalWidth, modalHeight).modal}
           onLayout={onLayout}>
-          <View style={styles.firstSelecBox}>
+          <Pressable style={styles.firstSelecBox} onPress={onReport}>
             <Text style={[Typography.subtitle3, {color: color.blueGray_04}]}>
               스팸 신고하기
             </Text>
-          </View>
+          </Pressable>
           <Pressable style={styles.secondSelecBox} onPress={onDeleteMessage}>
             <Text style={[Typography.subtitle3, {color: color.red_02}]}>
               쪽지 삭제하기

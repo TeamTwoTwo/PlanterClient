@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, StyleSheet, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import FindHeader from '../../components/common/FindHeader';
+import {Typography} from '../../utils/utils';
 
 const TOSDetail = ({route}: any) => {
   const number = route.params.number;
@@ -9,7 +10,7 @@ const TOSDetail = ({route}: any) => {
   return (
     <SafeAreaView style={styles.safe}>
       <FindHeader />
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>
           플랜터{' '}
           {number === 1
@@ -18,7 +19,7 @@ const TOSDetail = ({route}: any) => {
             ? '개인정보 처리 방침'
             : '전자금융거래 이용 약관'}
         </Text>
-        <Text style={styles.content}>
+        <Text style={[Typography.body1, styles.content]}>
           {number === 1
             ? `제 1 장 총칙 
 제 1 조 (목적) 

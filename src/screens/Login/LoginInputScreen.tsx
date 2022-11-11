@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
+  Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import FindHeader from '../../components/common/FindHeader';
@@ -142,7 +143,9 @@ const LoginInputScreen = () => {
 
   return (
     <SafeAreaView style={styles.block}>
-      <KeyboardAvoidingView style={{flex: 1}}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={{paddingHorizontal: 24, flex: 1}}>
           <FindHeader />
           <View style={{marginTop: 47}}>

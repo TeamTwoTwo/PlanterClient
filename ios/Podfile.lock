@@ -75,7 +75,6 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - hermes-engine (0.70.1)
   - libevent (2.1.12)
   - NMapsMap (3.16.0)
   - OpenSSL-Universal (1.1.1100)
@@ -90,12 +89,6 @@ PODS:
     - DoubleConversion
     - fmt (~> 6.2.1)
     - glog
-  - RCT-Folly/Futures (2021.07.22.00):
-    - boost
-    - DoubleConversion
-    - fmt (~> 6.2.1)
-    - glog
-    - libevent
   - RCTRequired (0.70.1)
   - RCTTypeSafety (0.70.1):
     - FBLazyVector (= 0.70.1)
@@ -273,17 +266,6 @@ PODS:
     - React-logger (= 0.70.1)
     - React-perflogger (= 0.70.1)
     - React-runtimeexecutor (= 0.70.1)
-  - React-hermes (0.70.1):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2021.07.22.00)
-    - RCT-Folly/Futures (= 2021.07.22.00)
-    - React-cxxreact (= 0.70.1)
-    - React-jsi (= 0.70.1)
-    - React-jsiexecutor (= 0.70.1)
-    - React-jsinspector (= 0.70.1)
-    - React-perflogger (= 0.70.1)
   - React-jsi (0.70.1):
     - boost (= 1.76.0)
     - DoubleConversion
@@ -307,9 +289,6 @@ PODS:
     - glog
   - react-native-image-picker (4.10.0):
     - React-Core
-  - react-native-multiple-image-picker (0.4.13):
-    - React-Core
-    - TLPhotoPicker (= 2.1.4)
   - react-native-nmap (0.0.66):
     - NMapsMap
     - React
@@ -408,7 +387,6 @@ PODS:
   - RNSVG (13.2.0):
     - React-Core
   - SocketRocket (0.6.0)
-  - TLPhotoPicker (2.1.4)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -442,8 +420,6 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.125.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.125.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - hermes-engine (from `../node_modules/react-native/sdks/hermes/hermes-engine.podspec`)
-  - libevent (~> 2.1.12)
   - OpenSSL-Universal (= 1.1.1100)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -457,13 +433,11 @@ DEPENDENCIES:
   - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
   - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
-  - React-hermes (from `../node_modules/react-native/ReactCommon/hermes`)
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
-  - "react-native-multiple-image-picker (from `../node_modules/@baronha/react-native-multiple-image-picker`)"
   - react-native-nmap (from `../node_modules/react-native-nmap`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
@@ -504,7 +478,6 @@ SPEC REPOS:
     - NMapsMap
     - OpenSSL-Universal
     - SocketRocket
-    - TLPhotoPicker
     - TOCropViewController
     - YogaKit
 
@@ -521,8 +494,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
-  hermes-engine:
-    :podspec: "../node_modules/react-native/sdks/hermes/hermes-engine.podspec"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -543,8 +514,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/CoreModules"
   React-cxxreact:
     :path: "../node_modules/react-native/ReactCommon/cxxreact"
-  React-hermes:
-    :path: "../node_modules/react-native/ReactCommon/hermes"
   React-jsi:
     :path: "../node_modules/react-native/ReactCommon/jsi"
   React-jsiexecutor:
@@ -555,8 +524,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
-  react-native-multiple-image-picker:
-    :path: "../node_modules/@baronha/react-native-multiple-image-picker"
   react-native-nmap:
     :path: "../node_modules/react-native-nmap"
   react-native-safe-area-context:
@@ -620,7 +587,6 @@ SPEC CHECKSUMS:
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  hermes-engine: 9cd393f741bfa14d1d0cd90cc373e3619c0bc7ea
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   NMapsMap: a2593320fca2bb09e521c05b4dffee4da42e96ed
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -634,13 +600,11 @@ SPEC CHECKSUMS:
   React-Core: 59487b5839f3ff353bbc847df22fc7f8a42ff421
   React-CoreModules: 62df56334be6c6ef93e1b637284abb782a731318
   React-cxxreact: 5a641acd449213f420ec01f0c912c8433a91c4ba
-  React-hermes: 909477fce9db1d83e854489d5f3c360dd40cf8b9
   React-jsi: 28343c93479aa1380251c450a76a9d6eabacf3cd
   React-jsiexecutor: 47201924064085223b63ec7e3ee9fd40ad8508e8
   React-jsinspector: 1363be638eccfe1aea1b10dd42e632b0397e5ec8
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
   react-native-image-picker: 4bc9ed38c8be255b515d8c88babbaf74973f91a8
-  react-native-multiple-image-picker: ba2725d577e1da7fa83ce1b12a81d84107556240
   react-native-nmap: cfcc5402746040494c544ea90a6062f49505acdf
   react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
@@ -663,11 +627,10 @@ SPEC CHECKSUMS:
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   RNSVG: 07037623c36f12e41312730622d5f6b3656227ca
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  TLPhotoPicker: f486e8499e1c3f464d0e886697635e25a72a52b8
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 6c8252e38d65aa387daee699eacf027e055e0b31
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 63c3d6a2abe9608269dc54057140f8ec32b9e1ce
+PODFILE CHECKSUM: 883e0771f64664bbe086d30f531e544dac9859ec
 
 COCOAPODS: 1.11.3

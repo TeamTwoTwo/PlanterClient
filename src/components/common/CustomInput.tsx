@@ -34,7 +34,7 @@ interface Props {
   checkStatus?: boolean;
   multiline?: boolean;
   pointerEventsNone?: boolean;
-  onChangeText: Dispatch<SetStateAction<string>>;
+  onChangeText: Dispatch<SetStateAction<string>> | ((e: string) => void);
   clearText?: () => void;
 }
 

@@ -1,11 +1,25 @@
 import React from 'react';
 import {color} from '../../utils/utils';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {LoginStackNavigationProp} from '../LoginStack';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import CustomButton from '../../components/common/CustomButton';
 import FlowerSpot from '../../assets/icon/ic-flowerpot.svg';
+import CustomButton from '../../components/common/CustomButton';
 
 const IdNoneScreen = () => {
+  const navigation = useNavigation<LoginStackNavigationProp>();
+
+  const onPress = (): void => {
+    navigation.popToTop();
+    navigation.navigate('TermsOfService');
+  };
+
   return (
     <SafeAreaView style={styles.block}>
       <View style={styles.nextBlock}>
@@ -25,7 +39,7 @@ const IdNoneScreen = () => {
         </View>
       </View>
       <View>
-        <CustomButton backgroundColor={color.mint_05} text="회원가입 하기" />
+        <CustomButton backgroundColor={color.mint_05} text="회원가입 하기" onPress={onPress} />
       </View>
     </SafeAreaView>
   );
@@ -46,6 +60,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: color.gray_05,
     textDecorationLine: 'underline',
+  },
+  wrap: {
+    flex: 1,
+    justifyContent: 'center',
   },
   titleWrap: {
     paddingHorizontal: 33,
@@ -84,6 +102,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     paddingTop: 14,
+  },
+  illustView: {
+    marginTop: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  illust: {
+    width: 280,
+    height: 280,
+    backgroundColor: color.gray_03,
   },
 });
 

@@ -11,7 +11,7 @@ const IdDoneScreen = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
 
   const onPress = (): void => {
-    navigation.navigate('LoginScreen');
+    navigation.popToTop();
   };
 
   return (
