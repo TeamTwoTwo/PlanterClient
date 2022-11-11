@@ -18,7 +18,9 @@ import Community from '../assets/icon/ic-community.svg';
 import MyPage from '../assets/icon/ic-mypage.svg';
 import {StyleSheet} from 'react-native';
 import {RootStackNavigationProp} from './RootStack';
+import {LoginStackNavigationProp} from './LoginStack';
 import MatchingHistoryListScreen from './MatchingHistory/MatchingHistoryListScreen';
+import MyPageScreen from './MyPage/MyPageScreen';
 
 type MainTabParamList = {
   Matching: undefined;
@@ -27,6 +29,7 @@ type MainTabParamList = {
 };
 
 export type MainTabNavigationProp = CompositeNavigationProp<
+  LoginStackNavigationProp,
   RootStackNavigationProp,
   BottomTabNavigationProp<MainTabParamList>
 >;
@@ -71,7 +74,7 @@ const MainTab = () => {
       />
       <Tab.Screen
         name="Mypage"
-        component={HomeScreen}
+        component={MyPageScreen}
         options={{
           tabBarIcon: ({focused}) => (focused ? <FocusedMypage /> : <MyPage />),
           title: '마이페이지',

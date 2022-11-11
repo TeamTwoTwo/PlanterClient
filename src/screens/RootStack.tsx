@@ -13,6 +13,8 @@ import ReviewDetailScreen from './ExpertDetail/ReviewDetailScreen';
 import MatchingHistoryDetailScreen from './MatchingHistory/MatchingHistoryDetailScreen';
 import ReviewStarScreen from './MatchingHistory/ReviewStarScreen';
 import ReviewWriteScreen from './Review/ReviewWriteScreen';
+import DropOutScreen from './MyPage/DropOutScreen';
+import ProfileScreen from './MyPage/ProfileScreen';
 
 type messageData = {
   plantManagereId: number;
@@ -48,6 +50,8 @@ type RootStackParamList = {
     matchingId: number;
     rating: number;
   };
+  DropOutScreen: undefined;
+  ProfileScreen: undefined;
 };
 
 export type RootStackNavigationProp =
@@ -74,6 +78,8 @@ const RootStack = () => {
       />
       <Stack.Screen name="ReviewStarScreen" component={ReviewStarScreen} />
       <Stack.Screen name="ReviewWriteScreen" component={ReviewWriteScreen} />
+      <Stack.Screen name="DropOutScreen" component={DropOutScreen} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     </Stack.Navigator>
   );
 };
