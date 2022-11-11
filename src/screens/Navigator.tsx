@@ -5,7 +5,6 @@ import LoginStack from './LoginStack';
 import RootStack from './RootStack';
 import {NavigationContainer} from '@react-navigation/native';
 import {getData} from '../utils/AsyncStorage';
-import PwDoneScreen from '../screens/FindPW/PwDoneScreen';
 
 const Navigator = () => {
   const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);
@@ -22,8 +21,7 @@ const Navigator = () => {
 
   return (
     <NavigationContainer>
-      {/* {loginStatus.isLogined ? <RootStack /> : <LoginStack />} */}
-      <PwDoneScreen />
+      {loginStatus.isLogined ? <RootStack /> : <LoginStack />}
     </NavigationContainer>
   );
 };
