@@ -40,7 +40,7 @@ const MyPageScreen = () => {
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);
-  const [userInfo, setUserInfo] = useState<userData[]>();
+  const [userInfo, setUserInfo] = useState<userData>();
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -98,7 +98,14 @@ const MyPageScreen = () => {
       <View style={styles.profileArea}>
         <View style={styles.rowArea}>
           {userInfo && (
-            <Image style={styles.profile} source={{uri: userInfo.profileImg}} />
+            <Image
+              style={styles.profile}
+              source={
+                userInfo.profileImg
+                  ? {uri: userInfo.profileImg}
+                  : require('../../assets/img/img-profile-default.png')
+              }
+            />
           )}
           <View>
             <View style={styles.rowArea}>

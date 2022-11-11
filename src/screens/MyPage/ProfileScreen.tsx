@@ -18,7 +18,7 @@ interface userData {
 }
 
 const ProfileScreen = () => {
-  const [userInfo, setUserInfo] = useState<userData[]>();
+  const [userInfo, setUserInfo] = useState<userData>();
 
   useEffect(() => {
     getData('auth').then(auth => {
@@ -45,7 +45,14 @@ const ProfileScreen = () => {
       </View>
       <View style={styles.profileArea}>
         {userInfo && (
-          <Image style={styles.profile} source={{uri: userInfo.profileImg}} />
+          <Image
+            style={styles.profile}
+            source={
+              userInfo.profileImg
+                ? {uri: userInfo.profileImg}
+                : require('../../assets/img/img-profile-default.png')
+            }
+          />
         )}
         <Text
           style={[
