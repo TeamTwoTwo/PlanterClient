@@ -1,12 +1,9 @@
 import React from 'react';
 import {color} from '../../utils/utils';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import CustomButton from '../../components/common/CustomButton';
+import FlowerSpot from '../../assets/icon/ic-flowerpot.svg';
 
 const IdNoneScreen = () => {
   return (
@@ -20,16 +17,15 @@ const IdNoneScreen = () => {
         <Text style={styles.title}>아이디가</Text>
         <Text style={styles.title}>존재하지 않습니다.</Text>
         <View style={styles.textWrap}>
-          <Text style={styles.text}>지금 회원가입하고 플랜터의 ~를</Text>
-          <Text style={styles.text}>경험해보세요.</Text>
+          <Text style={styles.text}>지금 회원가입하고</Text>
+          <Text style={styles.text}>플랜터의 식물 전문가들과 만나보세요!</Text>
+        </View>
+        <View style={{alignItems: 'center', marginTop: 41}}>
+          <FlowerSpot />
         </View>
       </View>
       <View>
-        <TouchableOpacity activeOpacity={1}>
-          <View style={styles.nextBtn}>
-            <Text style={styles.btnText}>회원가입 하기</Text>
-          </View>
-        </TouchableOpacity>
+        <CustomButton backgroundColor={color.mint_05} text="회원가입 하기" />
       </View>
     </SafeAreaView>
   );

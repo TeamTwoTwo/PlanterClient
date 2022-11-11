@@ -1,15 +1,11 @@
 import React from 'react';
 import {color} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomButton from '../../components/common/CustomButton';
+import FlowerSpot from '../../assets/icon/ic-flowerpot.svg';
 
 const PwDoneScreen = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
@@ -25,7 +21,7 @@ const PwDoneScreen = () => {
           <Text style={styles.title}>완료되었습니다.</Text>
         </View>
         <View style={styles.illustView}>
-          <View style={styles.illust} />
+          <FlowerSpot />
         </View>
       </View>
       <View>
@@ -64,7 +60,7 @@ const styles = StyleSheet.create({
     color: color.blueGray_04,
   },
   illustView: {
-    marginTop: 40,
+    marginTop: 106,
     alignItems: 'center',
     justifyContent: 'center',
   },

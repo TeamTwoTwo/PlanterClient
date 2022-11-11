@@ -8,6 +8,7 @@ import {signupState} from '../../recoil/atoms/signup';
 import {authState} from '../../recoil/atoms/auth';
 import {setData} from '../../utils/AsyncStorage';
 import {LoginStatusState} from '../../recoil/atoms/loginStatus';
+import Flowerpot from '../../assets/icon/ic-flowerpot.svg';
 
 const SignupScreen04 = () => {
   const signupInfo = useRecoilValue(signupState);
@@ -26,11 +27,11 @@ const SignupScreen04 = () => {
       <View style={styles.wrap}>
         <View style={styles.textView}>
           <Text style={styles.mainText}>회원가입 완료!</Text>
-          <Text style={styles.subText}>플랜터와 ~한 을 경험해보세요</Text>
+          <Text style={styles.subText}>
+            플랜터의 식물 전문가들과 만나보세요!
+          </Text>
         </View>
-        <View style={styles.illustView}>
-          <View style={styles.illust} />
-        </View>
+        <Flowerpot />
       </View>
       <CustomButton
         backgroundColor={color.mint_05}
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
   },
   textView: {
     alignItems: 'center',
+    marginBottom: 38,
   },
   mainText: {
     fontSize: 28,

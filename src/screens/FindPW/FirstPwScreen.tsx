@@ -296,7 +296,7 @@ const FirstPwScreen = () => {
               />
             </View>
           </ScrollView>
-          {toastStatus && <Toast />}
+          {toastStatus && <Toast text="인증번호가 전송되었습니다." />}
         </View>
         {isBtnShow && stage === 1 && (
           <TouchableOpacity activeOpacity={1} onPress={onPress}>
