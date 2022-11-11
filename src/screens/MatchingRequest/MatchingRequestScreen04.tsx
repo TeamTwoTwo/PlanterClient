@@ -224,7 +224,7 @@ const MatchingRequestScreen04 = () => {
               Typography.subtitle2,
               {color: color.blueGray_06, marginTop: 40},
             ]}>
-            매칭 요청
+            매칭요청
           </Text>
           <Text
             style={[
