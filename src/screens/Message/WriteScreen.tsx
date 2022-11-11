@@ -160,7 +160,6 @@ const WriteScreen = ({route}: any) => {
           {imageFiles && imageFiles.length > 0 && (
             <View style={styles.imgWrap}>
               <FlatList
-                scrollEnabled={false}
                 showsHorizontalScrollIndicator={false}
                 nestedScrollEnabled
                 horizontal
