@@ -38,6 +38,7 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const {plantManagerId, name} = route?.params.item;
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
@@ -115,6 +116,26 @@ const MessageDetailScreen = ({route}: any) => {
     });
   };
 
+  const onGetMessageDetailList = () => {
+    setRefreshing(true);
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + `plant-managers/${plantManagerId}/messages`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          // console.log(res.data.result);
+          setMessageDetail(res.data.result);
+          setRefreshing(false);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
   useEffect(() => {
     getData('auth').then(auth => {
       axios
@@ -156,6 +177,8 @@ const MessageDetailScreen = ({route}: any) => {
         keyExtractor={(item: messageData) => item.messageId.toString()}
         ItemSeparatorComponent={() => <View style={styles.line} />}
         ListFooterComponent={<View style={{marginTop: 90}} />}
+        refreshing={refreshing}
+        onRefresh={onGetMessageDetailList}
       />
       <View style={styles.wrap}>
         <Pressable

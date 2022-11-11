@@ -101,11 +101,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.head}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            navigation.navigate('LocationScreen');
-          }}>
+        <TouchableOpacity activeOpacity={1}>
           <View style={styles.navigation}>
             <Place />
             <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>

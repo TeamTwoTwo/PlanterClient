@@ -88,7 +88,10 @@ const MatchingItem = ({
           <View>
             <Star fill="#ffc42c" />
           </View>
-          <Text style={[Typography.caption1, styles.info]}> {rate}</Text>
+          <Text style={[Typography.caption1, styles.info]}>
+            {' '}
+            {rate.toFixed(1)}
+          </Text>
         </View>
         <View style={styles.bodyLine}>
           <Text style={[Typography.body2, styles.bodyText]} numberOfLines={2}>
