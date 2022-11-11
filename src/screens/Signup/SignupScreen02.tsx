@@ -394,7 +394,7 @@ const SignupScreen02 = () => {
               </View>
             </View>
           </ScrollView>
-          {toastStatus && <Toast />}
+          {toastStatus && <Toast text="인증번호가 전송되었습니다." />}
         </View>
         {(step === 1 && name !== '') ||
         (step === 2 && name !== '' && birth !== '') ? (

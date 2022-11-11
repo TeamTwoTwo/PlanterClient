@@ -64,7 +64,7 @@ const MessageScreen = () => {
             <MessageItem
               onPress={() => {
                 navigation.navigate('MessageDetailScreen', {
-                  item: item,
+                  item,
                 });
               }}
               name={item.name}
@@ -82,7 +82,7 @@ const MessageScreen = () => {
       ) : (
         <View style={styles.contentWrap}>
           <View style={styles.img} />
-          <Text stylee={[Typography.body1, {color: color.blueGray_06}]}>
+          <Text style={[Typography.body1, {color: color.blueGray_06}]}>
             받은 쪽지가 없습니다.
           </Text>
         </View>

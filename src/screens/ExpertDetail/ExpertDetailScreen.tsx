@@ -16,7 +16,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Back from '../../assets/icon/ic-back-arrow.svg';
 import BackBlack from '../../assets/icon/ic-back-arrow-black.svg';
 import Meatball from '../../assets/icon/ic-meatball.svg';
-import PlantBadge from '../../assets/icon/ic-plant-badge.svg';
 import Camera from '../../assets/icon/ic-camera.svg';
 import Badge from '../../assets/icon/ic-badge.svg';
 import Cost from '../../assets/icon/ic-cost.svg';
@@ -33,6 +32,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {getBottomSpace} from 'react-native-iphone-x-helper';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
+import Butler from '../../assets/icon/ic-butler-badge.svg';
+import Expert from '../../assets/icon/ic-expert-badge.svg';
+import Flower from '../../assets/icon/ic-flower-badge.svg';
+import Care from '../../assets/icon/ic-care-badge.svg';
 
 let mock = [1, 2, 3];
 
@@ -127,9 +130,23 @@ const ExpertDetailScreen = ({route}: any) => {
     navigation.navigate('ReviewDetailScreen', {plantManagerId});
   };
 
+  const onPressRequest = () => {
+    if (info) {
+      navigation.navigate('MatchingRequestScreen01', {
+        plantManagerId: info?.id,
+      });
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safe} edges={['bottom']}>
-      <StatusBar barStyle={isHeaderWhite ? 'dark-content' : 'light-content'} />
+      <StatusBar
+        barStyle={
+          isHeaderWhite || (info && info?.images.length === 0)
+            ? 'dark-content'
+            : 'light-content'
+        }
+      />
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backBtn}
@@ -137,10 +154,20 @@ const ExpertDetailScreen = ({route}: any) => {
           onPress={() => {
             navigation.pop();
           }}>
-          {isHeaderWhite ? <BackBlack /> : <Back />}
+          {isHeaderWhite || (info && info?.images.length === 0) ? (
+            <BackBlack />
+          ) : (
+            <Back />
+          )}
         </TouchableOpacity>
         <TouchableOpacity style={styles.meatballBtn} activeOpacity={1}>
-          <Meatball fill={isHeaderWhite ? color.gray_08 : 'white'} />
+          <Meatball
+            fill={
+              isHeaderWhite || (info && info?.images.length === 0)
+                ? color.gray_08
+                : 'white'
+            }
+          />
         </TouchableOpacity>
       </View>
       {isHeaderWhite && <View style={styles.headerWhite} />}
@@ -149,49 +176,67 @@ const ExpertDetailScreen = ({route}: any) => {
         scrollEventThrottle={1}
         showsVerticalScrollIndicator={false}>
         <View style={styles.expertImgWrap}>
-          {!isHeaderWhite && (
+          {!isHeaderWhite && info && info?.images.length === 0 ? (
             <LinearGradient
-              colors={['rgba(16,16,16,0.8)', 'rgba(16,16,16,0)']}
+              colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0)']}
               style={styles.gradation}
               start={{x: 0, y: 0}}
               end={{x: 0, y: 1}}
             />
+          ) : (
+            !isHeaderWhite && (
+              <LinearGradient
+                colors={['rgba(16,16,16,0.8)', 'rgba(16,16,16,0)']}
+                style={styles.gradation}
+                start={{x: 0, y: 0}}
+                end={{x: 0, y: 1}}
+              />
+            )
           )}
           <View style={styles.expertImgView}>
-            <FlatList
-              data={info?.images}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item, index}) => (
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => {
-                    setIsExpertImageVisible(true);
-                  }}>
-                  <View>
-                    <Image
-                      style={styles.expertImg}
-                      source={{uri: item}}
-                      resizeMode="cover"
-                    />
-                    <View style={styles.numOfImgs}>
-                      <Text style={[Typography.caption1, styles.numOfImgsText]}>
-                        {index + 1}
+            {info && info?.images?.length > 0 ? (
+              <FlatList
+                data={info?.images}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                renderItem={({item, index}) => (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      setIsExpertImageVisible(true);
+                    }}>
+                    <View>
+                      <Image
+                        style={styles.expertImg}
+                        source={{uri: item}}
+                        resizeMode="cover"
+                      />
+                      <View style={styles.numOfImgs}>
                         <Text
-                          style={[
-                            Typography.caption2,
-                            styles.numOfImgsTextSub,
-                          ]}>
-                          &nbsp;/&nbsp;{info?.images.length}
+                          style={[Typography.caption1, styles.numOfImgsText]}>
+                          {index + 1}
+                          <Text
+                            style={[
+                              Typography.caption2,
+                              styles.numOfImgsTextSub,
+                            ]}>
+                            &nbsp;/&nbsp;{info?.images.length}
+                          </Text>
                         </Text>
-                      </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, idx) => `img ${item} ${idx}`}
-            />
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item, idx) => `img ${item} ${idx}`}
+              />
+            ) : (
+              <Image
+                source={require('../../assets/img/img-expert-img-none.png')}
+                style={styles.expertImg}
+                resizeMode="cover"
+              />
+            )}
           </View>
         </View>
         <View style={mainStyles(isHeaderWhite).main}>
@@ -201,7 +246,15 @@ const ExpertDetailScreen = ({route}: any) => {
               <Text style={[Typography.subtitle2, styles.name]}>
                 {info?.name}
               </Text>
-              <PlantBadge />
+              {info?.category === 0 ? (
+                <Butler />
+              ) : info?.category === 1 ? (
+                <Flower />
+              ) : info?.category === 2 ? (
+                <Expert />
+              ) : (
+                <Care />
+              )}
               <Text style={[Typography.body2, styles.type]}>
                 {info?.category === 0
                   ? '식물 집사'
@@ -209,7 +262,7 @@ const ExpertDetailScreen = ({route}: any) => {
                   ? '꽃집'
                   : info?.category === 2
                   ? '식물 전문가'
-                  : '식물 케어 서비스'}
+                  : '식물케어 서비스'}
               </Text>
               <Text style={[Typography.caption1, styles.distance]}>
                 {info?.distance}km
@@ -365,9 +418,7 @@ const ExpertDetailScreen = ({route}: any) => {
             <CustomButton
               backgroundColor={color.mint_05}
               text="매칭 요청"
-              onPress={() => {
-                navigation.navigate('MatchingRequestScreen01');
-              }}
+              onPress={onPressRequest}
               borderRadius={6}
               style={{flex: 1}}
             />

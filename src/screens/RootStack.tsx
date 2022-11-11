@@ -22,7 +22,7 @@ import ProfileScreen from './MyPage/ProfileScreen';
 import TOSDetail from './Signup/TOSDetail';
 
 type messageData = {
-  plantManagereId: number;
+  plantManagerId: number;
   profileImg: string;
   name: string;
   category: number;
@@ -55,10 +55,10 @@ type RootStackParamList = {
     matchingId: number;
     rating: number;
   };
+  MatchingRequestScreen01: {plantManagerId: number};
   DropOutScreen: undefined;
   ProfileScreen: undefined;
   TOSDetail: {number: number};
-  MatchingRequestScreen01: undefined;
   MatchingRequestScreen02: undefined;
   MatchingRequestScreen03: undefined;
   MatchingRequestScreen04: undefined;

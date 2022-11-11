@@ -10,7 +10,11 @@ interface PropTypes {
 
 const MatchingFilter = ({text, onAddList, checkList}: PropTypes) => {
   return (
-    <TouchableOpacity onPress={onAddList} activeOpacity={1}>
+    <TouchableOpacity
+      onPress={() => {
+        onAddList(text);
+      }}
+      activeOpacity={1}>
       <View style={[dstyles(text, checkList).wrap, Typography.body2]}>
         <Text style={[Typography.body2, dstyles(text, checkList).text]}>
           {text}

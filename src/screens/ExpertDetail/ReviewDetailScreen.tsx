@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {View, TouchableOpacity, StyleSheet, Text, FlatList} from 'react-native';
-import {color, screen, Typography, url} from '../../utils/utils';
+import {View, StyleSheet, FlatList} from 'react-native';
+import {url} from '../../utils/utils';
 import {MainTabNavigationProp} from '../MainTab';
 import {useNavigation} from '@react-navigation/native';
-import BackBlack from '../../assets/icon/ic-back-arrow-black.svg';
-import Meatball from '../../assets/icon/ic-meatball.svg';
 import Review from '../../components/ExpertDetail/Review';
 import ImageDetail from '../../components/common/ImageDetail';
 import {getData} from '../../utils/AsyncStorage';
 import axios from 'axios';
+import MatchingHeader from '../../components/matching/MatchingHeader';
 
 export interface ReviewInfoTypes {
   reviewId: number;
@@ -60,20 +59,7 @@ const ReviewDetailScreen = ({route}: any) => {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backBtn}
-          activeOpacity={1}
-          onPress={() => {
-            navigation.pop();
-          }}>
-          <BackBlack />
-        </TouchableOpacity>
-        <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-          리뷰 전체보기
-        </Text>
-        <TouchableOpacity style={styles.meatballBtn} activeOpacity={1}>
-          <Meatball fill={color.gray_08} />
-        </TouchableOpacity>
+        <MatchingHeader title="리뷰 전체보기" />
       </View>
       <View style={styles.main}>
         <FlatList
@@ -107,12 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    width: screen.width,
-    height: 48,
-    zIndex: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   backBtn: {
     marginLeft: 6,

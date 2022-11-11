@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
+  RefreshControl,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography, url} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackNavigationProp} from '../RootStack';
 import Place from '../../assets/icon/ic-place.svg';
 import Message from '../../assets/icon/ic-message.svg';
 import NoneCheck from '../../assets/icon/ic-nonecheck.svg';
@@ -50,6 +50,7 @@ const HomeScreen = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilter] = useState<string>('가까운순');
   const [userData, setUserData] = useState<UserData[]>();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const onAddList = (text: string): void => {
     setCheckList([...checkList, text]);
@@ -63,7 +64,8 @@ const HomeScreen = () => {
     setPhotoCheck(!photoCheck);
   };
 
-  useEffect(() => {
+  const getMatchingList = () => {
+    setRefreshing(true);
     getData('auth').then(auth => {
       axios
         .get(url.dev + 'plant-managers', {
@@ -73,12 +75,19 @@ const HomeScreen = () => {
         })
         .then(res => {
           console.log(res.data.result);
-          setUserData(res.data.result);
+          if (res.data.isSuccess) {
+            setUserData(res.data.result);
+            setRefreshing(false);
+          }
         })
         .catch(e => {
           console.error(e);
         });
     });
+  };
+
+  useEffect(() => {
+    getMatchingList();
   }, []);
 
   const dummy: Dummy[] = [
@@ -208,11 +217,18 @@ const HomeScreen = () => {
 
       <View style={styles.contentWrap}>
         <FlatList
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={getMatchingList}
+            />
+          }
           contentContainerStyle={{paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
           data={userData}
           renderItem={({item}: {item: UserData}) => (
             <MatchingItem
+              id={item.id}
               name={item.name}
               category={item.category}
               distance={item.distance}
@@ -222,7 +238,9 @@ const HomeScreen = () => {
               description={item.description}
               minPrice={item.minPrice}
               onPress={() => {
-                navigation.navigate('ExpertDetailScreen', {plantManagerId: 2});
+                navigation.navigate('ExpertDetailScreen', {
+                  plantManagerId: item.id,
+                });
               }}
             />
           )}
@@ -240,7 +258,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.gray_00,
   },
   head: {
-    // borderWidth: 1,
     height: 48,
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -253,7 +270,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   filter: {
-    // borderWidth: 1,
     height: 48,
     paddingLeft: 20,
     flexDirection: 'row',

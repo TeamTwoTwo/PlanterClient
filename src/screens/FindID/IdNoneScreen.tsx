@@ -7,8 +7,18 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {LoginStackNavigationProp} from '../LoginStack';
+import CustomButton from '../../components/common/CustomButton';
 
 const IdNoneScreen = () => {
+  const navigation = useNavigation<LoginStackNavigationProp>();
+
+  const onPress = (): void => {
+    navigation.popToTop();
+    navigation.navigate('TermsOfService');
+  };
+
   return (
     <SafeAreaView style={styles.block}>
       <View style={styles.nextBlock}>
@@ -16,20 +26,27 @@ const IdNoneScreen = () => {
           <Text style={styles.nextText}>다음에 하기</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.titleWrap}>
-        <Text style={styles.title}>아이디가</Text>
-        <Text style={styles.title}>존재하지 않습니다.</Text>
-        <View style={styles.textWrap}>
-          <Text style={styles.text}>지금 회원가입하고 플랜터의 ~를</Text>
-          <Text style={styles.text}>경험해보세요.</Text>
+      <View style={styles.wrap}>
+        <View style={styles.titleWrap}>
+          <Text style={styles.title}>아이디가</Text>
+          <Text style={styles.title}>존재하지 않습니다.</Text>
+          <View style={styles.textWrap}>
+            <Text style={styles.text}>지금 회원가입하고 플랜터의 ~를</Text>
+            <Text style={styles.text}>경험해보세요.</Text>
+          </View>
+        </View>
+        <View style={styles.illustView}>
+          <View style={styles.illust} />
         </View>
       </View>
       <View>
-        <TouchableOpacity activeOpacity={1}>
-          <View style={styles.nextBtn}>
-            <Text style={styles.btnText}>회원가입 하기</Text>
-          </View>
-        </TouchableOpacity>
+        <View>
+          <CustomButton
+            backgroundColor={color.mint_05}
+            text="회원가입 하기"
+            onPress={onPress}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -50,6 +67,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: color.gray_05,
     textDecorationLine: 'underline',
+  },
+  wrap: {
+    flex: 1,
+    justifyContent: 'center',
   },
   titleWrap: {
     paddingHorizontal: 33,
@@ -88,6 +109,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     paddingTop: 14,
+  },
+  illustView: {
+    marginTop: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  illust: {
+    width: 280,
+    height: 280,
+    backgroundColor: color.gray_03,
   },
 });
 

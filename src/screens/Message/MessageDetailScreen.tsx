@@ -6,15 +6,14 @@ import {
   Pressable,
   TouchableOpacity,
   FlatList,
+  Platform,
   Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color, screen, Typography, url} from '../../utils/utils.ts';
+import {color, screen, Typography, url} from '../../utils/utils';
 import Plus from '../../assets/icon/ic-plus.svg';
 import {useNavigation} from '@react-navigation/native';
 import {MainTabNavigationProp} from '../../screens/MainTab';
-import ReceiveMessage from '../../components/Message/ReceiveMessage';
-import SendMessage from '../../components/Message/SendMessage';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import MyMessage from '../../components/Message/MyMessage';
 import Modal from '../../components/common/Modal';
@@ -39,7 +38,7 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
-  const {plantManagerId, name} = route.params.item;
+  const {plantManagerId, name} = route?.params.item;
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
   });
@@ -154,8 +153,8 @@ const MessageDetailScreen = ({route}: any) => {
             images={item.images}
           />
         )}
-        keyExtractor={(item: messageData) => item.messageId}
-        ItemSeparatorComponent={<View style={styles.line} />}
+        keyExtractor={(item: messageData) => item.messageId.toString()}
+        ItemSeparatorComponent={() => <View style={styles.line} />}
         ListFooterComponent={<View style={{marginTop: 90}} />}
       />
       <View style={styles.wrap}>

@@ -4,13 +4,17 @@ import {color, Typography} from '../../utils/utils';
 import Badge from '../../assets/icon/ic-plant-badge.svg';
 import GrayBadge from '../../assets/icon/ic-plant-badge-gray.svg';
 import {ReqType} from '../../screens/MatchingHistory/MatchingHistoryListScreen';
+import Butler from '../../assets/icon/ic-butler-badge.svg';
+import Expert from '../../assets/icon/ic-expert-badge.svg';
+import Flower from '../../assets/icon/ic-flower-badge.svg';
+import Care from '../../assets/icon/ic-care-badge.svg';
 
 interface Props {
   info: ReqType;
   onPress: () => void;
 }
 
-const category = ['식물 집사', '꽃집', '식물 전문가', '식물 케어 서비스'];
+const category = ['식물 집사', '꽃집', '식물 전문가', '식물케어 서비스'];
 
 const MatchingHistoryItem = ({info, onPress}: Props) => {
   return (
@@ -39,7 +43,17 @@ const MatchingHistoryItem = ({info, onPress}: Props) => {
                 {info?.name}
               </Text>
               <View style={styles.badgeWrap}>
-                {info?.status === 'cancel' ? <GrayBadge /> : <Badge />}
+                {info?.status === 'cancel' ? (
+                  <GrayBadge />
+                ) : info?.category === 0 ? (
+                  <Butler />
+                ) : info?.category === 1 ? (
+                  <Flower />
+                ) : info?.category === 2 ? (
+                  <Expert />
+                ) : (
+                  <Care />
+                )}
               </View>
               <Text
                 style={[

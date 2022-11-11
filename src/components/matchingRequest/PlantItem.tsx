@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, {Dispatch, SetStateAction} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomInput from '../common/CustomInput';
 import Check from '../../assets/icon/ic-check.svg';
@@ -51,13 +45,26 @@ const PlantItem = ({
     setPlantList(list);
   };
 
-  // 옵션 id에 따라 체크값 상태 관리
-  // 클릭한 옵션만 상태를 반대로 변경
-  const onCheckOption = (optionId: number) => {
+  // optionId를 value로 갖는 tmpList 생성 후 오름차순 정렬
+  // ex)
+  // tmpList = [7, 8]
+  // optionId = [null, null]
+  // oId = 7
+  // tmpList[x]===oId, optionId[x]=tmpList[x]로 설정
+  const onCheckOption = (oId: number) => {
+    let tmpList: number[] = [];
+    optionList.forEach(data => {
+      tmpList.push(data.optionId);
+    });
+    tmpList.sort(function (a, b) {
+      return a - b;
+    });
+    console.log(tmpList);
+
     const changed = {
       ...plantItem,
       optionId: plantItem.optionId.map((data, i) =>
-        optionId === i + 1 ? (data ? null : optionId) : data,
+        oId === tmpList[i] ? (data ? null : tmpList[i]) : data,
       ),
     };
     let list = [...plantList];
@@ -97,7 +104,7 @@ const PlantItem = ({
               onPress={() => {
                 onCheckOption(data.optionId);
               }}>
-              {plantItem.optionId[data.optionId - 1] ? (
+              {plantItem.optionId[i] ? (
                 <Check width={20} height={20} fill={color.mint_05} />
               ) : (
                 <View style={styles.empty} />

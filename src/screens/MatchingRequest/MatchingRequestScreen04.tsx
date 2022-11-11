@@ -1,7 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
 import CustomButton from '../../components/common/CustomButton';
@@ -42,9 +49,13 @@ const MatchingRequestScreen04 = () => {
     getData('auth')
       .then(auth => {
         axios
-          .get(url.dev + 'plant-managers/2/option', {
-            headers: {Authorization: `Bearer ${auth.token}`},
-          })
+          .get(
+            url.dev +
+              `plant-managers/${matchingRequestInfo.plantManagerId}/option`,
+            {
+              headers: {Authorization: `Bearer ${auth.token}`},
+            },
+          )
           .then(res => {
             console.log(res.data.result);
             if (res.data.isSuccess) {
@@ -58,6 +69,7 @@ const MatchingRequestScreen04 = () => {
       .catch(e => {
         console.error(e);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -92,6 +104,7 @@ const MatchingRequestScreen04 = () => {
           .then(res => {
             console.log(res);
             if (res.data.isSuccess) {
+              Alert.alert('매칭을 요청했습니다.');
               navigation.navigate('MatchingHistory');
             }
           })
@@ -219,7 +232,7 @@ const MatchingRequestScreen04 = () => {
               Typography.subtitle2,
               {color: color.blueGray_06, marginTop: 40},
             ]}>
-            매칭 요청
+            매칭요청
           </Text>
           <Text
             style={[

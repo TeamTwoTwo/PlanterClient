@@ -11,7 +11,6 @@ export interface PlantItemType {
   plantName: string;
   optionId: (number | null)[];
 }
-
 export interface OptionListType {
   optionId: number;
   name: string;
@@ -19,15 +18,16 @@ export interface OptionListType {
 }
 
 const MatchingRequestScreen01 = ({route}: any) => {
-  const plantManagerId = route?.params;
+  const {plantManagerId} = route?.params;
   const [optionList, setOptionList] = useState<OptionListType[]>([]);
   const [plantList, setPlantList] = useState<PlantItemType[]>([]);
 
   useEffect(() => {
+    console.log(plantManagerId);
     getData('auth')
       .then(auth => {
         axios
-          .get(url.dev + 'plant-managers/2/option', {
+          .get(url.dev + `plant-managers/${plantManagerId}/option`, {
             headers: {Authorization: `Bearer ${auth.token}`},
           })
           .then(res => {
@@ -49,7 +49,9 @@ const MatchingRequestScreen01 = ({route}: any) => {
       .catch(e => {
         console.error(e);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.padding}>
