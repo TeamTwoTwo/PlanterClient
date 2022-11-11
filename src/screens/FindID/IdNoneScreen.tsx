@@ -1,11 +1,6 @@
 import React from 'react';
 import {color} from '../../utils/utils';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -39,7 +34,11 @@ const IdNoneScreen = () => {
         </View>
       </View>
       <View>
-        <CustomButton backgroundColor={color.mint_05} text="회원가입 하기" onPress={onPress} />
+        <CustomButton
+          backgroundColor={color.mint_05}
+          text="회원가입 하기"
+          onPress={onPress}
+        />
       </View>
     </SafeAreaView>
   );
