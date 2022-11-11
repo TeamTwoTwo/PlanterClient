@@ -17,6 +17,9 @@ import MatchingRequestScreen01 from './MatchingRequest/MatchingRequestScreen01';
 import MatchingRequestScreen03 from './MatchingRequest/MatchingRequestScreen03';
 import MatchingRequestScreen04 from './MatchingRequest/MatchingRequestScreen04';
 import ReviewWriteScreen from './Review/ReviewWriteScreen';
+import DropOutScreen from './MyPage/DropOutScreen';
+import ProfileScreen from './MyPage/ProfileScreen';
+import TOSDetail from './Signup/TOSDetail';
 
 type messageData = {
   plantManagerId: number;
@@ -53,6 +56,9 @@ type RootStackParamList = {
     rating: number;
   };
   MatchingRequestScreen01: {plantManagerId: number};
+  DropOutScreen: undefined;
+  ProfileScreen: undefined;
+  TOSDetail: {number: number};
   MatchingRequestScreen02: undefined;
   MatchingRequestScreen03: undefined;
   MatchingRequestScreen04: undefined;
@@ -98,6 +104,9 @@ const RootStack = () => {
         component={MatchingRequestScreen04}
       />
       <Stack.Screen name="ReviewWriteScreen" component={ReviewWriteScreen} />
+      <Stack.Screen name="DropOutScreen" component={DropOutScreen} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="TOSDetail" component={TOSDetail} />
     </Stack.Navigator>
   );
 };
