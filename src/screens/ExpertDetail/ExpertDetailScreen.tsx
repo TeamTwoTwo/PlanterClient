@@ -140,7 +140,13 @@ const ExpertDetailScreen = ({route}: any) => {
 
   return (
     <SafeAreaView style={styles.safe} edges={['bottom']}>
-      <StatusBar barStyle={isHeaderWhite ? 'dark-content' : 'light-content'} />
+      <StatusBar
+        barStyle={
+          isHeaderWhite || (info && info?.images.length === 0)
+            ? 'dark-content'
+            : 'light-content'
+        }
+      />
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backBtn}
@@ -148,10 +154,20 @@ const ExpertDetailScreen = ({route}: any) => {
           onPress={() => {
             navigation.pop();
           }}>
-          {isHeaderWhite ? <BackBlack /> : <Back />}
+          {isHeaderWhite || (info && info?.images.length === 0) ? (
+            <BackBlack />
+          ) : (
+            <Back />
+          )}
         </TouchableOpacity>
         <TouchableOpacity style={styles.meatballBtn} activeOpacity={1}>
-          <Meatball fill={isHeaderWhite ? color.gray_08 : 'white'} />
+          <Meatball
+            fill={
+              isHeaderWhite || (info && info?.images.length === 0)
+                ? color.gray_08
+                : 'white'
+            }
+          />
         </TouchableOpacity>
       </View>
       {isHeaderWhite && <View style={styles.headerWhite} />}
@@ -160,49 +176,67 @@ const ExpertDetailScreen = ({route}: any) => {
         scrollEventThrottle={1}
         showsVerticalScrollIndicator={false}>
         <View style={styles.expertImgWrap}>
-          {!isHeaderWhite && (
+          {!isHeaderWhite && info && info?.images.length === 0 ? (
             <LinearGradient
-              colors={['rgba(16,16,16,0.8)', 'rgba(16,16,16,0)']}
+              colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0)']}
               style={styles.gradation}
               start={{x: 0, y: 0}}
               end={{x: 0, y: 1}}
             />
+          ) : (
+            !isHeaderWhite && (
+              <LinearGradient
+                colors={['rgba(16,16,16,0.8)', 'rgba(16,16,16,0)']}
+                style={styles.gradation}
+                start={{x: 0, y: 0}}
+                end={{x: 0, y: 1}}
+              />
+            )
           )}
           <View style={styles.expertImgView}>
-            <FlatList
-              data={info?.images}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item, index}) => (
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => {
-                    setIsExpertImageVisible(true);
-                  }}>
-                  <View>
-                    <Image
-                      style={styles.expertImg}
-                      source={{uri: item}}
-                      resizeMode="cover"
-                    />
-                    <View style={styles.numOfImgs}>
-                      <Text style={[Typography.caption1, styles.numOfImgsText]}>
-                        {index + 1}
+            {info && info?.images?.length > 0 ? (
+              <FlatList
+                data={info?.images}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                renderItem={({item, index}) => (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      setIsExpertImageVisible(true);
+                    }}>
+                    <View>
+                      <Image
+                        style={styles.expertImg}
+                        source={{uri: item}}
+                        resizeMode="cover"
+                      />
+                      <View style={styles.numOfImgs}>
                         <Text
-                          style={[
-                            Typography.caption2,
-                            styles.numOfImgsTextSub,
-                          ]}>
-                          &nbsp;/&nbsp;{info?.images.length}
+                          style={[Typography.caption1, styles.numOfImgsText]}>
+                          {index + 1}
+                          <Text
+                            style={[
+                              Typography.caption2,
+                              styles.numOfImgsTextSub,
+                            ]}>
+                            &nbsp;/&nbsp;{info?.images.length}
+                          </Text>
                         </Text>
-                      </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, idx) => `img ${item} ${idx}`}
-            />
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item, idx) => `img ${item} ${idx}`}
+              />
+            ) : (
+              <Image
+                source={require('../../assets/img/img-expert-img-none.png')}
+                style={styles.expertImg}
+                resizeMode="cover"
+              />
+            )}
           </View>
         </View>
         <View style={mainStyles(isHeaderWhite).main}>
