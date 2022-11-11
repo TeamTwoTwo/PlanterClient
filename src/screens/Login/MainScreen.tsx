@@ -68,7 +68,7 @@ const MainScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.underWrap}>
+      {/* <View style={styles.underWrap}>
         <Pressable onPress={onIdPress}>
           <Text style={[Typography.body2, {color: color.gray_05}]}>
             아이디 찾기
@@ -80,7 +80,7 @@ const MainScreen = () => {
             비밀번호 찾기
           </Text>
         </Pressable>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 };
