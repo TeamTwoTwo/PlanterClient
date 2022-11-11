@@ -10,6 +10,8 @@ import {
   FlatList,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Pressable,
+  Alert,
 } from 'react-native';
 import {color, screen, Typography, url} from '../../utils/utils';
 import LinearGradient from 'react-native-linear-gradient';
@@ -37,6 +39,7 @@ import Expert from '../../assets/icon/ic-expert-badge.svg';
 import Flower from '../../assets/icon/ic-flower-badge.svg';
 import Care from '../../assets/icon/ic-care-badge.svg';
 import {ReviewInfoTypes} from './ReviewDetailScreen';
+import Modal from '../../components/common/Modal';
 
 let mock = [1, 2, 3];
 
@@ -80,6 +83,10 @@ const ExpertDetailScreen = ({route}: any) => {
   const [coord, setCoords] = useState<CoordType>({latitude: 0, longitude: 0});
 
   const [reviewList, setReviewList] = useState<ReviewInfoTypes[]>([]);
+
+  const [isModalShown, setIsModalShown] = useState<boolean>(false);
+  const [modalWidth, setModalWidth] = useState<number>(0);
+  const [modalHeight, setModalHeight] = useState<number>(0);
 
   // 리뷰 별로 이미지가 다르니까 리뷰 이미지를 클릭할 때마다 이 값 바꿔줌(review imageDetail에 props로 이 값 사용)
   const [reviewImgs, setReviewImgs] = useState<string[] | undefined>(
@@ -140,12 +147,20 @@ const ExpertDetailScreen = ({route}: any) => {
     }
   };
 
-  const onLayout = (e: {
+  const onLayoutMarker = (e: {
     nativeEvent: {layout: {width: number; height: number}};
   }) => {
     const {width, height} = e.nativeEvent.layout;
     setMarkerWidth(width);
     setMarkerHeight(height);
+  };
+
+  const onLayoutModal = (e: {
+    nativeEvent: {layout: {width: number; height: number}};
+  }) => {
+    const {width, height} = e.nativeEvent.layout;
+    setModalWidth(width);
+    setModalHeight(height);
   };
 
   const onPressReviewDetail = () => {
@@ -162,6 +177,31 @@ const ExpertDetailScreen = ({route}: any) => {
 
   const onPressMessage = () => {
     navigation.navigate('WriteScreen', {plantManagerId});
+  };
+
+  const onPressReport = () => {
+    getData('auth').then(auth => {
+      axios
+        .post(
+          url.dev + 'reports',
+          {plantManagerId},
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          console.log(res.data.result);
+          if (res.data.isSuccess) {
+            setIsModalShown(false);
+            Alert.alert('신고가 완료되었습니다.');
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
   };
 
   return (
@@ -186,7 +226,12 @@ const ExpertDetailScreen = ({route}: any) => {
             <Back />
           )}
         </TouchableOpacity>
-        <TouchableOpacity style={styles.meatballBtn} activeOpacity={1}>
+        <TouchableOpacity
+          style={styles.meatballBtn}
+          activeOpacity={1}
+          onPress={() => {
+            setIsModalShown(true);
+          }}>
           <Meatball
             fill={
               isHeaderWhite || (info && info?.images.length === 0)
@@ -373,7 +418,7 @@ const ExpertDetailScreen = ({route}: any) => {
               />
               <View style={dstyles(markerWidth, markerHeight).marker}>
                 <Image
-                  onLayout={onLayout}
+                  onLayout={onLayoutMarker}
                   source={require('../../assets/img/img-map-marker.png')}
                 />
               </View>
@@ -465,9 +510,47 @@ const ExpertDetailScreen = ({route}: any) => {
         setVisible={setIsReviewImageVisible}
         images={info?.images}
       />
+      <Modal visible={isModalShown} setVisible={setIsModalShown} overlay>
+        <View
+          style={modalStyles(modalWidth, modalHeight).modal}
+          onLayout={onLayoutModal}>
+          <Pressable style={styles.firstSelectBox} onPress={onPressReport}>
+            <Text style={[Typography.subtitle3, {color: color.red_02}]}>
+              신고하기
+            </Text>
+          </Pressable>
+          <Pressable
+            style={styles.cancelBox}
+            onPress={() => {
+              setIsModalShown(false);
+            }}>
+            <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
+              취소
+            </Text>
+          </Pressable>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
+
+const modalStyles = (modalWidth: number, modalHeight: number) =>
+  StyleSheet.create({
+    modal: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      backgroundColor: 'white',
+      transform: [
+        {translateX: -modalWidth * 0.5},
+        {translateY: -modalHeight * 0.5},
+      ],
+      borderRadius: 8,
+      width: screen.width - 80,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
 
 const mainStyles = (isHeaderWhite: boolean) =>
   StyleSheet.create({
@@ -673,6 +756,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 8,
+  },
+  firstSelectBox: {
+    paddingTop: 22,
+  },
+  cancelBox: {
+    marginTop: 32,
+    paddingBottom: 22,
   },
 });
 
