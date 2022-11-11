@@ -254,7 +254,7 @@ const ExpertDetailScreen = ({route}: any) => {
                     </View>
                   </TouchableOpacity>
                 )}
-                keyExtractor={(item, idx) => `img ${item} ${idx}`}
+                keyExtractor={(item, idx) => `img ${idx}`}
               />
             ) : (
               <Image
@@ -413,7 +413,7 @@ const ExpertDetailScreen = ({route}: any) => {
                     info={item}
                   />
                 )}
-                keyExtractor={item => `img ${item}`}
+                keyExtractor={(item, idx) => `img ${idx}`}
                 ItemSeparatorComponent={() => <View style={{height: 40}} />}
               />
             </View>
@@ -653,7 +653,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     height: (screen.width * 52) / 375 + 73,
     position: 'absolute',
-    bottom: getBottomSpace(),
+    bottom: getBottomSpace() + 2,
   },
   footer: {
     flexDirection: 'row',
