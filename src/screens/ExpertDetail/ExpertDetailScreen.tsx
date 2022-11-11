@@ -36,6 +36,7 @@ import Butler from '../../assets/icon/ic-butler-badge.svg';
 import Expert from '../../assets/icon/ic-expert-badge.svg';
 import Flower from '../../assets/icon/ic-flower-badge.svg';
 import Care from '../../assets/icon/ic-care-badge.svg';
+import {ReviewInfoTypes} from './ReviewDetailScreen';
 
 let mock = [1, 2, 3];
 
@@ -78,6 +79,8 @@ const ExpertDetailScreen = ({route}: any) => {
   const [info, setInfo] = useState<InfoTypes>();
   const [coord, setCoords] = useState<CoordType>({latitude: 0, longitude: 0});
 
+  const [reviewList, setReviewList] = useState<ReviewInfoTypes[]>([]);
+
   // 리뷰 별로 이미지가 다르니까 리뷰 이미지를 클릭할 때마다 이 값 바꿔줌(review imageDetail에 props로 이 값 사용)
   const [reviewImgs, setReviewImgs] = useState<string[] | undefined>(
     info?.images,
@@ -103,6 +106,25 @@ const ExpertDetailScreen = ({route}: any) => {
           console.error(e);
         });
     });
+
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + `plant-managers/${plantManagerId}/reviews`, {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.isSuccess) {
+            setReviewList(res.data.result);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -362,7 +384,7 @@ const ExpertDetailScreen = ({route}: any) => {
               <View style={styles.reviewHeader}>
                 <ChatBubble />
                 <Text style={[Typography.subtitle2, styles.contentHeaderText]}>
-                  후기 {info?.numOfReview.toLocaleString()}건
+                  후기 {reviewList?.length.toLocaleString()}건
                 </Text>
               </View>
               <View style={styles.reviewHeader}>
@@ -378,12 +400,13 @@ const ExpertDetailScreen = ({route}: any) => {
             </View>
             <View style={styles.contentFooterView}>
               <FlatList
-                data={mock}
+                data={reviewList.slice(0, 3)}
                 renderItem={({item}) => (
                   <Review
                     onPress={() => {
                       setIsReviewImageVisible(true);
                     }}
+                    info={item}
                   />
                 )}
                 keyExtractor={item => `img ${item}`}
