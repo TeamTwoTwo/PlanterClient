@@ -85,11 +85,15 @@ const MatchingItem = ({
               · 사진 제공 ·{' '}
             </Text>
           )}
-          <Star />
+          <View>
+            <Star fill="#ffc42c" />
+          </View>
           <Text style={[Typography.caption1, styles.info]}> {rate}</Text>
         </View>
         <View style={styles.bodyLine}>
-          <Text style={[Typography.body2, styles.bodyText]}>{description}</Text>
+          <Text style={[Typography.body2, styles.bodyText]} numberOfLines={2}>
+            {description}
+          </Text>
         </View>
         <View style={styles.moneyLine}>
           <Text style={[Typography.subtitle4, {color: color.blueGray_06}]}>

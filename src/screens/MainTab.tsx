@@ -19,6 +19,7 @@ import MyPage from '../assets/icon/ic-mypage.svg';
 import {StyleSheet} from 'react-native';
 import {RootStackNavigationProp} from './RootStack';
 import MatchingHistoryListScreen from './MatchingHistory/MatchingHistoryListScreen';
+import MyPageScreen from './MyPage/MyPageScreen';
 
 type MainTabParamList = {
   Matching: undefined;
@@ -71,7 +72,7 @@ const MainTab = () => {
       />
       <Tab.Screen
         name="Mypage"
-        component={HomeScreen}
+        component={MyPageScreen}
         options={{
           tabBarIcon: ({focused}) => (focused ? <FocusedMypage /> : <MyPage />),
           title: '마이페이지',

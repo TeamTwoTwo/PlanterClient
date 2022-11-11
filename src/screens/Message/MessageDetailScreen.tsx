@@ -6,6 +6,7 @@ import {
   Pressable,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, screen, Typography, url} from '../../utils/utils.ts';
@@ -89,6 +90,32 @@ const MessageDetailScreen = ({route}: any) => {
     });
   };
 
+  const onReport = (): void => {
+    getData('auth').then(auth => {
+      axios
+        .post(
+          url.dev + 'reports',
+          {plantManagerId: plantManagerId},
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          console.log(res.data.result);
+          setIsModalShown(false);
+          if (res.data.isSuccess) {
+            Alert.alert('스팸 신고를 완료했습니다.');
+            navigation.navigate('MessageScreen');
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
   useEffect(() => {
     getData('auth').then(auth => {
       axios
@@ -146,11 +173,11 @@ const MessageDetailScreen = ({route}: any) => {
         <View
           style={modalStyles(modalWidth, modalHeight).modal}
           onLayout={onLayout}>
-          <View style={styles.firstSelecBox}>
+          <Pressable style={styles.firstSelecBox} onPress={onReport}>
             <Text style={[Typography.subtitle3, {color: color.blueGray_04}]}>
               스팸 신고하기
             </Text>
-          </View>
+          </Pressable>
           <Pressable style={styles.secondSelecBox} onPress={onDeleteMessage}>
             <Text style={[Typography.subtitle3, {color: color.red_02}]}>
               쪽지 삭제하기
