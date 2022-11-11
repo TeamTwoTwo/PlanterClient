@@ -1,7 +1,6 @@
 import React from 'react';
 import {color} from '../../utils/utils';
 import {
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -9,6 +8,8 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../LoginStack';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import FlowerSpot from '../../assets/icon/ic-flowerpot.svg';
 import CustomButton from '../../components/common/CustomButton';
 
 const IdNoneScreen = () => {
@@ -26,27 +27,19 @@ const IdNoneScreen = () => {
           <Text style={styles.nextText}>다음에 하기</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.wrap}>
-        <View style={styles.titleWrap}>
-          <Text style={styles.title}>아이디가</Text>
-          <Text style={styles.title}>존재하지 않습니다.</Text>
-          <View style={styles.textWrap}>
-            <Text style={styles.text}>지금 회원가입하고 플랜터의 ~를</Text>
-            <Text style={styles.text}>경험해보세요.</Text>
-          </View>
+      <View style={styles.titleWrap}>
+        <Text style={styles.title}>아이디가</Text>
+        <Text style={styles.title}>존재하지 않습니다.</Text>
+        <View style={styles.textWrap}>
+          <Text style={styles.text}>지금 회원가입하고</Text>
+          <Text style={styles.text}>플랜터의 식물 전문가들과 만나보세요!</Text>
         </View>
-        <View style={styles.illustView}>
-          <View style={styles.illust} />
+        <View style={{alignItems: 'center', marginTop: 41}}>
+          <FlowerSpot />
         </View>
       </View>
       <View>
-        <View>
-          <CustomButton
-            backgroundColor={color.mint_05}
-            text="회원가입 하기"
-            onPress={onPress}
-          />
-        </View>
+        <CustomButton backgroundColor={color.mint_05} text="회원가입 하기" onPress={onPress} />
       </View>
     </SafeAreaView>
   );

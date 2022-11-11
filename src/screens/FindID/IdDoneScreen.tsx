@@ -2,14 +2,10 @@ import React from 'react';
 import {color} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import CustomButton from '../../components/common/CustomButton';
+import Flowerpot from '../../assets/icon/ic-flowerpot.svg';
 
 const IdDoneScreen = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
@@ -26,8 +22,8 @@ const IdDoneScreen = () => {
           <Text style={styles.email}>example@email.kr</Text>
           <Text style={styles.title}>입니다.</Text>
         </View>
-        <View style={styles.illustView}>
-          <View style={styles.illust} />
+        <View style={{alignItems: 'center', marginTop: 70}}>
+          <Flowerpot />
         </View>
       </View>
       <View>
@@ -66,7 +62,6 @@ const styles = StyleSheet.create({
     color: color.blueGray_04,
   },
   illustView: {
-    marginTop: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
