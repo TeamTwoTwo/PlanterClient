@@ -1,7 +1,14 @@
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
 import CustomButton from '../../components/common/CustomButton';
@@ -97,6 +104,7 @@ const MatchingRequestScreen04 = () => {
           .then(res => {
             console.log(res);
             if (res.data.isSuccess) {
+              Alert.alert('매칭을 요청했습니다.');
               navigation.navigate('MatchingHistory');
             }
           })
