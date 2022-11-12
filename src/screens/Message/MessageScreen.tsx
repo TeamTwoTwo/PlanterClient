@@ -82,7 +82,7 @@ const MessageScreen = () => {
         />
       ) : (
         <View style={styles.contentWrap}>
-          <View style={styles.img} />
+          {/* <View style={styles.img} /> */}
           <Text style={[Typography.body1, {color: color.blueGray_06}]}>
             받은 쪽지가 없습니다.
           </Text>

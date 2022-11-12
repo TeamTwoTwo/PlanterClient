@@ -8,7 +8,7 @@ interface Props {
 const NoMatchingHistory = ({type}: Props) => {
   return (
     <View style={styles.wrap}>
-      <View style={styles.illust} />
+      {/* <View style={styles.illust} /> */}
       <View style={styles.textWrap}>
         <Text style={[Typography.body1, {color: color.blueGray_06}]}>
           {type} 매칭 내역이 없습니다.
