@@ -131,7 +131,7 @@ const SignupScreen03 = ({route}: any) => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.container}>
           <FindHeader />
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.progressBarWrap}>
               <View style={styles.progressBarOuter}>
                 <View style={styles.progressBarInner} />
