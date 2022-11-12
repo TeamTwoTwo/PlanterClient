@@ -16,12 +16,22 @@ import Modal from '../common/Modal';
 interface Props {
   onPress: () => void;
   info?: ReviewInfoTypes | undefined;
+  screenType: string;
 }
 
-const Review = ({onPress, info}: Props) => {
+const Review = ({onPress, info, screenType}: Props) => {
+  const maxContentsLength = 50;
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
+  const [contents, setContents] = useState<string | undefined>(
+    screenType === 'ExpertDetail' &&
+      info?.contents &&
+      info?.contents.length > maxContentsLength
+      ? info?.contents.slice(0, maxContentsLength + 1) + ' ...'
+      : info?.contents,
+  );
+  const [isMoreClicked, setIsMoreClicked] = useState<boolean>(false);
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -38,6 +48,11 @@ const Review = ({onPress, info}: Props) => {
   const onSubmit = () => {
     setIsModalShown(false);
     Alert.alert('리뷰 신고가 접수되었습니다.');
+  };
+
+  const onPressContentsMore = () => {
+    setContents(info?.contents);
+    setIsMoreClicked(true);
   };
 
   return (
@@ -72,7 +87,17 @@ const Review = ({onPress, info}: Props) => {
       </View>
       <View style={styles.content}>
         <Text style={[Typography.body2, {color: color.blueGray_05}]}>
-          {info?.contents}
+          {contents}
+          {screenType === 'ExpertDetail' &&
+            !isMoreClicked &&
+            contents &&
+            contents.length > maxContentsLength && (
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={onPressContentsMore}>
+                <Text style={{color: color.blueGray_01}}>&nbsp;더보기</Text>
+              </TouchableOpacity>
+            )}
         </Text>
       </View>
       <View style={styles.imgView}>

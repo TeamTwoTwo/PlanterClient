@@ -70,6 +70,7 @@ const ReviewDetailScreen = ({route}: any) => {
                 setReviewImgs(item.images);
               }}
               info={item}
+              screenType="ReviewDetail"
             />
           )}
           showsVerticalScrollIndicator={false}

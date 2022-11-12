@@ -83,15 +83,14 @@ const ExpertDetailScreen = ({route}: any) => {
   const [coord, setCoords] = useState<CoordType>({latitude: 0, longitude: 0});
 
   const [reviewList, setReviewList] = useState<ReviewInfoTypes[]>([]);
+  const [isClickedReviewId, setIsClickedReviewId] = useState<number>(0);
 
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
 
   // 리뷰 별로 이미지가 다르니까 리뷰 이미지를 클릭할 때마다 이 값 바꿔줌(review imageDetail에 props로 이 값 사용)
-  const [reviewImgs, setReviewImgs] = useState<string[] | undefined>(
-    info?.images,
-  );
+  const [reviewImgs, setReviewImgs] = useState<string[] | undefined>();
 
   useEffect(() => {
     getData('auth').then(auth => {
@@ -134,6 +133,19 @@ const ExpertDetailScreen = ({route}: any) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    reviewList.forEach(data => {
+      if (data.reviewId === isClickedReviewId) {
+        setReviewImgs(data.images);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClickedReviewId]);
+
+  useEffect(() => {
+    console.log(reviewImgs);
+  }, [reviewImgs]);
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (e.nativeEvent.contentOffset.y > 55) {
@@ -454,8 +466,10 @@ const ExpertDetailScreen = ({route}: any) => {
                   <Review
                     onPress={() => {
                       setIsReviewImageVisible(true);
+                      setIsClickedReviewId(item.reviewId);
                     }}
                     info={item}
+                    screenType="ExpertDetail"
                   />
                 )}
                 keyExtractor={(item, idx) => `img ${idx}`}
@@ -505,11 +519,13 @@ const ExpertDetailScreen = ({route}: any) => {
         setVisible={setIsExpertImageVisible}
         images={info?.images}
       />
-      <ImageDetail
-        visible={isReviewImageVisible}
-        setVisible={setIsReviewImageVisible}
-        images={info?.images}
-      />
+      {reviewImgs && (
+        <ImageDetail
+          visible={isReviewImageVisible}
+          setVisible={setIsReviewImageVisible}
+          images={reviewImgs}
+        />
+      )}
       <Modal visible={isModalShown} setVisible={setIsModalShown} overlay>
         <View
           style={modalStyles(modalWidth, modalHeight).modal}

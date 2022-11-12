@@ -29,13 +29,15 @@ const ImageDetail = ({visible, setVisible, images}: Props) => {
           }}>
           <Close stroke="white" />
         </TouchableOpacity>
-        <ImageViewer
-          imageUrls={imgList}
-          enableSwipeDown
-          onSwipeDown={() => {
-            setVisible(false);
-          }}
-        />
+        {imgList && (
+          <ImageViewer
+            imageUrls={imgList}
+            enableSwipeDown
+            onSwipeDown={() => {
+              setVisible(false);
+            }}
+          />
+        )}
       </>
     </Modal>
   );
