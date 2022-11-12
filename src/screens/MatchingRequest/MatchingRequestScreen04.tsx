@@ -215,7 +215,7 @@ const MatchingRequestScreen04 = () => {
           </View>
         </View>
       </View>
-      <View style={styles.padding}>
+      <View style={[styles.padding, {marginBottom: 10}]}>
         <CustomButton
           text="요청하기"
           onPress={onPressRequest}
