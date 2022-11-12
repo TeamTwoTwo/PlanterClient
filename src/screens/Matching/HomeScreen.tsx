@@ -21,8 +21,6 @@ import ChekedFilter from '../../assets/icon/ic-checked-filter.svg';
 import MatchingFilter from '../../components/matching/MatchingFilter';
 import MatchingItem from '../../components/matching/MatchingItem';
 import {MainTabNavigationProp} from '../MainTab';
-import {useRecoilState} from 'recoil';
-import {LoginStatusState} from '../../recoil/atoms/loginStatus';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
 
@@ -51,6 +49,7 @@ const HomeScreen = () => {
   const [checkedFilter, setCheckedFilter] = useState<string>('가까운순');
   const [userData, setUserData] = useState<UserData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [address, setAddress] = useState<string>('');
 
   const onAddList = (text: string): void => {
     setCheckList([...checkList, text]);
@@ -86,8 +85,15 @@ const HomeScreen = () => {
     });
   };
 
+  const getUserInfo = () => {
+    getData('userInfo').then(info => {
+      setAddress(info.address);
+    });
+  };
+
   useEffect(() => {
     getMatchingList();
+    getUserInfo();
   }, []);
 
   const dummy: Dummy[] = [
@@ -97,7 +103,6 @@ const HomeScreen = () => {
     {id: 4, text: '식물케어 서비스'},
   ];
 
-  const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.head}>
@@ -105,7 +110,7 @@ const HomeScreen = () => {
           <View style={styles.navigation}>
             <Place />
             <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-              서울 서대문구 연희동
+              {address}
             </Text>
           </View>
         </TouchableOpacity>
