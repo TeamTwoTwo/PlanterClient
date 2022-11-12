@@ -116,7 +116,7 @@ const HomeScreen = () => {
           <Message stroke={'black'} />
         </Pressable>
       </View>
-      <View style={styles.filter}>
+      {/* <View style={styles.filter}>
         <FlatList
           horizontal
           data={dummy}
@@ -147,7 +147,7 @@ const HomeScreen = () => {
             </Text>
           </View>
         </Pressable>
-      </View>
+      </View> */}
 
       <Modal
         animationType="none"
@@ -260,6 +260,8 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 12,
     flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderColor: color.gray_02,
   },
   navigation: {
     flexDirection: 'row',
