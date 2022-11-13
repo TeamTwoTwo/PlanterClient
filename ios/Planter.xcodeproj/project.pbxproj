@@ -489,6 +489,8 @@
 				DEVELOPMENT_TEAM = 3AQ2WDVH35;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Planter/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = planter;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -516,6 +518,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3AQ2WDVH35;
 				INFOPLIST_FILE = Planter/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = planter;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
