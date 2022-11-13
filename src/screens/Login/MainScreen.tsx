@@ -1,5 +1,5 @@
 import React from 'react';
-import {color, url, Typography} from '../../utils/utils';
+import {color, url, Typography, screen} from '../../utils/utils';
 import {useNavigation} from '@react-navigation/native';
 import {LoginStackNavigationProp} from '../../screens/LoginStack';
 import {
@@ -12,6 +12,8 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import TitleLogo from '../../assets/icon/ic-title-logo.svg';
 import FlowerPot from '../../assets/icon/ic-flowerpot.svg';
+import CustomButton from '../../components/common/CustomButton';
+import {getBottomSpace} from 'react-native-iphone-x-helper';
 
 const MainScreen = () => {
   const navigation = useNavigation<LoginStackNavigationProp>();
@@ -32,6 +34,8 @@ const MainScreen = () => {
     navigation.navigate('FirstPwScreen');
   };
 
+  console.log(screen.height);
+
   return (
     <SafeAreaView style={styles.block}>
       <View style={styles.titleWrap}>
@@ -48,39 +52,35 @@ const MainScreen = () => {
       <View style={styles.flowerpotWrap}>
         <FlowerPot />
       </View>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.loginBtn}
-        onPress={onLoginPress}>
-        <View style={styles.loginBtn}>
-          <Text style={[Typography.subtitle3, {color: color.gray_00}]}>
-            로그인 하기
-          </Text>
+      <View style={styles.btnWrap}>
+        <CustomButton
+          backgroundColor={color.mint_05}
+          text="로그인 하기"
+          onPress={onLoginPress}
+          borderRadius={6}
+        />
+        <CustomButton
+          text="회원가입"
+          borderRadius={6}
+          backgroundColor={color.gray_00}
+          style={styles.cancelBtnStyle}
+          textStyle={{color: color.blueGray_03}}
+          onPress={onSignupPress}
+        />
+        <View style={styles.underWrap}>
+          <Pressable onPress={onIdPress}>
+            <Text style={[Typography.body2, {color: color.gray_05}]}>
+              아이디 찾기
+            </Text>
+          </Pressable>
+          <View style={styles.line} />
+          <Pressable onPress={onPwPress}>
+            <Text style={[Typography.body2, {color: color.gray_05}]}>
+              비밀번호 찾기
+            </Text>
+          </Pressable>
         </View>
-      </TouchableOpacity>
-      <View style={styles.signUpBtnWrap}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.signUpBtn}
-          onPress={onSignupPress}>
-          <Text style={[Typography.subtitle3, {color: color.blueGray_03}]}>
-            회원가입
-          </Text>
-        </TouchableOpacity>
       </View>
-      {/* <View style={styles.underWrap}>
-        <Pressable onPress={onIdPress}>
-          <Text style={[Typography.body2, {color: color.gray_05}]}>
-            아이디 찾기
-          </Text>
-        </Pressable>
-        <View style={styles.line} />
-        <Pressable onPress={onPwPress}>
-          <Text style={[Typography.body2, {color: color.gray_05}]}>
-            비밀번호 찾기
-          </Text>
-        </Pressable>
-      </View> */}
     </SafeAreaView>
   );
 };
@@ -89,41 +89,24 @@ const styles = StyleSheet.create({
   block: {
     backgroundColor: color.gray_00,
     flex: 1,
-    paddingHorizontal: 30,
   },
   titleWrap: {
+    paddingHorizontal: 30,
+    width: screen.width,
     marginTop: 124,
   },
   flowerpotWrap: {
-    // borderWidth: 1,
-    marginTop: 76,
-    marginBottom: 50,
+    paddingHorizontal: 30,
     alignItems: 'flex-end',
-  },
-  loginBtn: {
-    height: 52,
-    backgroundColor: color.mint_05,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  signUpBtnWrap: {
-    marginTop: 12,
-  },
-  signUpBtn: {
-    height: 52,
-    backgroundColor: color.gray_00,
-    borderColor: color.blueGray_00,
-    borderWidth: 1,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: screen.width,
+    position: 'absolute',
+    bottom: getBottomSpace() + 248,
   },
   underWrap: {
-    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
   },
   line: {
     height: 13,
@@ -131,6 +114,17 @@ const styles = StyleSheet.create({
     borderColor: color.gray_03,
     marginLeft: 21,
     marginRight: 17,
+  },
+  cancelBtnStyle: {
+    borderWidth: 1,
+    borderColor: color.blueGray_00,
+    marginTop: 12,
+  },
+  btnWrap: {
+    paddingHorizontal: 30,
+    width: screen.width,
+    position: 'absolute',
+    bottom: getBottomSpace() + 40,
   },
 });
 
