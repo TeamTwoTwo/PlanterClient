@@ -12,16 +12,33 @@
 📂src
  ┣ 📂assets
  ┃ ┣ 📂icon
+ ┃ ┣ 📂img
  ┣ 📂components
  ┃ ┣ 📂common
+ ┃ ┣ 📂ExpertDetail
+ ┃ ┣ 📂matching
+ ┃ ┣ 📂matchingHistory
+ ┃ ┣ 📂matchingRequest
+ ┃ ┣ 📂Message
+ ┃ ┣ 📂MyPage
  ┣ 📂recoil
  ┃ ┣ 📂atoms
  ┣ 📂screens
+ ┃ ┣ 📂ExpertDetail
  ┃ ┣ 📂FindID
  ┃ ┣ 📂FindPW
  ┃ ┣ 📂Login
+ ┃ ┣ 📂Matching
+ ┃ ┣ 📂MatchingHistory
+ ┃ ┣ 📂MatchingRequest
+ ┃ ┣ 📂Message
+ ┃ ┣ 📂MyPage
+ ┃ ┣ 📂Review
  ┃ ┣ 📂Signup
- ┃ ┗ LoginStack.tsx
+ ┃ ┣ LoginStack.tsx
+ ┃ ┣ MainTab.tsx
+ ┃ ┣ Navigator.tsx
+ ┃ ┗ RootStack.tsx
  ┣ 📂utils
  ┗ App.tsx
  ```
