@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NMFClientId</key>
-	<string>lj2qozotkw</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -26,8 +24,21 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NMFClientId</key>
+	<string>apllx85673</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>위치 접근 권한 허용</string>
+	<string>위치 접근 권한</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>이용자가 Planter 서비스 내에서 쪽지 전송, 리뷰 작성 작업을 수행하려면 앨범에 접근할 수 있는 권한이 필요합니다. 계속하려면 엑세스 권한을 허용해주세요.</string>
 	<key>UILaunchStoryboardName</key>
