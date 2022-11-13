@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -6,7 +6,6 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import {color, screen, Typography} from '../../utils/utils';
 import Star from '../../assets/icon/ic-star.svg';
@@ -17,9 +16,10 @@ interface Props {
   onPress: () => void;
   info?: ReviewInfoTypes | undefined;
   screenType: string;
+  reportUser: () => void;
 }
 
-const Review = ({onPress, info, screenType}: Props) => {
+const Review = ({onPress, info, screenType, reportUser}: Props) => {
   const maxContentsLength = 50;
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
@@ -47,7 +47,7 @@ const Review = ({onPress, info, screenType}: Props) => {
 
   const onSubmit = () => {
     setIsModalShown(false);
-    Alert.alert('리뷰 신고가 접수되었습니다.');
+    reportUser();
   };
 
   const onPressContentsMore = () => {
