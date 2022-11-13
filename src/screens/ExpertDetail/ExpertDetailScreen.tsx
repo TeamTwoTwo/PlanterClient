@@ -11,7 +11,6 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Pressable,
-  Alert,
 } from 'react-native';
 import {color, screen, Typography, url} from '../../utils/utils';
 import LinearGradient from 'react-native-linear-gradient';
@@ -192,28 +191,9 @@ const ExpertDetailScreen = ({route}: any) => {
   };
 
   const onPressReport = () => {
-    getData('auth').then(auth => {
-      axios
-        .post(
-          url.dev + 'reports',
-          {plantManagerId},
-          {
-            headers: {
-              Authorization: `Bearer ${auth.token}`,
-            },
-          },
-        )
-        .then(res => {
-          console.log(res.data.result);
-          if (res.data.isSuccess) {
-            setIsModalShown(false);
-            Alert.alert('신고가 완료되었습니다.');
-          }
-        })
-        .catch(e => {
-          console.error(e);
-        });
-    });
+    info &&
+      navigation.navigate('ReportScreen', {plantManagerId, name: info?.name});
+    setIsModalShown(false);
   };
 
   return (

@@ -20,6 +20,7 @@ import ReviewWriteScreen from './Review/ReviewWriteScreen';
 import DropOutScreen from './MyPage/DropOutScreen';
 import ProfileScreen from './MyPage/ProfileScreen';
 import TOSDetail from './Signup/TOSDetail';
+import ReportScreen from './ExpertDetail/ReportScreen';
 
 type RootStackParamList = {
   MainTab: undefined;
@@ -53,6 +54,7 @@ type RootStackParamList = {
   MatchingRequestScreen02: undefined;
   MatchingRequestScreen03: undefined;
   MatchingRequestScreen04: undefined;
+  ReportScreen: {plantManagerId: number; name: string};
 };
 
 export type RootStackNavigationProp =
@@ -98,6 +100,7 @@ const RootStack = () => {
       <Stack.Screen name="DropOutScreen" component={DropOutScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="TOSDetail" component={TOSDetail} />
+      <Stack.Screen name="ReportScreen" component={ReportScreen} />
     </Stack.Navigator>
   );
 };
