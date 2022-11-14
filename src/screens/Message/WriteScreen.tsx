@@ -49,8 +49,12 @@ const WriteScreen = ({route}: any) => {
 
   useEffect(() => {
     if (toastStatus) {
-      setTimeout(() => setToastStatus(false), 1000);
+      setTimeout(() => {
+        setToastStatus(false);
+        navigation.navigate('MessageScreen');
+      }, 500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toastStatus]);
 
   const onSelectImage = () => {
@@ -120,7 +124,6 @@ const WriteScreen = ({route}: any) => {
                 if (!toastStatus) {
                   setToastStatus(true);
                 }
-                navigation.navigate('MessageScreen');
               }
             })
             .catch(e => {
@@ -180,7 +183,7 @@ const WriteScreen = ({route}: any) => {
           )}
           <View style={{minHeight: screen.height - 96}}>
             <TextInput
-              style={[Typography.body1, {paddingHorizontal: 24}]}
+              style={[Typography.body1, {paddingHorizontal: 24, flex: 1}]}
               placeholder="쪽지 내용을 작성해주세요."
               multiline
               textAlignVertical="top"
