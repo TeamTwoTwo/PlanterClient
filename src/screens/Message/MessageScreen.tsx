@@ -44,6 +44,10 @@ const MessageScreen = () => {
     });
   };
 
+  const onGoHome = (): void => {
+    navigation.navigate('MainTab');
+  };
+
   useFocusEffect(
     useCallback(() => {
       onGetMessageList(); // 화면이 포커스 됐을 때
@@ -55,7 +59,7 @@ const MessageScreen = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <MatchingHeader title="쪽지함" />
+      <MatchingHeader title="쪽지함" onGoHome={onGoHome} />
       {messageList && messageList.length > 0 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
