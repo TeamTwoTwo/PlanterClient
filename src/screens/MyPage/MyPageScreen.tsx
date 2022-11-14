@@ -11,17 +11,14 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, screen, Typography, url} from '../../utils/utils';
 import Bulter from '../../assets/icon/ic-butler-badge.svg';
 import ListItem from '../../components/MyPage/ListItem';
-import Modal from '../../components/common/Modal';
-import {removeData} from '../../utils/AsyncStorage';
-import {useRecoilState} from 'recoil';
-import {LoginStatusState} from '../../recoil/atoms/loginStatus';
 import {MainTabNavigationProp} from '../../screens/MainTab';
 import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
-import {getData} from '../../utils/AsyncStorage';
 import Expert from '../../assets/icon/ic-expert-badge.svg';
 import Flower from '../../assets/icon/ic-flower-badge.svg';
 import Care from '../../assets/icon/ic-care-badge.svg';
+import Setting from '../../assets/icon/ic-setting.svg';
+import axios from 'axios';
+import {getData} from '../../utils/AsyncStorage';
 
 interface userData {
   userId: number;
@@ -36,38 +33,11 @@ interface userData {
 
 const MyPageScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
-  const [isModalShown, setIsModalShown] = useState<boolean>(false);
-  const [modalWidth, setModalWidth] = useState<number>(0);
-  const [modalHeight, setModalHeight] = useState<number>(0);
-  const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);
+  const [isMatchingOn, setIsMatchingOn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<userData>();
-
-  const onLayout = (e: {
-    nativeEvent: {layout: {width: number; height: number}};
-  }) => {
-    const {width, height} = e.nativeEvent.layout;
-    setModalWidth(width);
-    setModalHeight(height);
-  };
-
-  const onLogoutModal = (): void => {
-    setIsModalShown(true);
-  };
-
-  const onCancel = (): void => {
-    setIsModalShown(false);
-  };
-
-  const onDropOut = (): void => {
-    navigation.navigate('DropOutScreen');
-  };
 
   const onGoProfile = (): void => {
     navigation.navigate('ProfileScreen');
-  };
-
-  const onTOSDetail = (): void => {
-    navigation.navigate('TOSDetail', {number: 1});
   };
 
   useEffect(() => {
@@ -94,6 +64,12 @@ const MyPageScreen = () => {
         <Text style={[Typography.subtitle2, {color: color.blueGray_06}]}>
           마이페이지
         </Text>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('SettingScreen');
+          }}>
+          <Setting />
+        </Pressable>
       </View>
       <View style={styles.profileArea}>
         <View style={styles.rowArea}>
@@ -158,46 +134,69 @@ const MyPageScreen = () => {
         </View>
         <Pressable onPress={onGoProfile}>
           <Text style={[Typography.caption2, {color: color.blueGray_02}]}>
-            프로필 보기
+            프로필 수정
           </Text>
         </Pressable>
       </View>
-      <View>
-        <ListItem title="이용약관" onPress={onTOSDetail} />
-        <ListItem title="로그아웃" onPress={onLogoutModal} />
-        <ListItem title="탈퇴하기" onPress={onDropOut} />
-      </View>
-      <Modal visible={isModalShown} setVisible={setIsModalShown} overlay cancel>
-        <View
-          style={modalStyles(modalWidth, modalHeight).modal}
-          onLayout={onLayout}>
-          <Text style={[styles.title, Typography.subtitle2]}>로그아웃</Text>
-          <Text style={[Typography.body1, {color: color.blueGray_05}]}>
-            정말 로그아웃 하시겠습니까?
+      <View
+        style={{
+          paddingHorizontal: 20,
+          borderBottomWidth: 1,
+          borderColor: color.blueGray_00,
+          marginBottom: 10,
+        }}>
+        <View style={styles.matchingBtnWrap}>
+          <Text style={(Typography.body1, {color: color.blueGray_06})}>
+            내 매칭페이지 관리
           </Text>
-          <View style={styles.buttonArea}>
-            <TouchableOpacity
-              style={styles.modalBtn}
-              activeOpacity={0.5}
-              onPress={onCancel}>
-              <Text style={[Typography.subtitle3, {color: color.blueGray_05}]}>
-                취소
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.modalBtn}
-              activeOpacity={0.5}
-              onPress={() => {
-                removeData('auth');
-                setLoginStatus({isLogined: false});
-              }}>
+          <Pressable
+            onPress={() => {
+              setIsMatchingOn(previousState => !previousState);
+            }}>
+            {isMatchingOn ? (
               <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
-                로그아웃
+                ON
               </Text>
-            </TouchableOpacity>
-          </View>
+            ) : (
+              <Text style={[Typography.subtitle3, {color: color.blueGray_01}]}>
+                OFF
+              </Text>
+            )}
+          </Pressable>
         </View>
-      </Modal>
+      </View>
+      <View>
+        <ListItem
+          title="알림설정"
+          onPress={() => {
+            navigation.navigate('AlarmScreen');
+          }}
+        />
+        <ListItem
+          title="공지사항"
+          onPress={() => {
+            navigation.navigate('NoticeScreen');
+          }}
+        />
+        <ListItem
+          title="이용약관"
+          onPress={() => {
+            navigation.navigate('TOSDetail', {number: 1});
+          }}
+        />
+        <ListItem
+          title="고객센터"
+          onPress={() => {
+            navigation.navigate('ClientCenterScreen');
+          }}
+        />
+        <ListItem
+          title="입점신청"
+          onPress={() => {
+            navigation.navigate('EnterStoreScreen');
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -229,16 +228,16 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 35,
     paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   profileArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 30,
-    borderBottomWidth: 1,
-    borderColor: color.blueGray_00,
-    marginBottom: 20,
+    paddingBottom: 24,
   },
   profile: {
     width: 40,
@@ -250,25 +249,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  title: {
-    marginTop: 40,
-    marginBottom: 8,
-    color: color.blueGray_06,
-  },
-  buttonArea: {
-    marginTop: 20,
-    flexDirection: 'row',
+  matchingBtnWrap: {
+    paddingHorizontal: 16,
+    backgroundColor: '#FAFAFC',
+    height: 52,
     justifyContent: 'space-between',
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    // borderWidth: 1,
-  },
-  modalBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    flex: 1,
-    // borderWidth: 1,
+    borderRadius: 6,
+    marginBottom: 20,
   },
 });
 
