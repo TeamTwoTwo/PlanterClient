@@ -33,6 +33,7 @@ const SignupScreen03 = ({route}: any) => {
 
   const navigation = useNavigation<LoginStackNavigationProp>();
   const addr = route.params?.address;
+  const simpleAddress = route.params?.simpleAddress;
   const [showAddressView, setShowAddressView] = useState<boolean>(false);
   const [nickname, setNickname] = useState<string>('');
   const [address, setAddress] = useState<string>('');
@@ -66,12 +67,14 @@ const SignupScreen03 = ({route}: any) => {
         nickname,
         address,
         detailAddress,
+        simpleAddress,
       }));
 
       let signupInfoTmp = {...signupInfo};
       signupInfoTmp.nickname = nickname;
       signupInfoTmp.address = address;
       signupInfoTmp.detailAddress = detailAddress;
+      signupInfoTmp.simpleAddress = simpleAddress;
 
       axios
         .post(url.dev + 'auth/signup', signupInfoTmp)

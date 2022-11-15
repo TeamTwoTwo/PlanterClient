@@ -176,7 +176,7 @@ const SignupScreen02 = () => {
         if (res.status === 200) {
           if (birthCheckStatus && name !== '') {
             clear();
-            navigation.navigate('Signup03', {address: ''});
+            navigation.navigate('Signup03', {address: '', simpleAddress: ''});
           }
         }
       })

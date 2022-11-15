@@ -35,7 +35,7 @@ type LoginStackParamList = {
   TOSDetail: {number: number};
   Signup01: undefined;
   Signup02: undefined;
-  Signup03: {address: string};
+  Signup03: {address: string; simpleAddress: string};
   FindAddress: undefined;
   Signup04: undefined;
 };

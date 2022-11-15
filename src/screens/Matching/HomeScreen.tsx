@@ -87,7 +87,7 @@ const HomeScreen = () => {
 
   const getUserInfo = () => {
     getData('userInfo').then(info => {
-      setAddress(info.address);
+      setAddress(info.simpleAddress);
     });
   };
 

@@ -26,6 +26,12 @@ const FindAddress = () => {
               data.buildingName !== ''
                 ? data.address + ` (${data.buildingName})`
                 : data.address,
+            simpleAddress:
+              data.sido +
+              ' ' +
+              data.sigungu +
+              ' ' +
+              (data.bname1.length > 0 ? data.bname1 : data.bname2),
           });
         }}
         onError={function (error: unknown): void {
