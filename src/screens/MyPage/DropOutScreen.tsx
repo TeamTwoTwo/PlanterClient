@@ -24,6 +24,7 @@ const DropOutScreen = () => {
           },
         )
         .then(res => {
+          console.log(res.data.result);
           if (res.data.isSuccess) {
             console.log(res.data.result);
             removeData('auth');

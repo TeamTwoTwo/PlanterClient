@@ -20,7 +20,18 @@ import ReviewWriteScreen from './Review/ReviewWriteScreen';
 import DropOutScreen from './MyPage/DropOutScreen';
 import ProfileScreen from './MyPage/ProfileScreen';
 import TOSDetail from './Signup/TOSDetail';
+import AlarmScreen from './MyPage/AlarmScreen';
+import ClientCenterScreen from './MyPage/ClientCenterScreen';
+import InquiryWriteScreen from './MyPage/InquiryWriteScreen';
+import InquiryHistoryScreen from './MyPage/InquiryHistoryScreen';
+import InquiryDetailScreen from './MyPage/InquiryDetailScreen';
+import EnterStoreScreen from './MyPage/EnterStoreScreen';
+import NoticeScreen from './MyPage/NoticeScreen';
+import NoticeDetailScreen from './MyPage/NoticeDetailScreen';
+import SettingScreen from './MyPage/SettingScreen';
+import ProfileEditScreen from './MyPage/ProfileEditScreen';
 import ReportScreen from './ExpertDetail/ReportScreen';
+
 
 type RootStackParamList = {
   MainTab: undefined;
@@ -54,6 +65,16 @@ type RootStackParamList = {
   MatchingRequestScreen02: undefined;
   MatchingRequestScreen03: undefined;
   MatchingRequestScreen04: undefined;
+  AlarmScreen: undefined;
+  ClientCenterScreen: undefined;
+  InquiryWriteScreen: undefined;
+  InquiryHistoryScreen: undefined;
+  InquiryDetailScreen: undefined;
+  EnterStoreScreen: undefined;
+  NoticeScreen: undefined;
+  NoticeDetailScreen: undefined;
+  SettingScreen: undefined;
+  ProfileEditScreen: {nickname: string};
   ReportScreen: {plantManagerId: number; name: string};
 };
 
@@ -100,6 +121,22 @@ const RootStack = () => {
       <Stack.Screen name="DropOutScreen" component={DropOutScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="TOSDetail" component={TOSDetail} />
+      <Stack.Screen name="AlarmScreen" component={AlarmScreen} />
+      <Stack.Screen name="ClientCenterScreen" component={ClientCenterScreen} />
+      <Stack.Screen name="InquiryWriteScreen" component={InquiryWriteScreen} />
+      <Stack.Screen
+        name="InquiryHistoryScreen"
+        component={InquiryHistoryScreen}
+      />
+      <Stack.Screen
+        name="InquiryDetailScreen"
+        component={InquiryDetailScreen}
+      />
+      <Stack.Screen name="EnterStoreScreen" component={EnterStoreScreen} />
+      <Stack.Screen name="NoticeScreen" component={NoticeScreen} />
+      <Stack.Screen name="NoticeDetailScreen" component={NoticeDetailScreen} />
+      <Stack.Screen name="SettingScreen" component={SettingScreen} />
+      <Stack.Screen name="ProfileEditScreen" component={ProfileEditScreen} />
       <Stack.Screen name="ReportScreen" component={ReportScreen} />
     </Stack.Navigator>
   );
