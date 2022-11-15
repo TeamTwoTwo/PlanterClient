@@ -67,7 +67,10 @@ const ProfileScreen = () => {
         )}
         <Pressable
           onPress={() => {
-            navigation.navigate('ProfileEditScreen', {nickname: userInfo.name});
+            userInfo &&
+              navigation.navigate('ProfileEditScreen', {
+                nickname: userInfo.name,
+              });
           }}
           style={{
             flexDirection: 'row',
