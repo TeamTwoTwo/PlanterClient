@@ -142,7 +142,21 @@ const MatchingHistoryListScreen = () => {
           <Message stroke={'black'} />
         </TouchableOpacity>
       </View>
-      {(isSelectedReq && reqList) || (isSelectedRcv && rcvList) ? (
+      {(isSelectedReq && (reqList?.length === 0 || !reqList)) ||
+      (isSelectedRcv && (rcvList?.length === 0 || !rcvList)) ? (
+        <View
+          onLayout={onLayoutNoView}
+          style={
+            dstyles(
+              viewWidth,
+              viewHeight,
+              noMatchingViewWidth,
+              noMatchingViewHeight,
+            ).noMatchingView
+          }>
+          <NoMatchingHistory type={isSelectedReq ? '요청한' : '받은'} />
+        </View>
+      ) : (
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={getReqList} />
@@ -295,19 +309,6 @@ const MatchingHistoryListScreen = () => {
             null}
           </View>
         </ScrollView>
-      ) : (
-        <View
-          onLayout={onLayoutNoView}
-          style={
-            dstyles(
-              viewWidth,
-              viewHeight,
-              noMatchingViewWidth,
-              noMatchingViewHeight,
-            ).noMatchingView
-          }>
-          <NoMatchingHistory type={isSelectedReq ? '요청한' : '받은'} />
-        </View>
       )}
     </SafeAreaView>
   );
@@ -355,7 +356,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 60,
+    height: 48,
     paddingHorizontal: 20,
   },
   matchingTypeWrap: {

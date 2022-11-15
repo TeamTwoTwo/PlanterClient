@@ -54,7 +54,7 @@ const MatchingRequestScreen03 = () => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
-          style={{marginTop: 20}}
+          style={{marginTop: 12}}
           onPress={() => {
             setGo(false);
             setCome(true);
@@ -90,9 +90,9 @@ const dstyles = (type: boolean) =>
   StyleSheet.create({
     item: {
       borderRadius: 6,
-      borderWidth: 2,
+      borderWidth: type ? 2 : 1,
       borderColor: type ? color.mint_05 : color.blueGray_00,
-      paddingTop: 30,
+      paddingTop: type ? 29 : 30,
       paddingBottom: 14,
       alignItems: 'center',
       justifyContent: 'center',

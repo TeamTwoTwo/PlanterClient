@@ -104,7 +104,6 @@ const MatchingRequestScreen04 = () => {
           .then(res => {
             console.log(res);
             if (res.data.isSuccess) {
-              Alert.alert('매칭을 요청했습니다.');
               navigation.navigate('MatchingHistory');
             }
           })

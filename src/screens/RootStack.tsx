@@ -30,6 +30,8 @@ import NoticeScreen from './MyPage/NoticeScreen';
 import NoticeDetailScreen from './MyPage/NoticeDetailScreen';
 import SettingScreen from './MyPage/SettingScreen';
 import ProfileEditScreen from './MyPage/ProfileEditScreen';
+import ReportScreen from './ExpertDetail/ReportScreen';
+
 
 type RootStackParamList = {
   MainTab: undefined;
@@ -73,6 +75,7 @@ type RootStackParamList = {
   NoticeDetailScreen: undefined;
   SettingScreen: undefined;
   ProfileEditScreen: {nickname: string};
+  ReportScreen: {plantManagerId: number; name: string};
 };
 
 export type RootStackNavigationProp =
@@ -134,6 +137,7 @@ const RootStack = () => {
       <Stack.Screen name="NoticeDetailScreen" component={NoticeDetailScreen} />
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
       <Stack.Screen name="ProfileEditScreen" component={ProfileEditScreen} />
+      <Stack.Screen name="ReportScreen" component={ReportScreen} />
     </Stack.Navigator>
   );
 };

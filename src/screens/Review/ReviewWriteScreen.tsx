@@ -32,6 +32,7 @@ const ReviewWriteScreen = ({route}: any) => {
   const [isFull, setIsFull] = useState<boolean>(false);
   const [imageFiles, setImageFiles] = useState<IImage[]>([]);
   const [toastStatus, setToastStatus] = useState<boolean>(false);
+  const [plantManagerId, setPlantManagerId] = useState<number | undefined>();
   const navigation = useNavigation<MainTabNavigationProp>();
   const onGoBack = () => {
     navigation.pop();
@@ -46,10 +47,20 @@ const ReviewWriteScreen = ({route}: any) => {
   }, [message]);
 
   useEffect(() => {
-    if (toastStatus) {
-      setTimeout(() => setToastStatus(false), 1000);
+    if (toastStatus && plantManagerId) {
+      setTimeout(() => {
+        setToastStatus(false);
+        navigation.navigate('Matching');
+        navigation.navigate('ExpertDetailScreen', {
+          plantManagerId,
+        });
+        navigation.navigate('ReviewDetailScreen', {
+          plantManagerId,
+        });
+      }, 500);
     }
-  }, [toastStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toastStatus, plantManagerId]);
 
   const onSelectImage = () => {
     ImagePicker.openPicker({
@@ -117,15 +128,9 @@ const ReviewWriteScreen = ({route}: any) => {
               if (res.data.isSuccess) {
                 Keyboard.dismiss();
                 if (!toastStatus) {
+                  setPlantManagerId(res.data.result.plantManagerId);
                   setToastStatus(true);
                 }
-                navigation.navigate('Matching');
-                navigation.navigate('ExpertDetailScreen', {
-                  plantManagerId: res.data.result.plantManagerId,
-                });
-                navigation.navigate('ReviewDetailScreen', {
-                  plantManagerId: res.data.result.plantManagerId,
-                });
               }
             })
             .catch(e => {
