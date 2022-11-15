@@ -16,7 +16,7 @@ const Toggle = ({text, isEnabled, onPress}: PropTypes) => {
         onValueChange={onPress}
         value={isEnabled}
         thumbColor={color.gray_00}
-        trackColor={isEnabled ? color.mint_05 : color.blueGray_00}
+        trackColor={{true: color.mint_05, false: color.blueGray_00}}
         ios_backgroundColor="#EDF0F5"
       />
     </View>
