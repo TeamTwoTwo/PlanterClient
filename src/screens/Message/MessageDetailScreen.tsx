@@ -39,10 +39,12 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {plantManagerId, name} = route?.params;
+  const {plantManagerId, name, type} = route?.params;
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
   });
+
+  console.log(type);
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -78,7 +80,7 @@ const MessageDetailScreen = ({route}: any) => {
           console.log(res.data);
           setIsModalShown(false);
           if (res.data.isSuccess) {
-            navigation.navigate('MessageScreen');
+            navigation.navigate('MessageScreen', {type: 'Matching'});
           }
         })
         .finally(() => {
@@ -107,7 +109,7 @@ const MessageDetailScreen = ({route}: any) => {
           setIsModalShown(false);
           if (res.data.isSuccess) {
             Alert.alert('스팸 신고를 완료했습니다.');
-            navigation.navigate('MessageScreen');
+            navigation.navigate('MessageScreen', {type: 'Matching'});
           }
         })
         .catch(e => {
@@ -184,9 +186,22 @@ const MessageDetailScreen = ({route}: any) => {
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
           onPress={() => {
-            navigation.navigate('WriteScreen', {
-              plantManagerId: plantManagerId,
-            });
+            if (type === 'Matching') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId: plantManagerId,
+                type: 'Matching',
+              });
+            } else if (type === 'MatchingHistory') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId: plantManagerId,
+                type: 'MatchingHistory',
+              });
+            } else if (type === 'MatchingHistoryDetail') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId: plantManagerId,
+                type: 'MatchingHistoryDetail',
+              });
+            }
           }}>
           <Plus />
         </Pressable>
