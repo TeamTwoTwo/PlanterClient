@@ -47,8 +47,24 @@ const WriteScreen = ({route}: any) => {
 
   useEffect(() => {
     if (toastStatus) {
-      setTimeout(() => setToastStatus(false), 1000);
+      setTimeout(() => {
+        setToastStatus(false);
+        if (type === 'Matching') {
+          navigation.navigate('MessageScreen', {type: 'Matching'});
+        } else if (type === 'ExpertDetail') {
+          navigation.navigate('MessageScreen', {type: 'ExpertDetail'});
+        } else if (type === 'MatchingHistory') {
+          navigation.navigate('MessageScreen', {
+            type: 'MatchingHistory',
+          });
+        } else if (type === 'MatchingHistoryDetail') {
+          navigation.navigate('MessageScreen', {
+            type: 'MatchingHistoryDetail',
+          });
+        }
+      }, 500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toastStatus]);
 
   const onSelectImage = () => {
@@ -117,19 +133,6 @@ const WriteScreen = ({route}: any) => {
                 Keyboard.dismiss();
                 if (!toastStatus) {
                   setToastStatus(true);
-                }
-                if (type === 'Matching') {
-                  navigation.navigate('MessageScreen', {type: 'Matching'});
-                } else if (type === 'ExpertDetail') {
-                  navigation.navigate('MessageScreen', {type: 'ExpertDetail'});
-                } else if (type === 'MatchingHistory') {
-                  navigation.navigate('MessageScreen', {
-                    type: 'MatchingHistory',
-                  });
-                } else if (type === 'MatchingHistoryDetail') {
-                  navigation.navigate('MessageScreen', {
-                    type: 'MatchingHistoryDetail',
-                  });
                 }
               }
             })
