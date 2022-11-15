@@ -8,6 +8,8 @@ import {MainTabNavigationProp} from '../../screens/MainTab';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
+import {useRecoilState} from 'recoil';
+import {MatchingIdState} from '../../recoil/atoms/matchingID';
 
 interface messageData {
   plantManagerId: number;
@@ -19,10 +21,12 @@ interface messageData {
   isUnread: boolean;
 }
 
-const MessageScreen = () => {
+const MessageScreen = ({route}: any) => {
   const [messageList, setMessageList] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [matchingID, setMatchingID] = useRecoilState(MatchingIdState);
   const navigation = useNavigation<MainTabNavigationProp>();
+  const {type} = route?.params;
 
   const onGetMessageList = (): void => {
     setRefreshing(true);
@@ -44,8 +48,22 @@ const MessageScreen = () => {
     });
   };
 
-  const onGoHome = (): void => {
-    navigation.navigate('MainTab');
+  const onPopToTop = (): void => {
+    if (type === '매칭' || type === '매칭내역') {
+      console.log('뒤로가자');
+      navigation.pop();
+    } else if (type === '전문가상세') {
+      if (messageList) {
+        navigation.popToTop();
+        navigation.navigate('ExpertDetailScreen', {
+          plantManagerId: messageList[0].plantManagerId,
+        });
+      }
+    } else if (type === '매칭내역상세') {
+      navigation.navigate('MatchingHistoryDetailScreen', {
+        matchingId: matchingID,
+      });
+    }
   };
 
   useFocusEffect(
@@ -59,7 +77,7 @@ const MessageScreen = () => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <MatchingHeader title="쪽지함" onGoHome={onGoHome} />
+      <MatchingHeader title="쪽지함" onPopToTop={onPopToTop} />
       {messageList && messageList.length > 0 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -67,10 +85,19 @@ const MessageScreen = () => {
           renderItem={({item}: {item: messageData}) => (
             <MessageItem
               onPress={() => {
-                navigation.navigate('MessageDetailScreen', {
-                  plantManagerId: item.plantManagerId,
-                  name: item.name,
-                });
+                if (type === '매칭') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: '매칭',
+                  });
+                } else if (type === '매칭내역') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: '매칭내역',
+                  });
+                }
               }}
               name={item.name}
               contents={item.contents}

@@ -39,7 +39,7 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {plantManagerId, name} = route?.params;
+  const {plantManagerId, name, type} = route?.params;
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
   });
@@ -78,7 +78,7 @@ const MessageDetailScreen = ({route}: any) => {
           console.log(res.data);
           setIsModalShown(false);
           if (res.data.isSuccess) {
-            navigation.navigate('MessageScreen');
+            navigation.navigate('MessageScreen', {type: '매칭'});
           }
         })
         .finally(() => {
@@ -107,7 +107,7 @@ const MessageDetailScreen = ({route}: any) => {
           setIsModalShown(false);
           if (res.data.isSuccess) {
             Alert.alert('스팸 신고를 완료했습니다.');
-            navigation.navigate('MessageScreen');
+            navigation.navigate('MessageScreen', {type: '매칭'});
           }
         })
         .catch(e => {
@@ -184,9 +184,22 @@ const MessageDetailScreen = ({route}: any) => {
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
           onPress={() => {
-            navigation.navigate('WriteScreen', {
-              plantManagerId: plantManagerId,
-            });
+            if (type === '매칭') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId: plantManagerId,
+                type: '매칭',
+              });
+            } else if (type === '매칭내역') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId: plantManagerId,
+                type: '매칭내역',
+              });
+            } else if (type === '매칭내역상세') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId: plantManagerId,
+                type: '매칭내역상세',
+              });
+            }
           }}>
           <Plus />
         </Pressable>

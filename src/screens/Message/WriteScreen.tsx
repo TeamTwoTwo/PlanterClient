@@ -32,12 +32,10 @@ const WriteScreen = ({route}: any) => {
   const [imageFiles, setImageFiles] = useState<IImage[]>([]);
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
-  const {plantManagerId} = route?.params;
+  const {plantManagerId, type} = route?.params;
   const onGoBack = () => {
     navigation.pop();
   };
-
-  console.log(plantManagerId);
 
   useEffect(() => {
     if (message.length === 0) {
@@ -120,7 +118,15 @@ const WriteScreen = ({route}: any) => {
                 if (!toastStatus) {
                   setToastStatus(true);
                 }
-                navigation.navigate('MessageScreen');
+                if (type === '매칭') {
+                  navigation.navigate('MessageScreen', {type: '매칭'});
+                } else if (type === '전문가상세') {
+                  navigation.navigate('MessageScreen', {type: '전문가상세'});
+                } else if (type === '매칭내역') {
+                  navigation.navigate('MessageScreen', {type: '매칭내역'});
+                } else if (type === '매칭내역상세') {
+                  navigation.navigate('MessageScreen', {type: '매칭내역상세'});
+                }
               }
             })
             .catch(e => {
