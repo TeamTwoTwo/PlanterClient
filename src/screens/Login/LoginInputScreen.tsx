@@ -109,6 +109,7 @@ const LoginInputScreen = () => {
               phone,
               address,
               detailAddress,
+              simpleAddress,
               token,
               userId,
             } = res.data.result;
@@ -122,6 +123,7 @@ const LoginInputScreen = () => {
               phone,
               address,
               detailAddress,
+              simpleAddress,
             };
             const authInfo = {token, userId};
 
