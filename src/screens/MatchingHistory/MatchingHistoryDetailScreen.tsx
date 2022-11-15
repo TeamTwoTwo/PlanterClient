@@ -161,7 +161,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
       navigation.navigate('MessageDetailScreen', {
         plantManagerId: matchingInfo?.plantManagerId,
         name: matchingInfo?.name,
-        type: '매칭내역상세',
+        type: 'MatchingHistoryDetail',
       });
   };
 

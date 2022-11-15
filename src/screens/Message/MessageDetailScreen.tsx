@@ -44,6 +44,8 @@ const MessageDetailScreen = ({route}: any) => {
     isLoading: false,
   });
 
+  console.log(type);
+
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
   }) => {
@@ -78,7 +80,7 @@ const MessageDetailScreen = ({route}: any) => {
           console.log(res.data);
           setIsModalShown(false);
           if (res.data.isSuccess) {
-            navigation.navigate('MessageScreen', {type: '매칭'});
+            navigation.navigate('MessageScreen', {type: 'Matching'});
           }
         })
         .finally(() => {
@@ -107,7 +109,7 @@ const MessageDetailScreen = ({route}: any) => {
           setIsModalShown(false);
           if (res.data.isSuccess) {
             Alert.alert('스팸 신고를 완료했습니다.');
-            navigation.navigate('MessageScreen', {type: '매칭'});
+            navigation.navigate('MessageScreen', {type: 'Matching'});
           }
         })
         .catch(e => {
@@ -184,20 +186,20 @@ const MessageDetailScreen = ({route}: any) => {
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
           onPress={() => {
-            if (type === '매칭') {
+            if (type === 'Matching') {
               navigation.navigate('WriteScreen', {
                 plantManagerId: plantManagerId,
-                type: '매칭',
+                type: 'Matching',
               });
-            } else if (type === '매칭내역') {
+            } else if (type === 'MatchingHistory') {
               navigation.navigate('WriteScreen', {
                 plantManagerId: plantManagerId,
-                type: '매칭내역',
+                type: 'MatchingHistory',
               });
-            } else if (type === '매칭내역상세') {
+            } else if (type === 'MatchingHistoryDetail') {
               navigation.navigate('WriteScreen', {
                 plantManagerId: plantManagerId,
-                type: '매칭내역상세',
+                type: 'MatchingHistoryDetail',
               });
             }
           }}>

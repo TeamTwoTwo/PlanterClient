@@ -190,7 +190,7 @@ const ExpertDetailScreen = ({route}: any) => {
   const onPressMessage = () => {
     navigation.navigate('WriteScreen', {
       plantManagerId: plantManagerId,
-      type: '전문가상세',
+      type: 'ExpertDetail',
     });
   };
 

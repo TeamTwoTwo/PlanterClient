@@ -109,7 +109,7 @@ const MatchingHistoryListScreen = () => {
   };
 
   const onPressMessage = () => {
-    navigation.navigate('MessageScreen', {type: '매칭내역'});
+    navigation.navigate('MessageScreen', {type: 'MatchingHistory'});
   };
 
   return (

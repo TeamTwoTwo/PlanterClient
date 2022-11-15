@@ -49,17 +49,17 @@ const MessageScreen = ({route}: any) => {
   };
 
   const onPopToTop = (): void => {
-    if (type === '매칭' || type === '매칭내역') {
+    if (type === 'Matching' || type === 'MatchingHistory') {
       console.log('뒤로가자');
       navigation.pop();
-    } else if (type === '전문가상세') {
+    } else if (type === 'ExpertDetail') {
       if (messageList) {
         navigation.popToTop();
         navigation.navigate('ExpertDetailScreen', {
           plantManagerId: messageList[0].plantManagerId,
         });
       }
-    } else if (type === '매칭내역상세') {
+    } else if (type === 'MatchingHistoryDetail') {
       navigation.navigate('MatchingHistoryDetailScreen', {
         matchingId: matchingID,
       });
@@ -85,17 +85,29 @@ const MessageScreen = ({route}: any) => {
           renderItem={({item}: {item: messageData}) => (
             <MessageItem
               onPress={() => {
-                if (type === '매칭') {
+                if (type === 'Matching') {
                   navigation.navigate('MessageDetailScreen', {
                     plantManagerId: item.plantManagerId,
                     name: item.name,
-                    type: '매칭',
+                    type: 'Matching',
                   });
-                } else if (type === '매칭내역') {
+                } else if (type === 'MatchingHistory') {
                   navigation.navigate('MessageDetailScreen', {
                     plantManagerId: item.plantManagerId,
                     name: item.name,
-                    type: '매칭내역',
+                    type: 'MatchingHistory',
+                  });
+                } else if (type === 'ExpertDetail') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: 'ExpertDetail',
+                  });
+                } else if (type === 'MatchingHistoryDetail') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: 'MatchingHistoryDetail',
                   });
                 }
               }}
