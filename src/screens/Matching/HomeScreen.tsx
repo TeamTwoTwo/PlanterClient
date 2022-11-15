@@ -224,7 +224,6 @@ const HomeScreen = () => {
               onRefresh={getMatchingList}
             />
           }
-          contentContainerStyle={{paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
           data={userData}
           renderItem={({item}: {item: UserData}) => (
