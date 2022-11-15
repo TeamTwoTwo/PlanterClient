@@ -9,6 +9,7 @@ import ImageDetail from '../../components/common/ImageDetail';
 import {getData} from '../../utils/AsyncStorage';
 import axios from 'axios';
 import MatchingHeader from '../../components/matching/MatchingHeader';
+import Toast from '../../components/common/Toast';
 
 export interface ReviewInfoTypes {
   reviewId: number;
@@ -27,6 +28,16 @@ const ReviewDetailScreen = ({route}: any) => {
     useState<boolean>(false);
   const [info, setInfo] = useState<ReviewInfoTypes[]>();
   const [reviewImgs, setReviewImgs] = useState<string[] | undefined>();
+  const [toastStatus, setToastStatus] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (toastStatus) {
+      setTimeout(() => {
+        setToastStatus(false);
+      }, 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toastStatus]);
 
   useEffect(() => {
     getData('auth').then(auth => {
@@ -56,6 +67,30 @@ const ReviewDetailScreen = ({route}: any) => {
     }
   }, [reviewImgs]);
 
+  const reportUser = (reviewId: number) => {
+    getData('auth').then(auth => {
+      axios
+        .post(
+          url.dev + 'reports',
+          {reviewId},
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          console.log(res.data.result);
+          if (res.data.isSuccess) {
+            setToastStatus(true);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
@@ -71,6 +106,9 @@ const ReviewDetailScreen = ({route}: any) => {
               }}
               info={item}
               screenType="ReviewDetail"
+              reportUser={() => {
+                reportUser(item.reviewId);
+              }}
             />
           )}
           showsVerticalScrollIndicator={false}
@@ -84,6 +122,11 @@ const ReviewDetailScreen = ({route}: any) => {
         setVisible={setIsReviewImageVisible}
         images={reviewImgs}
       />
+      {toastStatus && (
+        <View style={styles.toast}>
+          <Toast text="신고가 접수되었습니다." />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -107,6 +150,12 @@ const styles = StyleSheet.create({
   main: {
     paddingHorizontal: 20,
     marginTop: 28,
+  },
+  toast: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 100,
+    paddingHorizontal: 20,
   },
 });
 

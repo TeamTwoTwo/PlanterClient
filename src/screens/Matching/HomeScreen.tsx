@@ -224,7 +224,6 @@ const HomeScreen = () => {
               onRefresh={getMatchingList}
             />
           }
-          contentContainerStyle={{paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
           data={userData}
           renderItem={({item}: {item: UserData}) => (
@@ -263,7 +262,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: 20,
-    paddingRight: 12,
+    paddingRight: 20,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderColor: color.gray_02,

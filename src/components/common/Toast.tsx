@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
-import {color} from '../../utils/utils';
+import {color, Typography} from '../../utils/utils';
 
 interface PropTypes {
   text: string;
@@ -9,7 +9,7 @@ interface PropTypes {
 const Toast = ({text}: PropTypes) => {
   return (
     <View style={styles.wrap}>
-      <Text style={styles.text}>{text}</Text>
+      <Text style={[styles.text, Typography.body2]}>{text}</Text>
     </View>
   );
 };
@@ -27,9 +27,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: '500',
   },
 });
 

@@ -11,7 +11,6 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Pressable,
-  Alert,
 } from 'react-native';
 import {color, screen, Typography, url} from '../../utils/utils';
 import LinearGradient from 'react-native-linear-gradient';
@@ -40,6 +39,7 @@ import Flower from '../../assets/icon/ic-flower-badge.svg';
 import Care from '../../assets/icon/ic-care-badge.svg';
 import {ReviewInfoTypes} from './ReviewDetailScreen';
 import Modal from '../../components/common/Modal';
+import Toast from '../../components/common/Toast';
 
 let mock = [1, 2, 3];
 
@@ -91,6 +91,17 @@ const ExpertDetailScreen = ({route}: any) => {
 
   // 리뷰 별로 이미지가 다르니까 리뷰 이미지를 클릭할 때마다 이 값 바꿔줌(review imageDetail에 props로 이 값 사용)
   const [reviewImgs, setReviewImgs] = useState<string[] | undefined>();
+
+  const [toastStatus, setToastStatus] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (toastStatus) {
+      setTimeout(() => {
+        setToastStatus(false);
+      }, 1000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toastStatus]);
 
   useEffect(() => {
     getData('auth').then(auth => {
@@ -195,11 +206,17 @@ const ExpertDetailScreen = ({route}: any) => {
   };
 
   const onPressReport = () => {
+    info &&
+      navigation.navigate('ReportScreen', {plantManagerId, name: info?.name});
+    setIsModalShown(false);
+  };
+
+  const reportUser = (reviewId: number) => {
     getData('auth').then(auth => {
       axios
         .post(
           url.dev + 'reports',
-          {plantManagerId},
+          {reviewId},
           {
             headers: {
               Authorization: `Bearer ${auth.token}`,
@@ -209,8 +226,7 @@ const ExpertDetailScreen = ({route}: any) => {
         .then(res => {
           console.log(res.data.result);
           if (res.data.isSuccess) {
-            setIsModalShown(false);
-            Alert.alert('신고가 완료되었습니다.');
+            setToastStatus(true);
           }
         })
         .catch(e => {
@@ -473,6 +489,9 @@ const ExpertDetailScreen = ({route}: any) => {
                     }}
                     info={item}
                     screenType="ExpertDetail"
+                    reportUser={() => {
+                      reportUser(item.reviewId);
+                    }}
                   />
                 )}
                 keyExtractor={(item, idx) => `img ${idx}`}
@@ -549,6 +568,11 @@ const ExpertDetailScreen = ({route}: any) => {
           </Pressable>
         </View>
       </Modal>
+      {toastStatus && (
+        <View style={styles.toast}>
+          <Toast text="신고가 접수되었습니다." />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -782,6 +806,12 @@ const styles = StyleSheet.create({
   cancelBox: {
     marginTop: 32,
     paddingBottom: 22,
+  },
+  toast: {
+    width: '100%',
+    position: 'absolute',
+    bottom: 100,
+    paddingHorizontal: 20,
   },
 });
 

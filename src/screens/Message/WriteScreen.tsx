@@ -193,7 +193,7 @@ const WriteScreen = ({route}: any) => {
           )}
           <View style={{minHeight: screen.height - 96}}>
             <TextInput
-              style={[Typography.body1, {paddingHorizontal: 24}]}
+              style={[Typography.body1, {paddingHorizontal: 24, flex: 1}]}
               placeholder="쪽지 내용을 작성해주세요."
               multiline
               textAlignVertical="top"
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 16,
