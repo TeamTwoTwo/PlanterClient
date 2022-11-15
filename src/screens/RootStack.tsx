@@ -37,15 +37,13 @@ type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
   ExpertDetailScreen: {plantManagerId: number};
-  MessageScreen: {type: string};
+  MessageScreen: undefined;
   MessageDetailScreen: {
     plantManagerId: number;
     name: string;
-    type: string;
   };
   WriteScreen: {
     plantManagerId: number;
-    type: string;
   };
   ReviewDetailScreen: {plantManagerId: number};
   MatchingHistoryDetailScreen: {

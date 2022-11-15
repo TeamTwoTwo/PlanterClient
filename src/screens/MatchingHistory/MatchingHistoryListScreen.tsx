@@ -17,8 +17,6 @@ import {ScrollView} from 'react-native-virtualized-view';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
 import NoMatchingHistory from '../../components/matchingHistory/NoMatchingHistory';
-import {useRecoilState} from 'recoil';
-import {MatchingIdState} from '../../recoil/atoms/matchingID';
 
 export interface ReqType {
   matchingId: number;
@@ -46,8 +44,6 @@ const MatchingHistoryListScreen = () => {
   const [noMatchingViewHeight, setNoMatchingViewHeight] = useState<number>(0);
   const [viewWidth, setViewWidth] = useState<number>(0);
   const [viewHeight, setViewHeight] = useState<number>(0);
-
-  const [matchingID, setMatchingID] = useRecoilState(MatchingIdState);
 
   const getReqList = () => {
     setRefreshing(true);
@@ -109,7 +105,7 @@ const MatchingHistoryListScreen = () => {
   };
 
   const onPressMessage = () => {
-    navigation.navigate('MessageScreen', {type: 'MatchingHistory'});
+    navigation.navigate('MessageScreen');
   };
 
   return (
@@ -189,7 +185,6 @@ const MatchingHistoryListScreen = () => {
                           <MatchingHistoryItem
                             info={item}
                             onPress={() => {
-                              setMatchingID(item.matchingId);
                               navigation.navigate(
                                 'MatchingHistoryDetailScreen',
                                 {
@@ -225,7 +220,6 @@ const MatchingHistoryListScreen = () => {
                           <MatchingHistoryItem
                             info={item}
                             onPress={() => {
-                              setMatchingID(item.matchingId);
                               navigation.navigate(
                                 'MatchingHistoryDetailScreen',
                                 {
@@ -265,7 +259,6 @@ const MatchingHistoryListScreen = () => {
                         <MatchingHistoryItem
                           info={item}
                           onPress={() => {
-                            setMatchingID(item.matchingId);
                             navigation.navigate('MatchingHistoryDetailScreen', {
                               matchingId: item.matchingId,
                             });
@@ -300,7 +293,6 @@ const MatchingHistoryListScreen = () => {
                         <MatchingHistoryItem
                           info={item}
                           onPress={() => {
-                            setMatchingID(item.matchingId);
                             navigation.navigate('MatchingHistoryDetailScreen', {
                               matchingId: item.matchingId,
                             });

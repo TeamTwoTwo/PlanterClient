@@ -22,8 +22,6 @@ import {MainTabNavigationProp} from '../MainTab';
 import Modal from '../../components/common/Modal';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
-import {useRecoilState} from 'recoil';
-import {MatchingIdState} from '../../recoil/atoms/matchingID';
 
 const category = ['식물 집사', '꽃집', '식물 전문가', '식물 케어 서비스'];
 const pickupType = [
@@ -64,7 +62,6 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
   const [btnType, setBtnType] = useState<string>();
   const [matchingInfo, setMatchingInfo] = useState<MatchingInfoType>();
   const [type, setType] = useState<string>('');
-  const [matchingID, setMatchingID] = useRecoilState(MatchingIdState);
 
   useEffect(() => {
     getData('auth').then(auth => {
@@ -82,7 +79,6 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
           }
         })
         .catch(e => {
-          console.log('리스트 안들어와요');
           console.error(e);
         });
     });
@@ -161,7 +157,6 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
       navigation.navigate('MessageDetailScreen', {
         plantManagerId: matchingInfo?.plantManagerId,
         name: matchingInfo?.name,
-        type: 'MatchingHistoryDetail',
       });
   };
 

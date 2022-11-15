@@ -116,7 +116,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <Pressable
           onPress={() => {
-            navigation.navigate('MessageScreen', {type: 'Matching'});
+            navigation.navigate('MessageScreen');
           }}>
           <Message stroke={'black'} />
         </Pressable>
