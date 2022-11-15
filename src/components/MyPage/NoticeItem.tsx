@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable, Text, StyleSheet, View} from 'react-native';
-import {color, Typography} from '../../utils/utils.ts';
+import {color, Typography} from '../../utils/utils';
 
 interface PropTypes {
   title: string;

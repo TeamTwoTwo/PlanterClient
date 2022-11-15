@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Switch, StyleSheet, Text} from 'react-native';
-import {color, Typography} from '../../utils/utils.ts';
+import {color, Typography} from '../../utils/utils';
 
 interface PropTypes {
   text: string;
