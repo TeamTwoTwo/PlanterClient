@@ -180,6 +180,7 @@ const MatchingRequestScreen04 = () => {
                   </View>
                 )}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
+                listKey="service-type-list"
               />
             </View>
           </View>

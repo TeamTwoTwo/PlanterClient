@@ -113,6 +113,7 @@ const PlantItemList = ({
             )}
             keyExtractor={(_, idx) => `plant-item ${idx}`}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
+            listKey="plant-item-list"
           />
           <View style={[styles.addBtnWrap, styles.padding]}>
             <TouchableOpacity

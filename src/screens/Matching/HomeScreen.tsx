@@ -133,6 +133,7 @@ const HomeScreen = () => {
             />
           )}
           keyExtractor={(item: Dummy) => item.id.toString()}
+          listKey='matching-home-filter'
         />
       </View>
       <View style={styles.secondfilter}>
@@ -246,6 +247,7 @@ const HomeScreen = () => {
           )}
           keyExtractor={(item: UserData) => item.id.toString()}
           ListFooterComponent={<View style={styles.last} />}
+          listKey="matching-card-list"
         />
       </View>
     </SafeAreaView>

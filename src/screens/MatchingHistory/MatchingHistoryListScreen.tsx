@@ -195,6 +195,7 @@ const MatchingHistoryListScreen = () => {
                           />
                         )}
                         keyExtractor={(item, idx) => item.matchingId.toString()}
+                        listKey="reqIngList"
                       />
                     </View>
                   ) : //  요청한 내역 중 진행중인 매칭이 없을 경우
@@ -230,6 +231,7 @@ const MatchingHistoryListScreen = () => {
                           />
                         )}
                         keyExtractor={(item, idx) => item.matchingId.toString()}
+                        listKey="reqLastList"
                       />
                     </View>
                   ) : //요청한 내역 중 지난 매칭이 없을 경우
@@ -266,6 +268,7 @@ const MatchingHistoryListScreen = () => {
                         />
                       )}
                       keyExtractor={item => `img ${item}`}
+                      listKey="rcvIngList"
                     />
                   </View>
                 ) : // 받은 내역 중 진행중인 매칭이 없을 경우
@@ -300,6 +303,7 @@ const MatchingHistoryListScreen = () => {
                         />
                       )}
                       keyExtractor={item => `img ${item}`}
+                      listKey="rcvLastList"
                     />
                   </View>
                 ) : // 받은 내역 중 지난 매칭이 없을 경우

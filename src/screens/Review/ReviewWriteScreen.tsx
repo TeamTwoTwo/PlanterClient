@@ -188,6 +188,7 @@ const ReviewWriteScreen = ({route}: any) => {
                   </View>
                 )}
                 keyExtractor={(item, idx) => `img ${idx.toString()}`}
+                listKey="review-img-list"
               />
             </View>
           )}

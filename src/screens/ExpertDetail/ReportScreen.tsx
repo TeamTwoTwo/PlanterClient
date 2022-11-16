@@ -90,6 +90,7 @@ const ReportScreen = ({route}: any) => {
               </TouchableOpacity>
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
+            listKey="report-option-list"
           />
         </View>
       </View>
