@@ -241,7 +241,6 @@ const HomeScreen = () => {
               onPress={() => {
                 navigation.navigate('ExpertDetailScreen', {
                   plantManagerId: item.id,
-                  type: 'ExpertDetailScreen',
                 });
               }}
             />

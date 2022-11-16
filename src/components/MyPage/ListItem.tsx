@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable, Text, StyleSheet} from 'react-native';
-import {color, Typography} from '../../utils/utils.ts';
+import {color, Typography} from '../../utils/utils';
 import Arrow from '../../assets/icon/ic-click-arrow.svg';
 
 interface PropTypes {

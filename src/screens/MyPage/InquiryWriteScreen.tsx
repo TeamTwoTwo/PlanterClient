@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Pressable,
   TextInput,
+  Platform,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, screen, Typography, url} from '../../utils/utils';

@@ -81,7 +81,7 @@ const MessageDetailScreen = ({route}: any) => {
           setIsModalShown(false);
           if (res.data.isSuccess) {
             Alert.alert('쪽지를 삭제하였습니다.');
-            navigation.navigate('MessageScreen');
+            navigation.navigate('MessageScreen', {type: 'Matching'});
           }
         })
         .finally(() => {
@@ -116,7 +116,7 @@ const MessageDetailScreen = ({route}: any) => {
           setIsModalShown(false);
           if (res.data.isSuccess) {
             Alert.alert('스팸 신고를 완료했습니다.');
-            navigation.navigate('MessageScreen');
+            navigation.navigate('MessageScreen', {type: 'Matching'});
           }
         })
         .finally(() => {
