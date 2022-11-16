@@ -26,9 +26,10 @@ const ReviewDetailScreen = ({route}: any) => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isReviewImageVisible, setIsReviewImageVisible] =
     useState<boolean>(false);
-  const [info, setInfo] = useState<ReviewInfoTypes[]>();
+  const [info, setInfo] = useState<ReviewInfoTypes[]>([]);
   const [reviewImgs, setReviewImgs] = useState<string[] | undefined>();
   const [toastStatus, setToastStatus] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
 
   useEffect(() => {
     if (toastStatus) {
@@ -40,23 +41,7 @@ const ReviewDetailScreen = ({route}: any) => {
   }, [toastStatus]);
 
   useEffect(() => {
-    getData('auth').then(auth => {
-      axios
-        .get(url.dev + `plant-managers/${plantManagerId}/reviews`, {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        })
-        .then(res => {
-          console.log(res);
-          if (res.data.isSuccess) {
-            setInfo(res.data.result);
-          }
-        })
-        .catch(e => {
-          console.error(e);
-        });
-    });
+    loadMore();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,6 +76,32 @@ const ReviewDetailScreen = ({route}: any) => {
     });
   };
 
+  const loadMore = () => {
+    console.log('load');
+    getData('auth').then(auth => {
+      axios
+        .get(
+          url.dev +
+            `plant-managers/${plantManagerId}/reviews?page=${page}&size=20`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          console.log(res);
+          if (res.data.isSuccess) {
+            setInfo(info?.concat(res.data.result));
+            setPage(page + 1);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
@@ -115,6 +126,8 @@ const ReviewDetailScreen = ({route}: any) => {
           keyExtractor={(item, idx) => `img ${item} ${idx}`}
           ItemSeparatorComponent={() => <View style={{height: 40}} />}
           ListFooterComponent={() => <View style={{marginBottom: 90}} />}
+          onEndReached={loadMore}
+          onEndReachedThreshold={1}
         />
       </View>
       <ImageDetail
@@ -150,6 +163,7 @@ const styles = StyleSheet.create({
   main: {
     paddingHorizontal: 20,
     marginTop: 28,
+    flex: 1,
   },
   toast: {
     width: '100%',
