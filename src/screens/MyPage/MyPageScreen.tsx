@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {color, screen, Typography, url} from '../../utils/utils';
 import Bulter from '../../assets/icon/ic-butler-badge.svg';
 import ListItem from '../../components/MyPage/ListItem';
 import {MainTabNavigationProp} from '../../screens/MainTab';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Expert from '../../assets/icon/ic-expert-badge.svg';
 import Flower from '../../assets/icon/ic-flower-badge.svg';
 import Care from '../../assets/icon/ic-care-badge.svg';
@@ -41,23 +41,25 @@ const MyPageScreen = () => {
     navigation.navigate('ProfileScreen');
   };
 
-  useEffect(() => {
-    getData('auth').then(auth => {
-      axios
-        .get(url.dev + `users/${auth.userId}`, {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        })
-        .then(res => {
-          console.log(res.data.result);
-          setUserInfo(res.data.result);
-        })
-        .catch(e => {
-          console.error(e);
-        });
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getData('auth').then(auth => {
+        axios
+          .get(url.dev + `users/${auth.userId}`, {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          })
+          .then(res => {
+            console.log(res.data.result);
+            setUserInfo(res.data.result);
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      });
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.safe}>
