@@ -29,7 +29,8 @@ interface messageData {
 }
 
 interface ButtonRefProps {
-  isLoading: boolean;
+  isLoadingDelete: boolean;
+  isLoadingReport: boolean;
 }
 
 const MessageDetailScreen = ({route}: any) => {
@@ -39,9 +40,10 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {plantManagerId, name} = route?.params;
+  const {plantManagerId, name, type, matchingId} = route?.params;
   const buttonRef = useRef<ButtonRefProps>({
-    isLoading: false,
+    isLoadingDelete: false,
+    isLoadingReport: false,
   });
 
   const onLayout = (e: {
@@ -57,11 +59,11 @@ const MessageDetailScreen = ({route}: any) => {
   };
 
   const onDeleteMessage = (): void => {
-    if (buttonRef.current.isLoading) {
+    if (buttonRef.current.isLoadingDelete) {
       return;
     }
 
-    buttonRef.current.isLoading = true;
+    buttonRef.current.isLoadingDelete = true;
 
     getData('auth').then(auth => {
       axios
@@ -78,11 +80,12 @@ const MessageDetailScreen = ({route}: any) => {
           console.log(res.data);
           setIsModalShown(false);
           if (res.data.isSuccess) {
+            Alert.alert('쪽지를 삭제하였습니다.');
             navigation.navigate('MessageScreen');
           }
         })
         .finally(() => {
-          buttonRef.current.isLoading = false;
+          buttonRef.current.isLoadingDelete = false;
         })
         .catch(e => {
           console.error(e);
@@ -91,6 +94,12 @@ const MessageDetailScreen = ({route}: any) => {
   };
 
   const onReport = (): void => {
+    if (buttonRef.current.isLoadingReport) {
+      return;
+    }
+
+    buttonRef.current.isLoadingReport = true;
+
     getData('auth').then(auth => {
       axios
         .post(
@@ -109,6 +118,9 @@ const MessageDetailScreen = ({route}: any) => {
             Alert.alert('스팸 신고를 완료했습니다.');
             navigation.navigate('MessageScreen');
           }
+        })
+        .finally(() => {
+          buttonRef.current.isLoadingReport = false;
         })
         .catch(e => {
           console.error(e);
@@ -185,9 +197,23 @@ const MessageDetailScreen = ({route}: any) => {
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
           onPress={() => {
-            navigation.navigate('WriteScreen', {
-              plantManagerId: plantManagerId,
-            });
+            if (type === 'Matching') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId,
+                type: 'Matching',
+              });
+            } else if (type === 'MatchingHistory') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId,
+                type: 'MatchingHistory',
+              });
+            } else if (type === 'MatchingHistoryDetail') {
+              navigation.navigate('WriteScreen', {
+                matchingId,
+                plantManagerId,
+                type: 'MatchingHistoryDetail',
+              });
+            }
           }}>
           <Plus />
         </Pressable>

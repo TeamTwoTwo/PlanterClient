@@ -32,18 +32,21 @@ import SettingScreen from './MyPage/SettingScreen';
 import ProfileEditScreen from './MyPage/ProfileEditScreen';
 import ReportScreen from './ExpertDetail/ReportScreen';
 
-
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
   ExpertDetailScreen: {plantManagerId: number};
-  MessageScreen: undefined;
+  MessageScreen: {type?: string};
   MessageDetailScreen: {
     plantManagerId: number;
     name: string;
+    type: string;
+    matchingId?: number;
   };
   WriteScreen: {
     plantManagerId: number;
+    type: string;
+    matchingId?: number;
   };
   ReviewDetailScreen: {plantManagerId: number};
   MatchingHistoryDetailScreen: {
