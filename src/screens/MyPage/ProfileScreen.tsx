@@ -18,7 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 
 interface userData {
   userId: number;
-  name: string;
+  nickname: string;
   profileImg: string;
   email: string;
   category: number;
@@ -78,7 +78,7 @@ const ProfileScreen = () => {
             marginTop: 12,
           }}>
           <Text style={[Typography.subtitle2, {color: color.blueGray_06}]}>
-            {userInfo && userInfo.name}
+            {userInfo && userInfo.nickname}
           </Text>
           <Edit />
         </Pressable>

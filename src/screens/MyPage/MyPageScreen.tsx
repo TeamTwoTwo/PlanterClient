@@ -22,7 +22,7 @@ import {getData} from '../../utils/AsyncStorage';
 
 interface userData {
   userId: number;
-  name: string;
+  nickname: string;
   profileImg: string;
   email: string;
   category: number;
