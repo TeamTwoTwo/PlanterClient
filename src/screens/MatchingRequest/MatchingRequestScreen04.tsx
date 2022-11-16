@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Alert,
   FlatList,
@@ -20,7 +20,14 @@ import {color, screen, Typography, url} from '../../utils/utils';
 import {MainTabNavigationProp} from '../MainTab';
 import {OptionListType} from './MatchingRequestScreen01';
 
+interface ButtonRefProps {
+  isLoading: boolean;
+}
+
 const MatchingRequestScreen04 = () => {
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
   const navigation = useNavigation<MainTabNavigationProp>();
   const matchingRequestInfo = useRecoilValue(MatchingRequestInfoState);
   console.log(matchingRequestInfo);
@@ -95,6 +102,12 @@ const MatchingRequestScreen04 = () => {
   };
 
   const onSubmit = () => {
+    if (buttonRef.current.isLoading) {
+      return;
+    }
+
+    buttonRef.current.isLoading = true;
+
     getData('auth')
       .then(auth => {
         axios
@@ -106,6 +119,9 @@ const MatchingRequestScreen04 = () => {
             if (res.data.isSuccess) {
               navigation.navigate('MatchingHistory');
             }
+          })
+          .finally(() => {
+            buttonRef.current.isLoading = false;
           })
           .catch(e => {
             console.error(e);

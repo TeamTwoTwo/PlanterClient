@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   View,
@@ -29,6 +29,10 @@ const pickupType = [
   '매칭 상대가 제 주소로 와주세요',
 ];
 
+interface ButtonRefProps {
+  isLoading: boolean;
+}
+
 interface ServiceDetailType {
   plantName: string;
   plantCount: number;
@@ -54,6 +58,9 @@ interface MatchingInfoType {
 }
 
 const MatchingHistoryDetailScreen = ({route}: any) => {
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
   const {matchingId} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
@@ -99,6 +106,12 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
 
   const changeStatus = (status: string) => {
     if (matchingInfo !== undefined) {
+      if (buttonRef.current.isLoading) {
+        return;
+      }
+
+      buttonRef.current.isLoading = true;
+
       getData('auth').then(auth => {
         axios
           .patch(
@@ -123,6 +136,9 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
                 navigation.navigate('MatchingHistory');
               }
             }
+          })
+          .finally(() => {
+            buttonRef.current.isLoading = false;
           })
           .catch(e => {
             console.error(e);
