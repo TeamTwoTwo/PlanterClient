@@ -371,9 +371,13 @@ const styles = StyleSheet.create({
   },
   camera: {
     position: 'absolute',
-    right: -8,
-    bottom: -8,
-    padding: 8,
+    right: 0,
+    bottom: 0,
+    padding: 6,
+    borderWidth: 1,
+    borderColor: color.blueGray_00,
+    borderRadius: 50,
+    backgroundColor: 'white',
   },
   firstSelecBox: {
     paddingTop: 22,
