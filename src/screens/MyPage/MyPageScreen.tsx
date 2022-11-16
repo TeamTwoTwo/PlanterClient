@@ -90,7 +90,7 @@ const MyPageScreen = () => {
                   Typography.subtitle3,
                   {color: color.blueGray_06, marginRight: 5},
                 ]}>
-                {userInfo && userInfo.name}
+                {userInfo && userInfo.nickname}
               </Text>
               {userInfo && userInfo.category === 0 && (
                 <>

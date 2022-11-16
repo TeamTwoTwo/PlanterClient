@@ -69,7 +69,7 @@ const ProfileScreen = () => {
           onPress={() => {
             userInfo &&
               navigation.navigate('ProfileEditScreen', {
-                nickname: userInfo.name,
+                nickname: userInfo.nickname,
               });
           }}
           style={{
