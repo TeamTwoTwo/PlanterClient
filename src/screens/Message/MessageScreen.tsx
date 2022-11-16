@@ -8,8 +8,6 @@ import {MainTabNavigationProp} from '../../screens/MainTab';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
-import {useRecoilState} from 'recoil';
-import {MatchingIdState} from '../../recoil/atoms/matchingID';
 
 interface messageData {
   plantManagerId: number;
@@ -21,12 +19,10 @@ interface messageData {
   isUnread: boolean;
 }
 
-const MessageScreen = ({route}: any) => {
+const MessageScreen = () => {
   const [messageList, setMessageList] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [matchingID, setMatchingID] = useRecoilState(MatchingIdState);
   const navigation = useNavigation<MainTabNavigationProp>();
-  const {type} = route?.params;
 
   const onGetMessageList = (): void => {
     setRefreshing(true);
@@ -48,24 +44,6 @@ const MessageScreen = ({route}: any) => {
     });
   };
 
-  const onPopToTop = (): void => {
-    if (type === 'Matching' || type === 'MatchingHistory') {
-      console.log('뒤로가자');
-      navigation.pop();
-    } else if (type === 'ExpertDetail') {
-      if (messageList) {
-        navigation.popToTop();
-        navigation.navigate('ExpertDetailScreen', {
-          plantManagerId: messageList[0].plantManagerId,
-        });
-      }
-    } else if (type === 'MatchingHistoryDetail') {
-      navigation.navigate('MatchingHistoryDetailScreen', {
-        matchingId: matchingID,
-      });
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
       onGetMessageList(); // 화면이 포커스 됐을 때
@@ -77,7 +55,7 @@ const MessageScreen = ({route}: any) => {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <MatchingHeader title="쪽지함" onPopToTop={onPopToTop} />
+      <MatchingHeader title="쪽지함" />
       {messageList && messageList.length > 0 ? (
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -85,31 +63,10 @@ const MessageScreen = ({route}: any) => {
           renderItem={({item}: {item: messageData}) => (
             <MessageItem
               onPress={() => {
-                if (type === 'Matching') {
-                  navigation.navigate('MessageDetailScreen', {
-                    plantManagerId: item.plantManagerId,
-                    name: item.name,
-                    type: 'Matching',
-                  });
-                } else if (type === 'MatchingHistory') {
-                  navigation.navigate('MessageDetailScreen', {
-                    plantManagerId: item.plantManagerId,
-                    name: item.name,
-                    type: 'MatchingHistory',
-                  });
-                } else if (type === 'ExpertDetail') {
-                  navigation.navigate('MessageDetailScreen', {
-                    plantManagerId: item.plantManagerId,
-                    name: item.name,
-                    type: 'ExpertDetail',
-                  });
-                } else if (type === 'MatchingHistoryDetail') {
-                  navigation.navigate('MessageDetailScreen', {
-                    plantManagerId: item.plantManagerId,
-                    name: item.name,
-                    type: 'MatchingHistoryDetail',
-                  });
-                }
+                navigation.navigate('MessageDetailScreen', {
+                  plantManagerId: item.plantManagerId,
+                  name: item.name,
+                });
               }}
               name={item.name}
               contents={item.contents}
