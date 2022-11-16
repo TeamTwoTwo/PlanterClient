@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomInput from '../../components/common/CustomInput';
 import Camera from '../../assets/icon/ic-profile-camera.svg';
 import Modal from '../../components/common/Modal';
+import ImagePicker, {Image as IImage} from 'react-native-image-crop-picker';
 
 interface userData {
   userId: number;
@@ -33,15 +34,27 @@ interface userData {
   phone: string;
 }
 
+interface ButtonRefProps {
+  isLoading: boolean;
+}
+
 const ProfileEditScreen = ({route}: any) => {
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
   const {nickname} = route?.params;
   const [userInfo, setUserInfo] = useState<userData>();
   const [nick, setNick] = useState<string>(nickname);
-  const [isFull, setIsFull] = useState<boolean>(false);
+  const [canComplete, setCanComplete] = useState<boolean>(false);
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const navigation = useNavigation<MainTabNavigationProp>();
+  const [nicknameCheckStatus, setNicknameCheckStatus] = useState<boolean>(true);
+  const [isNicknameDuplicated, setIsNicknameDuplicated] =
+    useState<boolean>(false);
+  const [profileImgUrl, setProfileImgUrl] = useState<string | undefined>();
+  const [profileImg, setProfileImg] = useState<IImage | null>();
 
   const onGoBack = () => {
     navigation.pop();
@@ -66,6 +79,7 @@ const ProfileEditScreen = ({route}: any) => {
         .then(res => {
           console.log(res.data.result);
           setUserInfo(res.data.result);
+          setProfileImgUrl(res.data.result.profileImg);
         })
         .catch(e => {
           console.error(e);
@@ -74,12 +88,143 @@ const ProfileEditScreen = ({route}: any) => {
   }, []);
 
   useEffect(() => {
-    if (nick.length === 0) {
-      setIsFull(false);
-    } else {
-      setIsFull(true);
-    }
+    nicknameCheckFunc();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nick]);
+
+  useEffect(() => {
+    setProfileImgUrl(profileImg?.path);
+  }, [profileImg]);
+
+  const nicknameCheckFunc = () => {
+    var nicknameLen = 0;
+    var numCheck = /[0-9]/;
+    var specialCheck = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
+
+    //한글은 2, 영문은 1로 치환
+    for (var i = 0; i < nick.length; i++) {
+      var n = nick.charAt(i);
+
+      if (encodeURIComponent(n).length > 4) {
+        nicknameLen += 2;
+      } else {
+        nicknameLen += 1;
+      }
+    }
+
+    if (
+      specialCheck.test(nick) ||
+      nick.search(/\s/) !== -1 ||
+      numCheck.test(nick) ||
+      nicknameLen > 20 ||
+      nicknameLen === 0
+    ) {
+      setCanComplete(false);
+      setNicknameCheckStatus(false);
+      setIsNicknameDuplicated(false);
+    } else {
+      axios
+        .get(url.dev + `auth/check-duplication?nickname=${nick}`)
+        .then(res => {
+          if (!res.data.isSuccess) {
+            if (nickname !== nick) {
+              setCanComplete(false);
+              setNicknameCheckStatus(false);
+              setIsNicknameDuplicated(true);
+            } else {
+              setCanComplete(true);
+              setNicknameCheckStatus(true);
+            }
+          } else {
+            setCanComplete(true);
+            setNicknameCheckStatus(true);
+            setIsNicknameDuplicated(false);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    }
+  };
+
+  const onSelectImage = () => {
+    ImagePicker.openPicker({
+      width: 76,
+      height: 76,
+      waitAnimationEnd: false,
+      includeExif: true,
+      forceJpg: true, //ios live photo를 jpg로 바꿔줌
+      compressImageQuality: 1, //이미지 압축 0~1
+      mediaType: 'photo',
+      includeBase64: true,
+      maxFiles: 0,
+    })
+      .then(res => {
+        console.log(res);
+        setProfileImg(res);
+        setIsModalShown(false);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
+  const deleteImage = () => {
+    setProfileImgUrl(undefined);
+    setIsModalShown(false);
+    setProfileImg(null);
+  };
+  const onPressComplete = () => {
+    if (buttonRef.current.isLoading) {
+      return;
+    }
+
+    buttonRef.current.isLoading = true;
+
+    const formData = new FormData();
+
+    if (profileImg) {
+      formData.append('profileImg', {
+        name: 'name',
+        type: 'image/jpeg',
+        uri: profileImg.path,
+      });
+    }
+
+    if (profileImgUrl) {
+      formData.append('profileImgUrl', userInfo?.profileImg);
+    }
+
+    formData.append('nickname', nick);
+
+    console.log(formData);
+
+    getData('auth').then(auth => {
+      axios
+        .patch(url.dev + `users/${auth.userId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data; boundary="boundary"',
+            Authorization: `Bearer ${auth.token}`,
+          },
+          transformRequest: (data, headers) => {
+            return data;
+          },
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.isSuccess) {
+            navigation.popToTop();
+            navigation.navigate('ProfileScreen');
+          }
+        })
+        .finally(() => {
+          buttonRef.current.isLoading = false;
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -93,8 +238,10 @@ const ProfileEditScreen = ({route}: any) => {
           <View>
             <Text style={styles.title}>프로필 수정</Text>
           </View>
-          <Pressable>
-            <Text style={textStyles(isFull).send}>완료</Text>
+          <Pressable
+            onPress={onPressComplete}
+            disabled={canComplete ? false : true}>
+            <Text style={textStyles(canComplete).send}>완료</Text>
           </Pressable>
         </View>
         <View style={{alignItems: 'center'}}>
@@ -103,8 +250,8 @@ const ProfileEditScreen = ({route}: any) => {
               <Image
                 style={styles.profile}
                 source={
-                  userInfo.profileImg
-                    ? {uri: userInfo.profileImg}
+                  profileImgUrl
+                    ? {uri: profileImgUrl}
                     : require('../../assets/img/img-profile-default.png')
                 }
               />
@@ -124,10 +271,15 @@ const ProfileEditScreen = ({route}: any) => {
             placeholder="닉네임"
             onChangeText={setNick}
             value={nick}
-            errorText="이미 존재하는 닉네임입니다."
+            errorText={
+              isNicknameDuplicated
+                ? '이미 존재하는 닉네임입니다.'
+                : '한글 최대 10자, 영어 최대 20자로 입력해주세요.'
+            }
             clearText={() => {
               setNick('');
             }}
+            checkStatus={nicknameCheckStatus}
           />
         </View>
       </KeyboardAvoidingView>
@@ -135,12 +287,12 @@ const ProfileEditScreen = ({route}: any) => {
         <View
           style={modalStyles(modalWidth, modalHeight).modal}
           onLayout={onLayout}>
-          <Pressable style={styles.firstSelecBox}>
+          <Pressable style={styles.firstSelecBox} onPress={onSelectImage}>
             <Text style={[Typography.subtitle3, {color: color.blueGray_04}]}>
               앨범에서 선택
             </Text>
           </Pressable>
-          <Pressable style={styles.secondSelecBox}>
+          <Pressable style={styles.secondSelecBox} onPress={deleteImage}>
             <Text style={[Typography.subtitle3, {color: color.red_02}]}>
               프로필 사진 삭제
             </Text>
@@ -178,10 +330,10 @@ const modalStyles = (modalWidth: number, modalHeight: number) =>
     },
   });
 
-const textStyles = (isFull: boolean) =>
+const textStyles = (canComplete: boolean) =>
   StyleSheet.create({
     send: {
-      color: isFull ? color.mint_05 : color.gray_04,
+      color: canComplete ? color.mint_05 : color.gray_04,
       fontSize: 16,
       fontWeight: '600',
       lineHeight: 24,
@@ -219,8 +371,9 @@ const styles = StyleSheet.create({
   },
   camera: {
     position: 'absolute',
-    right: 0,
-    bottom: 0,
+    right: -8,
+    bottom: -8,
+    padding: 8,
   },
   firstSelecBox: {
     paddingTop: 22,
