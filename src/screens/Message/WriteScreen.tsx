@@ -122,52 +122,50 @@ const WriteScreen = ({route}: any) => {
 
     buttonRef.current.isLoadingSend = true;
 
-    if (isFull) {
-      const formData = new FormData();
-      formData.append('plantManagerId', plantManagerId);
-      formData.append('contents', message);
-      imageFiles.forEach(e => {
-        formData.append('images', {
-          name: 'name',
-          type: 'image/jpeg',
-          uri: e.path,
-        });
+    const formData = new FormData();
+    formData.append('plantManagerId', plantManagerId);
+    formData.append('contents', message);
+    imageFiles.forEach(e => {
+      formData.append('images', {
+        name: 'name',
+        type: 'image/jpeg',
+        uri: e.path,
       });
-      console.log(formData);
+    });
+    console.log(formData);
 
-      getData('auth')
-        .then(auth => {
-          axios
-            .post(url.dev + 'messages', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data; boundary="boundary"',
-                Authorization: `Bearer ${auth.token}`,
-              },
-              transformRequest: (data, headers) => {
-                return data;
-              },
-            })
-            .then(res => {
-              console.log('쪽지전송');
-              console.log(res.data);
-              if (res.data.isSuccess) {
-                Keyboard.dismiss();
-                if (!toastStatus) {
-                  setToastStatus(true);
-                }
+    getData('auth')
+      .then(auth => {
+        axios
+          .post(url.dev + 'messages', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data; boundary="boundary"',
+              Authorization: `Bearer ${auth.token}`,
+            },
+            transformRequest: (data, headers) => {
+              return data;
+            },
+          })
+          .then(res => {
+            console.log('쪽지전송');
+            console.log(res.data);
+            if (res.data.isSuccess) {
+              Keyboard.dismiss();
+              if (!toastStatus) {
+                setToastStatus(true);
               }
-            })
-            .finally(() => {
-              buttonRef.current.isLoadingSend = false;
-            })
-            .catch(e => {
-              console.error(e);
-            });
-        })
-        .catch(e => {
-          console.error(e);
-        });
-    }
+            }
+          })
+          .finally(() => {
+            buttonRef.current.isLoadingSend = false;
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   useEffect(() => {
@@ -186,7 +184,7 @@ const WriteScreen = ({route}: any) => {
           <View>
             <Text style={styles.title}>쪽지 쓰기</Text>
           </View>
-          <Pressable onPress={onSend}>
+          <Pressable onPress={onSend} disabled={isFull ? false : true}>
             <Text style={textStyles(isFull).send}>전송</Text>
           </Pressable>
         </View>

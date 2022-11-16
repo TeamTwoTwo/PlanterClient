@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 
 interface userData {
   userId: number;
+  name: string;
   nickname: string;
   profileImg: string;
   email: string;

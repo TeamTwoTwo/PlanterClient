@@ -84,7 +84,7 @@ const ProfileEditScreen = ({route}: any) => {
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
-        style={styles.keyboard}
+        style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.header}>
           <TouchableOpacity activeOpacity={1} onPress={onGoBack}>
