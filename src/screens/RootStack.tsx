@@ -35,7 +35,7 @@ import ReportScreen from './ExpertDetail/ReportScreen';
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
-  ExpertDetailScreen: {plantManagerId: number; type?: string};
+  ExpertDetailScreen: {plantManagerId: number};
   MessageScreen: {type?: string};
   MessageDetailScreen: {
     plantManagerId: number;
