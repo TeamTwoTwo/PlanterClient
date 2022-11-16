@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography, url} from '../../utils/utils';
@@ -9,9 +9,23 @@ import {removeData} from '../../utils/AsyncStorage';
 import {useRecoilState} from 'recoil';
 import {LoginStatusState} from '../../recoil/atoms/loginStatus';
 
+interface ButtonRefProps {
+  isLoadingDropOut: boolean;
+}
+
 const DropOutScreen = () => {
   const [loginStatus, setLoginStatus] = useRecoilState(LoginStatusState);
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoadingDropOut: false,
+  });
+
   const onDropOut = (): void => {
+    if (buttonRef.current.isLoadingDropOut) {
+      return;
+    }
+
+    buttonRef.current.isLoadingDropOut = true;
+
     getData('auth').then(auth => {
       axios
         .patch(
@@ -30,6 +44,9 @@ const DropOutScreen = () => {
             removeData('auth');
             setLoginStatus({isLogined: false});
           }
+        })
+        .finally(() => {
+          buttonRef.current.isLoadingDropOut = false;
         })
         .catch(e => {
           console.error(e);

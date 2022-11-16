@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -26,6 +26,10 @@ import Toast from '../../components/common/Toast';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
 
+interface ButtonRefProps {
+  isLoadingSend: boolean;
+}
+
 const WriteScreen = ({route}: any) => {
   const [message, setMessage] = useState<string>('');
   const [isFull, setIsFull] = useState<boolean>(false);
@@ -36,6 +40,9 @@ const WriteScreen = ({route}: any) => {
   const onGoBack = () => {
     navigation.pop();
   };
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoadingSend: false,
+  });
 
   console.log(plantManagerId, type);
 
@@ -109,6 +116,12 @@ const WriteScreen = ({route}: any) => {
   };
 
   const onSend = (): void => {
+    if (buttonRef.current.isLoadingSend) {
+      return;
+    }
+
+    buttonRef.current.isLoadingSend = true;
+
     if (isFull) {
       const formData = new FormData();
       formData.append('plantManagerId', plantManagerId);
@@ -143,6 +156,9 @@ const WriteScreen = ({route}: any) => {
                   setToastStatus(true);
                 }
               }
+            })
+            .finally(() => {
+              buttonRef.current.isLoadingSend = false;
             })
             .catch(e => {
               console.error(e);
