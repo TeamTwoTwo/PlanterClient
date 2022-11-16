@@ -249,6 +249,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
                   </View>
                 )}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}
+                listKey="service-list"
               />
             </View>
           </View>

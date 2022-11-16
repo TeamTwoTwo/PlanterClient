@@ -112,6 +112,7 @@ const Review = ({onPress, info, screenType, reportUser}: Props) => {
           )}
           keyExtractor={(item, idx) => `img ${item} ${idx}`}
           ItemSeparatorComponent={() => <View style={{width: 8}} />}
+          listKey="review-image-list"
         />
       </View>
       <Modal visible={isModalShown} setVisible={setIsModalShown} overlay>

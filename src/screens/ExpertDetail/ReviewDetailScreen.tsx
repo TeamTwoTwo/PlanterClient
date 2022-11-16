@@ -115,6 +115,7 @@ const ReviewDetailScreen = ({route}: any) => {
           keyExtractor={(item, idx) => `img ${item} ${idx}`}
           ItemSeparatorComponent={() => <View style={{height: 40}} />}
           ListFooterComponent={() => <View style={{marginBottom: 90}} />}
+          listKey="review-all-list"
         />
       </View>
       <ImageDetail

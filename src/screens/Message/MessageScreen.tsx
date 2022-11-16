@@ -79,6 +79,7 @@ const MessageScreen = () => {
           keyExtractor={(item: messageData) => item.plantManagerId.toString()}
           refreshing={refreshing}
           onRefresh={onGetMessageList}
+          listKey="message-list"
         />
       ) : (
         <View style={styles.contentWrap}>

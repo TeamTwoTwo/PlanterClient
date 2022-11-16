@@ -178,6 +178,7 @@ const WriteScreen = ({route}: any) => {
                   </View>
                 )}
                 keyExtractor={(item, idx) => `img ${idx.toString()}`}
+                listKey="message-img-list"
               />
             </View>
           )}

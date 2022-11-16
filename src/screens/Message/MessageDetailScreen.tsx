@@ -179,6 +179,7 @@ const MessageDetailScreen = ({route}: any) => {
         ListFooterComponent={<View style={{marginTop: 90}} />}
         refreshing={refreshing}
         onRefresh={onGetMessageDetailList}
+        listKey="message-detail-list"
       />
       <View style={styles.wrap}>
         <Pressable
