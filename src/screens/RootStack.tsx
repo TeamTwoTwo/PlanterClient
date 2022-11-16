@@ -32,7 +32,6 @@ import SettingScreen from './MyPage/SettingScreen';
 import ProfileEditScreen from './MyPage/ProfileEditScreen';
 import ReportScreen from './ExpertDetail/ReportScreen';
 
-
 type RootStackParamList = {
   MainTab: undefined;
   LocationScreen: undefined;
