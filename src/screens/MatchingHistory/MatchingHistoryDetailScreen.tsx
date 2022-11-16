@@ -155,8 +155,10 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
   const onPressMessage = () => {
     matchingInfo &&
       navigation.navigate('MessageDetailScreen', {
+        matchingId,
         plantManagerId: matchingInfo?.plantManagerId,
         name: matchingInfo?.name,
+        type: 'MatchingHistoryDetail',
       });
   };
 

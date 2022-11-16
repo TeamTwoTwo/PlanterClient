@@ -39,7 +39,7 @@ const MessageDetailScreen = ({route}: any) => {
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [messageDetail, setMessageDetail] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {plantManagerId, name} = route?.params;
+  const {plantManagerId, name, type, matchingId} = route?.params;
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
   });
@@ -184,9 +184,23 @@ const MessageDetailScreen = ({route}: any) => {
         <Pressable
           style={[styles.writeBtn, styles.shadow]}
           onPress={() => {
-            navigation.navigate('WriteScreen', {
-              plantManagerId: plantManagerId,
-            });
+            if (type === 'Matching') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId,
+                type: 'Matching',
+              });
+            } else if (type === 'MatchingHistory') {
+              navigation.navigate('WriteScreen', {
+                plantManagerId,
+                type: 'MatchingHistory',
+              });
+            } else if (type === 'MatchingHistoryDetail') {
+              navigation.navigate('WriteScreen', {
+                matchingId,
+                plantManagerId,
+                type: 'MatchingHistoryDetail',
+              });
+            }
           }}>
           <Plus />
         </Pressable>

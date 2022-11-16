@@ -105,7 +105,7 @@ const MatchingHistoryListScreen = () => {
   };
 
   const onPressMessage = () => {
-    navigation.navigate('MessageScreen');
+    navigation.navigate('MessageScreen', {type: 'MatchingHistory'});
   };
 
   return (

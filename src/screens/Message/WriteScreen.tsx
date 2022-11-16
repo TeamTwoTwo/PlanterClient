@@ -32,12 +32,12 @@ const WriteScreen = ({route}: any) => {
   const [imageFiles, setImageFiles] = useState<IImage[]>([]);
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
-  const {plantManagerId} = route?.params;
+  const {plantManagerId, type, matchingId} = route?.params;
   const onGoBack = () => {
     navigation.pop();
   };
 
-  console.log(plantManagerId);
+  console.log(plantManagerId, type);
 
   useEffect(() => {
     if (message.length === 0) {
@@ -51,7 +51,25 @@ const WriteScreen = ({route}: any) => {
     if (toastStatus) {
       setTimeout(() => {
         setToastStatus(false);
-        navigation.navigate('MessageScreen');
+        if (type === 'Matching') {
+          navigation.popToTop();
+          navigation.navigate('MessageScreen', {type: 'Matching'});
+        } else if (type === 'ExpertDetail') {
+          navigation.popToTop();
+          navigation.navigate('ExpertDetailScreen', {
+            plantManagerId,
+          });
+          navigation.navigate('MessageScreen', {type: 'ExpertDetail'});
+        } else if (type === 'MatchingHistory') {
+          navigation.popToTop();
+          navigation.navigate('MessageScreen', {type: 'MatchingHistory'});
+        } else if (type === 'MatchingHistoryDetail') {
+          navigation.popToTop();
+          navigation.navigate('MatchingHistoryDetailScreen', {
+            matchingId,
+          });
+          navigation.navigate('MessageScreen', {type: 'MatchingHistoryDetail'});
+        }
       }, 500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

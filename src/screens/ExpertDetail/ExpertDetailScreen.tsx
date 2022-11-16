@@ -199,7 +199,7 @@ const ExpertDetailScreen = ({route}: any) => {
   };
 
   const onPressMessage = () => {
-    navigation.navigate('WriteScreen', {plantManagerId});
+    navigation.navigate('WriteScreen', {plantManagerId, type: 'ExpertDetail'});
   };
 
   const onPressReport = () => {
