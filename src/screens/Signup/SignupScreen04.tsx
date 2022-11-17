@@ -9,6 +9,7 @@ import {authState} from '../../recoil/atoms/auth';
 import {setData} from '../../utils/AsyncStorage';
 import {LoginStatusState} from '../../recoil/atoms/loginStatus';
 import Flowerpot from '../../assets/icon/ic-flowerpot.svg';
+import SingupDone from '../../assets/illust/illust-signup-done.svg';
 
 const SignupScreen04 = () => {
   const signupInfo = useRecoilValue(signupState);
@@ -31,7 +32,7 @@ const SignupScreen04 = () => {
             플랜터의 식물 전문가들과 만나보세요!
           </Text>
         </View>
-        <Flowerpot />
+        <SingupDone />
       </View>
       <CustomButton
         backgroundColor={color.mint_05}

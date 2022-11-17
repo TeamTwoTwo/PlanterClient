@@ -263,7 +263,7 @@ const HomeScreen = () => {
               onRefresh={getMatchingList}
             />
           }
-          showsVerticalScrollIndicator
+          showsVerticalScrollIndicator={false}
           data={userData}
           renderItem={({item}: {item: UserData}) => (
             <MatchingItem
@@ -336,6 +336,7 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     flex: 1,
+    // borderWidth: 1,
   },
   centeredView: {
     flex: 1,
