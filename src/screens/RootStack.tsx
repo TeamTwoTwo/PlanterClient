@@ -31,10 +31,16 @@ import NoticeDetailScreen from './MyPage/NoticeDetailScreen';
 import SettingScreen from './MyPage/SettingScreen';
 import ProfileEditScreen from './MyPage/ProfileEditScreen';
 import ReportScreen from './ExpertDetail/ReportScreen';
+import AddressScreen from '../screens/Matching/AddressScreen';
 
 type RootStackParamList = {
   MainTab: undefined;
-  LocationScreen: undefined;
+  LocationScreen: {
+    simpleAddress: string;
+    locationAddress: string;
+    userId: number;
+  };
+  AddressScreen: undefined;
   ExpertDetailScreen: {plantManagerId: number};
   MessageScreen: {type?: string};
   MessageDetailScreen: {
@@ -141,6 +147,7 @@ const RootStack = () => {
       <Stack.Screen name="SettingScreen" component={SettingScreen} />
       <Stack.Screen name="ProfileEditScreen" component={ProfileEditScreen} />
       <Stack.Screen name="ReportScreen" component={ReportScreen} />
+      <Stack.Screen name="AddressScreen" component={AddressScreen} />
     </Stack.Navigator>
   );
 };

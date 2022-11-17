@@ -1,44 +1,44 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
 import {color, Typography} from '../../utils/utils';
 
 interface PropTypes {
   text: string;
-  onAddList: (text: string) => void;
-  checkList: string[];
+  id: number;
+  onAddList: (id: number) => void;
+  checkList: number[];
 }
 
-const MatchingFilter = ({text, onAddList, checkList}: PropTypes) => {
+const MatchingFilter = ({text, id, onAddList, checkList}: PropTypes) => {
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => {
-        onAddList(text);
-      }}
-      activeOpacity={1}>
-      <View style={[dstyles(text, checkList).wrap, Typography.body2]}>
-        <Text style={[Typography.body2, dstyles(text, checkList).text]}>
+        onAddList(id);
+      }}>
+      <View style={[dstyles(id, checkList).wrap, Typography.body2]}>
+        <Text style={[Typography.body2, dstyles(id, checkList).text]}>
           {text}
         </Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
-const dstyles = (text: string, checkList: string[]) =>
+const dstyles = (id: number, checkList: number[]) =>
   StyleSheet.create({
     wrap: {
       height: 34,
       borderWidth: 1,
-      borderColor: checkList.includes(text) ? color.mint_05 : color.blueGray_00,
+      borderColor: checkList.includes(id) ? color.mint_05 : color.blueGray_00,
       borderRadius: 49,
       marginRight: 8,
       paddingVertical: 6,
       paddingHorizontal: 10,
-      backgroundColor: checkList.includes(text) ? color.mint_00 : color.gray_00,
+      backgroundColor: checkList.includes(id) ? color.mint_00 : color.gray_00,
     },
     text: {
-      color: checkList.includes(text) ? color.mint_05 : color.blueGray_03,
-      fontWeight: checkList.includes(text) ? '600' : '400',
+      color: checkList.includes(id) ? color.mint_05 : color.blueGray_03,
+      fontWeight: checkList.includes(id) ? '600' : '400',
     },
   });
 
