@@ -28,8 +28,12 @@ interface Props {
   setIsMatchingAllowed: Dispatch<SetStateAction<boolean>>;
   imageFiles: IImage[];
   setImageFiles: Dispatch<SetStateAction<IImage[]>>;
+  imageUrl: string[];
+  setImageUrl: Dispatch<SetStateAction<string[]>>;
   introduceText: string;
   setIntroduceText: Dispatch<SetStateAction<string>>;
+  onelineText: string;
+  setOnelineText: Dispatch<SetStateAction<string>>;
   isPhoto: boolean;
   setIsPhoto: Dispatch<SetStateAction<boolean>>;
 }
@@ -42,8 +46,12 @@ const MyMatchingServiceList = ({
   setIsMatchingAllowed,
   imageFiles,
   setImageFiles,
+  imageUrl,
+  setImageUrl,
   introduceText,
   setIntroduceText,
+  onelineText,
+  setOnelineText,
   isPhoto,
   setIsPhoto,
 }: Props) => {
@@ -70,9 +78,9 @@ const MyMatchingServiceList = ({
         res.forEach(data => {
           list.push(data);
         });
-        if (list.length > 3) {
+        if (list.length > 3 - imageUrl.length) {
           Alert.alert('사진은 최대 3장까지 첨부할 수 있습니다.');
-          setImageFiles(list.slice(0, 3));
+          setImageFiles(list.slice(0, 3 - imageUrl.length));
         } else {
           setImageFiles(list);
         }
@@ -86,10 +94,13 @@ const MyMatchingServiceList = ({
     setImageFiles(imageFiles?.filter(img => img.path !== uri));
   };
 
+  const onDeleteUrl = (url: string): void => {
+    setImageUrl(imageUrl?.filter(img => img !== url));
+  };
+
   let serviceItem: ServiceType = {
     name: '',
     price: 0,
-    number: 1,
   };
 
   const addService = () => {
@@ -132,11 +143,29 @@ const MyMatchingServiceList = ({
                             Typography.body1,
                             {color: color.blueGray_05},
                           ]}>
-                          {imageFiles.length}/3
+                          {imageFiles.length + imageUrl.length}/3
                         </Text>
                       </View>
                     </View>
                   </Pressable>
+                  <View style={{marginRight: 8}}>
+                    <FlatList
+                      data={imageUrl}
+                      renderItem={({item}) => (
+                        <View style={styles.img}>
+                          <Pressable
+                            style={styles.delete}
+                            onPress={() => onDeleteUrl(item)}>
+                            <Delete />
+                          </Pressable>
+                          <Image style={styles.img} source={{uri: item}} />
+                        </View>
+                      )}
+                      ItemSeparatorComponent={() => <View style={{width: 8}} />}
+                      keyExtractor={(item, idx) => `img ${idx.toString()}`}
+                      listKey="my-matching-img-url-list"
+                    />
+                  </View>
                   <FlatList
                     scrollEnabled={false}
                     showsHorizontalScrollIndicator={false}
@@ -161,6 +190,8 @@ const MyMatchingServiceList = ({
               </View>
               <View style={[styles.blockWrap, styles.padding]}>
                 <MyMatchingIntroduce
+                  onelineText={onelineText}
+                  setOnelineText={setOnelineText}
                   introduceText={introduceText}
                   setIntroduceText={setIntroduceText}
                 />

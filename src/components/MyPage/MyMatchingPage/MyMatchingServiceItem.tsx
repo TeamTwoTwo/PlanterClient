@@ -46,15 +46,15 @@ const MyMatchingServiceItem = ({
     setServiceList(list);
   };
 
-  const onChangeNum = (e: string) => {
-    const changed = {
-      ...serviceItem,
-      number: Number(e),
-    };
-    let list = [...serviceList];
-    list[idx] = changed;
-    setServiceList(list);
-  };
+  // const onChangeNum = (e: string) => {
+  //   const changed = {
+  //     ...serviceItem,
+  //     number: Number(e),
+  //   };
+  //   let list = [...serviceList];
+  //   list[idx] = changed;
+  //   setServiceList(list);
+  // };
 
   return (
     <View>
@@ -92,14 +92,16 @@ const MyMatchingServiceItem = ({
           keyboardType="number-pad"
         />
         <View style={styles.separator} />
-        <TextInput
+        {/* <TextInput
           placeholder="1"
           style={[Typography.body1, {color: color.blueGray_06}]}
           value={serviceItem.number.toString()}
           onChangeText={onChangeNum}
           keyboardType="number-pad"
-        />
-        <Text style={[Typography.body1, {color: color.blueGray_06}]}>개당</Text>
+        /> */}
+        <Text style={[Typography.body1, {color: color.blueGray_06}]}>
+          1&nbsp;개당
+        </Text>
       </View>
     </View>
   );
