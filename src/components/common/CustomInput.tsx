@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     paddingTop: 10,
     paddingBottom: 14,
-    lineHeight: 24,
   },
   clearBtn: {
     padding: 12,

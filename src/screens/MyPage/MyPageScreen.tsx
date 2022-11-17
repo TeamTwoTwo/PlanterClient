@@ -1,18 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-  Image,
-} from 'react-native';
+import React, {useState, useCallback} from 'react';
+import {View, Text, StyleSheet, Pressable, Image} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, screen, Typography, url} from '../../utils/utils';
 import Bulter from '../../assets/icon/ic-butler-badge.svg';
 import ListItem from '../../components/MyPage/ListItem';
 import {MainTabNavigationProp} from '../../screens/MainTab';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Expert from '../../assets/icon/ic-expert-badge.svg';
 import Flower from '../../assets/icon/ic-flower-badge.svg';
 import Care from '../../assets/icon/ic-care-badge.svg';
@@ -30,34 +23,43 @@ interface userData {
   address: string;
   detailAddress: string;
   phone: string;
+  isMatchingActive: boolean;
 }
 
 const MyPageScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
-  const [isMatchingOn, setIsMatchingOn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<userData>();
 
   const onGoProfile = (): void => {
     navigation.navigate('ProfileScreen');
   };
 
-  useEffect(() => {
-    getData('auth').then(auth => {
-      axios
-        .get(url.dev + `users/${auth.userId}`, {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
-          },
-        })
-        .then(res => {
-          console.log(res.data.result);
-          setUserInfo(res.data.result);
-        })
-        .catch(e => {
-          console.error(e);
-        });
-    });
-  }, []);
+  const onPressMyMatchingPage = () => {
+    userInfo &&
+      navigation.navigate('MyMatchingPageScreen', {
+        category: userInfo?.category,
+      });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getData('auth').then(auth => {
+        axios
+          .get(url.dev + `users/${auth.userId}`, {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          })
+          .then(res => {
+            console.log(res.data.result);
+            setUserInfo(res.data.result);
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      });
+    }, []),
+  );
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -146,15 +148,12 @@ const MyPageScreen = () => {
           borderColor: color.blueGray_00,
           marginBottom: 10,
         }}>
-        <View style={styles.matchingBtnWrap}>
-          <Text style={(Typography.body1, {color: color.blueGray_06})}>
-            내 매칭페이지 관리
-          </Text>
-          <Pressable
-            onPress={() => {
-              setIsMatchingOn(previousState => !previousState);
-            }}>
-            {isMatchingOn ? (
+        <Pressable onPress={onPressMyMatchingPage}>
+          <View style={styles.matchingBtnWrap}>
+            <Text style={(Typography.body1, {color: color.blueGray_06})}>
+              내 매칭페이지 관리
+            </Text>
+            {userInfo?.isMatchingActive ? (
               <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
                 ON
               </Text>
@@ -163,8 +162,8 @@ const MyPageScreen = () => {
                 OFF
               </Text>
             )}
-          </Pressable>
-        </View>
+          </View>
+        </Pressable>
       </View>
       <View>
         <ListItem
