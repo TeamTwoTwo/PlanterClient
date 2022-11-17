@@ -30,6 +30,7 @@ interface userData {
 
 const ProfileScreen = () => {
   const [userInfo, setUserInfo] = useState<userData>();
+  const [simpleAddress, setSimpleAddress] = useState<string>('');
   const navigation = useNavigation<MainTabNavigationProp>();
 
   useEffect(() => {
@@ -48,7 +49,20 @@ const ProfileScreen = () => {
           console.error(e);
         });
     });
+
+    getData('userInfo').then(info => {
+      setSimpleAddress(info.simpleAddress);
+    });
   }, []);
+
+  const onPressChangeAddress = () => {
+    userInfo &&
+      navigation.navigate('ChangeAddressScreen', {
+        address: userInfo?.address,
+        detailAddress: userInfo?.detailAddress,
+        simpleAddress,
+      });
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -117,9 +131,11 @@ const ProfileScreen = () => {
               ]}>
               {userInfo && `${userInfo.address} ${userInfo.detailAddress}`}
             </Text>
-            <Text style={[Typography.body1, {color: color.blueGray_01}]}>
-              수정
-            </Text>
+            <Pressable onPress={onPressChangeAddress}>
+              <Text style={[Typography.body1, {color: color.blueGray_01}]}>
+                변경
+              </Text>
+            </Pressable>
           </View>
         </View>
         <View style={{marginTop: 32}}>
