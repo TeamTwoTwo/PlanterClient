@@ -23,11 +23,11 @@ interface userData {
   address: string;
   detailAddress: string;
   phone: string;
+  isMatchingActive: boolean;
 }
 
 const MyPageScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
-  const [isMatchingOn, setIsMatchingOn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<userData>();
 
   const onGoProfile = (): void => {
@@ -153,21 +153,15 @@ const MyPageScreen = () => {
             <Text style={(Typography.body1, {color: color.blueGray_06})}>
               내 매칭페이지 관리
             </Text>
-            <Pressable
-              onPress={() => {
-                setIsMatchingOn(previousState => !previousState);
-              }}>
-              {isMatchingOn ? (
-                <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
-                  ON
-                </Text>
-              ) : (
-                <Text
-                  style={[Typography.subtitle3, {color: color.blueGray_01}]}>
-                  OFF
-                </Text>
-              )}
-            </Pressable>
+            {userInfo?.isMatchingActive ? (
+              <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
+                ON
+              </Text>
+            ) : (
+              <Text style={[Typography.subtitle3, {color: color.blueGray_01}]}>
+                OFF
+              </Text>
+            )}
           </View>
         </Pressable>
       </View>
