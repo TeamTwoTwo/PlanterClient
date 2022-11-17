@@ -1,6 +1,8 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {color, Typography} from '../../utils/utils';
+import Rcv from '../../assets/illust/illust-no-received.svg';
+import Req from '../../assets/illust/illust_no_request.svg';
 
 interface Props {
   type: string;
@@ -8,7 +10,7 @@ interface Props {
 const NoMatchingHistory = ({type}: Props) => {
   return (
     <View style={styles.wrap}>
-      {/* <View style={styles.illust} /> */}
+      {type === '요청한' ? <Req /> : <Rcv />}
       <View style={styles.textWrap}>
         <Text style={[Typography.body1, {color: color.blueGray_06}]}>
           {type} 매칭 내역이 없습니다.
@@ -22,11 +24,6 @@ const styles = StyleSheet.create({
   wrap: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  illust: {
-    width: 160,
-    height: 160,
-    backgroundColor: '#D9D9D9',
   },
   textWrap: {
     marginTop: 20,

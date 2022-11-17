@@ -149,7 +149,7 @@ const MatchingHistoryListScreen = () => {
         <View
           onLayout={onLayout}
           style={{
-            height: screen.height,
+            height: '100%',
           }}>
           <View
             onLayout={onLayoutNoView}
