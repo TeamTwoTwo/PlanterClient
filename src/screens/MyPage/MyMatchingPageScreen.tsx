@@ -8,52 +8,81 @@ import {
   Platform,
   KeyboardAvoidingView,
   Pressable,
-  Alert,
-  FlatList,
-  Image,
-  TextInput,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Back from '../../assets/icon/ic-back-arrow-black.svg';
-import {color, screen, Typography} from '../../utils/utils';
+import {color, screen} from '../../utils/utils';
 import {MainTabNavigationProp} from '../MainTab';
 import ImagePicker, {Image as IImage} from 'react-native-image-crop-picker';
-import {ScrollView} from 'react-native-virtualized-view';
 import MyMatchingServiceList from '../../components/MyPage/MyMatchingPage/MyMatchingServiceList';
-import MyMatchingIntroduce from '../../components/MyPage/MyMatchingPage/MyMatchingIntroduce';
-import MyMatchingServiceItem from '../../components/MyPage/MyMatchingPage/MyMatchingServiceItem';
-import Toggle from '../../components/MyPage/Toggle';
-import Camera from '../../assets/icon/ic-profile-camera.svg';
-import Delete from '../../assets/icon/ic-img-delete.svg';
-import MyPageToggleView from '../../components/MyPage/MyMatchingPage/MyPageToggleView';
 
 export interface ServiceType {
   name: string;
-  price: number;
-  number: number;
+  price: number | string;
+  number: number | string;
 }
 
 const MyMatchingPageScreen = () => {
+  const type = 'butler';
   const navigation = useNavigation<MainTabNavigationProp>();
+  const [introOK, setIntroOK] = useState<boolean>(false);
+  const [serviceOK, setServiceOK] = useState<boolean>(false);
   const [canComplete, setCanComplete] = useState<boolean>(false);
+
   const [isMatchingAllowed, setIsMatchingAllowed] = useState<boolean>(true);
   const [imageFiles, setImageFiles] = useState<IImage[]>([]);
   const [introduceText, setIntroduceText] = useState<string>('');
   const [serviceList, setServiceList] = useState<ServiceType[]>([
     {
-      name: '',
-      price: 0,
-      number: 1,
+      name: type === 'butler' ? '식물관리' : '',
+      price: '',
+      number: '',
     },
   ]);
-
-  useEffect(() => {
-    console.log(introduceText);
-  }, [introduceText]);
+  const [isPhoto, setIsPhoto] = useState<boolean>(false);
 
   const onGoBack = () => {
     navigation.pop();
   };
+
+  useEffect(() => {
+    console.log(serviceList);
+    let cnt = 0;
+    serviceList?.forEach((data, idx) => {
+      if (data.name !== '' && data.number !== '' && data.price !== '') {
+        cnt++;
+      }
+    });
+
+    if (cnt === serviceList.length) {
+      setServiceOK(true);
+    } else {
+      setServiceOK(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serviceList]);
+
+  useEffect(() => {
+    console.log(introduceText);
+    if (introduceText.length > 0) {
+      if (introduceText.length > 300) {
+        setIntroduceText(introduceText.slice(0, 300));
+      }
+      setIntroOK(true);
+    } else {
+      setIntroOK(false);
+    }
+  }, [introduceText]);
+
+  useEffect(() => {
+    if (introOK && serviceOK) {
+      setCanComplete(true);
+    } else {
+      setCanComplete(false);
+    }
+  }, [introOK, serviceOK]);
+
+  const onPressComplete = () => {};
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -68,14 +97,13 @@ const MyMatchingPageScreen = () => {
             <Text style={styles.title}>내 매칭페이지 관리</Text>
           </View>
           <Pressable
-          // onPress={onPressComplete}
-          // disabled={canComplete ? false : true}
-          >
+            onPress={onPressComplete}
+            disabled={canComplete ? false : true}>
             <Text style={textStyles(canComplete).send}>완료</Text>
           </Pressable>
         </View>
-
         <MyMatchingServiceList
+          type={type}
           serviceList={serviceList}
           setServiceList={setServiceList}
           isMatchingAllowed={isMatchingAllowed}
@@ -84,18 +112,13 @@ const MyMatchingPageScreen = () => {
           setImageFiles={setImageFiles}
           introduceText={introduceText}
           setIntroduceText={setIntroduceText}
+          isPhoto={isPhoto}
+          setIsPhoto={setIsPhoto}
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
-
-const dstyles = (isMatchingAllowed: boolean) =>
-  StyleSheet.create({
-    main: {
-      display: isMatchingAllowed ? 'flex' : 'none',
-    },
-  });
 
 const textStyles = (canComplete: boolean) =>
   StyleSheet.create({

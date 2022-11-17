@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import {ServiceType} from '../../../screens/MyPage/MyMatchingPageScreen';
 import {color, Typography} from '../../../utils/utils';
-import CustomInput from '../../common/CustomInput';
 
 interface Props {
+  type: string;
   idx: number;
   serviceItem: ServiceType;
   serviceList: ServiceType[];
@@ -19,6 +19,7 @@ interface Props {
 }
 
 const MyMatchingServiceItem = ({
+  type,
   idx,
   serviceItem,
   serviceList,
@@ -79,20 +80,16 @@ const MyMatchingServiceItem = ({
           autoCorrect={false}
           value={serviceItem.name}
           onChangeText={onChangeName}
+          editable={type === 'butler' ? false : true}
         />
-        {/* <CustomInput
-          value={serviceItem.name}
-          onChangeText={onChangeName}
-          label="식물관리"
-          placeholder="식물관리"
-        /> */}
       </View>
-      {/* <View style={styles.priceWrap}>
+      <View style={styles.priceWrap}>
         <TextInput
           placeholder="￦5,000"
           style={[Typography.body1, {color: color.blueGray_06, width: '70%'}]}
           value={serviceItem.price.toString()}
           onChangeText={onChangePrice}
+          keyboardType="number-pad"
         />
         <View style={styles.separator} />
         <TextInput
@@ -100,9 +97,10 @@ const MyMatchingServiceItem = ({
           style={[Typography.body1, {color: color.blueGray_06}]}
           value={serviceItem.number.toString()}
           onChangeText={onChangeNum}
+          keyboardType="number-pad"
         />
         <Text style={[Typography.body1, {color: color.blueGray_06}]}>개당</Text>
-      </View> */}
+      </View>
     </View>
   );
 };
