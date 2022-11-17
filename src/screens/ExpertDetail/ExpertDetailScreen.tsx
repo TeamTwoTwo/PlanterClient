@@ -21,6 +21,7 @@ import Camera from '../../assets/icon/ic-camera.svg';
 import Badge from '../../assets/icon/ic-badge.svg';
 import Cost from '../../assets/icon/ic-cost.svg';
 import ChatBubble from '../../assets/icon/ic-chat-bubble.svg';
+import ReviewIcon from '../../assets/icon/ic-review.svg';
 import Star from '../../assets/icon/ic-star.svg';
 import Message from '../../assets/icon/ic-message.svg';
 import NaverMapView from 'react-native-nmap';
@@ -40,6 +41,7 @@ import Care from '../../assets/icon/ic-care-badge.svg';
 import {ReviewInfoTypes} from './ReviewDetailScreen';
 import Modal from '../../components/common/Modal';
 import Toast from '../../components/common/Toast';
+import MapMaker from '../../assets/icon/ic-map-marker.svg';
 
 let mock = [1, 2, 3];
 
@@ -446,10 +448,7 @@ const ExpertDetailScreen = ({route}: any) => {
                 scrollGesturesEnabled={false}
               />
               <View style={dstyles(markerWidth, markerHeight).marker}>
-                <Image
-                  onLayout={onLayoutMarker}
-                  source={require('../../assets/img/img-map-marker.png')}
-                />
+                <MapMaker onLayout={onLayoutMarker} />
               </View>
             </View>
           </View>
@@ -460,7 +459,7 @@ const ExpertDetailScreen = ({route}: any) => {
                 {justifyContent: 'space-between'},
               ]}>
               <View style={styles.reviewHeader}>
-                <ChatBubble />
+                <ReviewIcon />
                 <Text style={[Typography.subtitle2, styles.contentHeaderText]}>
                   후기 {reviewList?.length.toLocaleString()}건
                 </Text>
