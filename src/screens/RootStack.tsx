@@ -57,6 +57,7 @@ type RootStackParamList = {
   ReviewDetailScreen: {plantManagerId: number};
   MatchingHistoryDetailScreen: {
     matchingId: number;
+    type?: number;
   };
   ReviewStarScreen: {
     matchingId: number;
