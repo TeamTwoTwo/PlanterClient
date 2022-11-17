@@ -132,7 +132,7 @@ const dstyles = (type: boolean) =>
       borderWidth: type ? 2 : 1,
       borderColor: type ? color.mint_05 : color.blueGray_00,
       height: 244,
-      paddingHorizontal: 24,
+      paddingHorizontal: 20,
       width: screen.width / 2 - 26,
       alignItems: 'center',
       justifyContent: 'center',
