@@ -36,7 +36,7 @@ type LoginStackParamList = {
   Signup01: undefined;
   Signup02: undefined;
   Signup03: {address: string; simpleAddress: string};
-  FindAddress: undefined;
+  FindAddress: {type: string};
   Signup04: undefined;
 };
 

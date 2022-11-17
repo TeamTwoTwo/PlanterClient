@@ -96,7 +96,7 @@ const SignupScreen03 = ({route}: any) => {
   };
 
   const onPressAddress = () => {
-    navigation.navigate('FindAddress');
+    navigation.navigate('FindAddress', {type: 'signup'});
   };
 
   const nicknameCheckFunc = () => {

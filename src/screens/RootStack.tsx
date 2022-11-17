@@ -32,6 +32,8 @@ import SettingScreen from './MyPage/SettingScreen';
 import ProfileEditScreen from './MyPage/ProfileEditScreen';
 import ReportScreen from './ExpertDetail/ReportScreen';
 import MyMatchingPageScreen from './MyPage/MyMatchingPageScreen';
+import ChangeAddressScreen from './MyPage/ChangeAddressScreen';
+import FindAddress from './Signup/FindAddress';
 
 type RootStackParamList = {
   MainTab: undefined;
@@ -81,6 +83,12 @@ type RootStackParamList = {
   ProfileEditScreen: {nickname: string};
   ReportScreen: {plantManagerId: number; name: string};
   MyMatchingPageScreen: {category: number};
+  ChangeAddressScreen: {
+    address: string;
+    detailAddress?: string;
+    simpleAddress?: string;
+  };
+  FindAddress: {type: string};
 };
 
 export type RootStackNavigationProp =
@@ -147,6 +155,11 @@ const RootStack = () => {
         name="MyMatchingPageScreen"
         component={MyMatchingPageScreen}
       />
+      <Stack.Screen
+        name="ChangeAddressScreen"
+        component={ChangeAddressScreen}
+      />
+      <Stack.Screen name="FindAddress" component={FindAddress} />
     </Stack.Navigator>
   );
 };
