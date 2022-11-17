@@ -19,10 +19,11 @@ interface messageData {
   isUnread: boolean;
 }
 
-const MessageScreen = () => {
+const MessageScreen = ({route}: any) => {
   const [messageList, setMessageList] = useState<messageData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
+  const {type} = route?.params;
 
   const onGetMessageList = (): void => {
     setRefreshing(true);
@@ -63,10 +64,31 @@ const MessageScreen = () => {
           renderItem={({item}: {item: messageData}) => (
             <MessageItem
               onPress={() => {
-                navigation.navigate('MessageDetailScreen', {
-                  plantManagerId: item.plantManagerId,
-                  name: item.name,
-                });
+                if (type === 'Matching') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: 'Matching',
+                  });
+                } else if (type === 'ExpertDetail') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: 'ExpertDetail',
+                  });
+                } else if (type === 'MatchingHistory') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: 'MatchingHistory',
+                  });
+                } else if (type === 'MatchingHistoryDetail') {
+                  navigation.navigate('MessageDetailScreen', {
+                    plantManagerId: item.plantManagerId,
+                    name: item.name,
+                    type: 'MatchingHistoryDetail',
+                  });
+                }
               }}
               name={item.name}
               contents={item.contents}
@@ -79,6 +101,7 @@ const MessageScreen = () => {
           keyExtractor={(item: messageData) => item.plantManagerId.toString()}
           refreshing={refreshing}
           onRefresh={onGetMessageList}
+          listKey="message-list"
         />
       ) : (
         <View style={styles.contentWrap}>

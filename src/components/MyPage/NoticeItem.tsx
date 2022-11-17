@@ -7,7 +7,7 @@ interface PropTypes {
   day: string;
   onPress: () => void;
 }
-const NoticeItem = ({title, day, isAnswered, onPress}: PropTypes) => {
+const NoticeItem = ({title, day, onPress}: PropTypes) => {
   return (
     <Pressable style={styles.block} onPress={onPress}>
       <View>

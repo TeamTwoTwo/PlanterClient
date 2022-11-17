@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -26,7 +26,14 @@ import Toast from '../../components/common/Toast';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
 
+interface ButtonRefProps {
+  isLoading: boolean;
+}
+
 const ReviewWriteScreen = ({route}: any) => {
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoading: false,
+  });
   const {matchingId, rating} = route?.params;
   const [message, setMessage] = useState<string>('');
   const [isFull, setIsFull] = useState<boolean>(false);
@@ -95,52 +102,59 @@ const ReviewWriteScreen = ({route}: any) => {
   };
 
   const onSend = (): void => {
-    if (isFull) {
-      const formData = new FormData();
-      console.log(matchingId);
-      console.log(rating);
-      formData.append('rate', rating);
-      formData.append('contents', message);
-      formData.append('matchingId', matchingId);
-      imageFiles.forEach(e => {
-        formData.append('images', {
-          name: e.filename,
-          type: 'image/jpeg',
-          uri: e.path,
-        });
-      });
-      console.log(formData);
-
-      getData('auth')
-        .then(auth => {
-          axios
-            .post(url.dev + 'reviews', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data; boundary="boundary"',
-                Authorization: `Bearer ${auth.token}`,
-              },
-              transformRequest: (data, headers) => {
-                return data;
-              },
-            })
-            .then(res => {
-              console.log(res);
-              if (res.data.isSuccess) {
-                Keyboard.dismiss();
-                if (!toastStatus) {
-                  setPlantManagerId(res.data.result.plantManagerId);
-                  setToastStatus(true);
-                }
-              }
-            })
-            .catch(e => {
-              console.error(e);
-            });
-        })
-        .catch(e => {
-          console.error(e);
-        });
+    if (buttonRef.current.isLoading) {
+      return;
     }
+
+    buttonRef.current.isLoading = true;
+
+    const formData = new FormData();
+    console.log(matchingId);
+    console.log(rating);
+    formData.append('rate', rating);
+    formData.append('contents', message);
+    formData.append('matchingId', matchingId);
+    imageFiles.forEach(e => {
+      formData.append('images', {
+        name: e.filename,
+        type: 'image/jpeg',
+        uri: e.path,
+      });
+    });
+    console.log(formData);
+
+    getData('auth')
+      .then(auth => {
+        axios
+          .post(url.dev + 'reviews', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data; boundary="boundary"',
+              Authorization: `Bearer ${auth.token}`,
+            },
+            transformRequest: (data, headers) => {
+              return data;
+            },
+          })
+          .then(res => {
+            console.log(res);
+            if (res.data.isSuccess) {
+              Keyboard.dismiss();
+              if (!toastStatus) {
+                setPlantManagerId(res.data.result.plantManagerId);
+                setToastStatus(true);
+              }
+            }
+          })
+          .finally(() => {
+            buttonRef.current.isLoading = false;
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   useEffect(() => {
@@ -159,11 +173,9 @@ const ReviewWriteScreen = ({route}: any) => {
           <View>
             <Text style={styles.title}>리뷰 쓰기</Text>
           </View>
-          <View>
-            <Text style={textStyles(isFull).send} onPress={onSend}>
-              완료
-            </Text>
-          </View>
+          <Pressable disabled={isFull ? false : true} onPress={onSend}>
+            <Text style={textStyles(isFull).send}>완료</Text>
+          </Pressable>
         </View>
         <ScrollView
           style={styles.textWrap}
@@ -188,6 +200,7 @@ const ReviewWriteScreen = ({route}: any) => {
                   </View>
                 )}
                 keyExtractor={(item, idx) => `img ${idx.toString()}`}
+                listKey="review-img-list"
               />
             </View>
           )}

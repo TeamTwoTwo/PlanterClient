@@ -128,6 +128,7 @@ const ReviewDetailScreen = ({route}: any) => {
           ListFooterComponent={() => <View style={{marginBottom: 90}} />}
           onEndReached={loadMore}
           onEndReachedThreshold={1}
+          listKey="review-all-list"
         />
       </View>
       <ImageDetail

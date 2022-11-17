@@ -70,6 +70,7 @@ const MyMessage = ({
               )}
               keyExtractor={item => `img ${item}`}
               ItemSeparatorComponent={() => <View style={{marginRight: 5}} />}
+              listKey="message-image-list"
             />
           </View>
         )}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography, url} from '../../utils/utils';
@@ -6,7 +6,6 @@ import MatchingHeader from '../../components/matching/MatchingHeader';
 import Answer from '../../assets/icon/ic-answer.svg';
 
 const NoticeDetailScreen = () => {
-  const [isAnswered, setIsAnswered] = useState<boolean>(true);
   return (
     <SafeAreaView style={styles.safe}>
       <View style={{paddingHorizontal: 20}}>

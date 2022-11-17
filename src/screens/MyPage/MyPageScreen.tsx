@@ -23,6 +23,7 @@ import {getData} from '../../utils/AsyncStorage';
 interface userData {
   userId: number;
   name: string;
+  nickname: string;
   profileImg: string;
   email: string;
   category: number;
@@ -90,7 +91,7 @@ const MyPageScreen = () => {
                   Typography.subtitle3,
                   {color: color.blueGray_06, marginRight: 5},
                 ]}>
-                {userInfo && userInfo.name}
+                {userInfo && userInfo.nickname}
               </Text>
               {userInfo && userInfo.category === 0 && (
                 <>

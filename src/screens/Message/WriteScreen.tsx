@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -26,18 +26,25 @@ import Toast from '../../components/common/Toast';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
 
+interface ButtonRefProps {
+  isLoadingSend: boolean;
+}
+
 const WriteScreen = ({route}: any) => {
   const [message, setMessage] = useState<string>('');
   const [isFull, setIsFull] = useState<boolean>(false);
   const [imageFiles, setImageFiles] = useState<IImage[]>([]);
   const [toastStatus, setToastStatus] = useState<boolean>(false);
   const navigation = useNavigation<MainTabNavigationProp>();
-  const {plantManagerId} = route?.params;
+  const {plantManagerId, type, matchingId} = route?.params;
   const onGoBack = () => {
     navigation.pop();
   };
+  const buttonRef = useRef<ButtonRefProps>({
+    isLoadingSend: false,
+  });
 
-  console.log(plantManagerId);
+  console.log(plantManagerId, type);
 
   useEffect(() => {
     if (message.length === 0) {
@@ -51,7 +58,25 @@ const WriteScreen = ({route}: any) => {
     if (toastStatus) {
       setTimeout(() => {
         setToastStatus(false);
-        navigation.navigate('MessageScreen');
+        if (type === 'Matching') {
+          navigation.popToTop();
+          navigation.navigate('MessageScreen', {type: 'Matching'});
+        } else if (type === 'ExpertDetail') {
+          navigation.popToTop();
+          navigation.navigate('ExpertDetailScreen', {
+            plantManagerId,
+          });
+          navigation.navigate('MessageScreen', {type: 'ExpertDetail'});
+        } else if (type === 'MatchingHistory') {
+          navigation.popToTop();
+          navigation.navigate('MessageScreen', {type: 'MatchingHistory'});
+        } else if (type === 'MatchingHistoryDetail') {
+          navigation.popToTop();
+          navigation.navigate('MatchingHistoryDetailScreen', {
+            matchingId,
+          });
+          navigation.navigate('MessageScreen', {type: 'MatchingHistoryDetail'});
+        }
       }, 500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,49 +116,56 @@ const WriteScreen = ({route}: any) => {
   };
 
   const onSend = (): void => {
-    if (isFull) {
-      const formData = new FormData();
-      formData.append('plantManagerId', plantManagerId);
-      formData.append('contents', message);
-      imageFiles.forEach(e => {
-        formData.append('images', {
-          name: 'name',
-          type: 'image/jpeg',
-          uri: e.path,
-        });
-      });
-      console.log(formData);
-
-      getData('auth')
-        .then(auth => {
-          axios
-            .post(url.dev + 'messages', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data; boundary="boundary"',
-                Authorization: `Bearer ${auth.token}`,
-              },
-              transformRequest: (data, headers) => {
-                return data;
-              },
-            })
-            .then(res => {
-              console.log('쪽지전송');
-              console.log(res.data);
-              if (res.data.isSuccess) {
-                Keyboard.dismiss();
-                if (!toastStatus) {
-                  setToastStatus(true);
-                }
-              }
-            })
-            .catch(e => {
-              console.error(e);
-            });
-        })
-        .catch(e => {
-          console.error(e);
-        });
+    if (buttonRef.current.isLoadingSend) {
+      return;
     }
+
+    buttonRef.current.isLoadingSend = true;
+
+    const formData = new FormData();
+    formData.append('plantManagerId', plantManagerId);
+    formData.append('contents', message);
+    imageFiles.forEach(e => {
+      formData.append('images', {
+        name: 'name',
+        type: 'image/jpeg',
+        uri: e.path,
+      });
+    });
+    console.log(formData);
+
+    getData('auth')
+      .then(auth => {
+        axios
+          .post(url.dev + 'messages', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data; boundary="boundary"',
+              Authorization: `Bearer ${auth.token}`,
+            },
+            transformRequest: (data, headers) => {
+              return data;
+            },
+          })
+          .then(res => {
+            console.log('쪽지전송');
+            console.log(res.data);
+            if (res.data.isSuccess) {
+              Keyboard.dismiss();
+              if (!toastStatus) {
+                setToastStatus(true);
+              }
+            }
+          })
+          .finally(() => {
+            buttonRef.current.isLoadingSend = false;
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   useEffect(() => {
@@ -152,7 +184,7 @@ const WriteScreen = ({route}: any) => {
           <View>
             <Text style={styles.title}>쪽지 쓰기</Text>
           </View>
-          <Pressable onPress={onSend}>
+          <Pressable onPress={onSend} disabled={isFull ? false : true}>
             <Text style={textStyles(isFull).send}>전송</Text>
           </Pressable>
         </View>
@@ -178,6 +210,7 @@ const WriteScreen = ({route}: any) => {
                   </View>
                 )}
                 keyExtractor={(item, idx) => `img ${idx.toString()}`}
+                listKey="message-img-list"
               />
             </View>
           )}

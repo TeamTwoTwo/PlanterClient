@@ -199,7 +199,7 @@ const ExpertDetailScreen = ({route}: any) => {
   };
 
   const onPressMessage = () => {
-    navigation.navigate('WriteScreen', {plantManagerId});
+    navigation.navigate('WriteScreen', {plantManagerId, type: 'ExpertDetail'});
   };
 
   const onPressReport = () => {
@@ -328,6 +328,7 @@ const ExpertDetailScreen = ({route}: any) => {
                   </TouchableOpacity>
                 )}
                 keyExtractor={(item, idx) => `img ${idx}`}
+                listKey="expert-image-list"
               />
             ) : (
               <Image
@@ -493,6 +494,7 @@ const ExpertDetailScreen = ({route}: any) => {
                 )}
                 keyExtractor={(item, idx) => `img ${idx}`}
                 ItemSeparatorComponent={() => <View style={{height: 40}} />}
+                listKey="review-list"
               />
             </View>
           </View>
