@@ -1,12 +1,5 @@
 import React, {useState, useCallback} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Image} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, screen, Typography, url} from '../../utils/utils';
 import Bulter from '../../assets/icon/ic-butler-badge.svg';
@@ -39,6 +32,10 @@ const MyPageScreen = () => {
 
   const onGoProfile = (): void => {
     navigation.navigate('ProfileScreen');
+  };
+
+  const onPressMyMatchingPage = () => {
+    navigation.navigate('MyMatchingPageScreen');
   };
 
   useFocusEffect(
@@ -148,25 +145,28 @@ const MyPageScreen = () => {
           borderColor: color.blueGray_00,
           marginBottom: 10,
         }}>
-        <View style={styles.matchingBtnWrap}>
-          <Text style={(Typography.body1, {color: color.blueGray_06})}>
-            내 매칭페이지 관리
-          </Text>
-          <Pressable
-            onPress={() => {
-              setIsMatchingOn(previousState => !previousState);
-            }}>
-            {isMatchingOn ? (
-              <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
-                ON
-              </Text>
-            ) : (
-              <Text style={[Typography.subtitle3, {color: color.blueGray_01}]}>
-                OFF
-              </Text>
-            )}
-          </Pressable>
-        </View>
+        <Pressable onPress={onPressMyMatchingPage}>
+          <View style={styles.matchingBtnWrap}>
+            <Text style={(Typography.body1, {color: color.blueGray_06})}>
+              내 매칭페이지 관리
+            </Text>
+            <Pressable
+              onPress={() => {
+                setIsMatchingOn(previousState => !previousState);
+              }}>
+              {isMatchingOn ? (
+                <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
+                  ON
+                </Text>
+              ) : (
+                <Text
+                  style={[Typography.subtitle3, {color: color.blueGray_01}]}>
+                  OFF
+                </Text>
+              )}
+            </Pressable>
+          </View>
+        </Pressable>
       </View>
       <View>
         <ListItem
