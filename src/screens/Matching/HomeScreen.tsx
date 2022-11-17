@@ -87,6 +87,7 @@ const HomeScreen = () => {
         )
         .then(res => {
           if (res.data.isSuccess) {
+            console.log(res.data.result);
             setUserData(res.data.result);
             setRefreshing(false);
           }
@@ -168,6 +169,7 @@ const HomeScreen = () => {
       </View>
       <View style={styles.filter}>
         <FlatList
+          scrollEnabled={false}
           horizontal
           data={dummy}
           renderItem={({item}: {item: Dummy}) => (
@@ -284,7 +286,7 @@ const HomeScreen = () => {
             />
           )}
           keyExtractor={(item: UserData) => item.id.toString()}
-          ListFooterComponent={<View style={styles.last} />}
+          ListFooterComponent={() => <View style={styles.last} />}
           listKey="matching-card-list"
         />
       </View>
@@ -360,7 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   last: {
-    marginTop: 70,
+    height: 170,
   },
 });
 

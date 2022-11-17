@@ -39,7 +39,14 @@ const MatchingItem = ({
     <Shadow startColor="rgba(190,202,223,0.1)" offset={[0, 0]}>
       <Pressable style={styles.box} onPress={onPress}>
         <View>
-          <Image style={styles.profile} source={{uri: profileImg}} />
+          <Image
+            style={styles.profile}
+            source={
+              profileImg
+                ? {uri: profileImg}
+                : require('../../assets/img/img-profile-default.png')
+            }
+          />
         </View>
         <View style={styles.content}>
           <View style={styles.line}>
@@ -124,8 +131,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: color.gray_00,
     flexDirection: 'row',
-    marginLeft: 22,
-    marginRight: 18,
+    marginHorizontal: 20,
   },
   profile: {
     width: 80,
@@ -133,8 +139,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   content: {
-    // borderWidth: 1,
-    marginLeft: 9,
+    marginLeft: 12,
     width: '69%',
   },
   line: {
