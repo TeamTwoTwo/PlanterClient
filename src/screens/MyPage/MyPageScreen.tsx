@@ -166,12 +166,12 @@ const MyPageScreen = () => {
         </Pressable>
       </View>
       <View>
-        <ListItem
+        {/* <ListItem
           title="알림설정"
           onPress={() => {
             navigation.navigate('AlarmScreen');
           }}
-        />
+        /> */}
         <ListItem
           title="공지사항"
           onPress={() => {
@@ -184,12 +184,12 @@ const MyPageScreen = () => {
             navigation.navigate('TOSDetail', {number: 1});
           }}
         />
-        <ListItem
+        {/* <ListItem
           title="고객센터"
           onPress={() => {
             navigation.navigate('ClientCenterScreen');
           }}
-        />
+        /> */}
         <ListItem
           title="입점신청"
           onPress={() => {
