@@ -288,7 +288,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               {matchingInfo && matchingInfo?.totalDate}일
             </Text>
           </View>
-          <View style={styles.mainItemWrap}>
+          <View style={styles.pickUpItemWrap}>
             <Text style={[Typography.body1, {color: color.blueGray_04}]}>
               픽업 형태
             </Text>
@@ -524,7 +524,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: '#FAFAFC',
     borderRadius: 8,
-    padding: 20,
+    paddingTop: 20,
+    paddingHorizontal: 20,
   },
   serviceTypeWrap: {
     borderBottomWidth: 1,
@@ -547,6 +548,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#E2E7EF',
+  },
+  pickUpItemWrap: {
+    paddingVertical: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   btnView: {
     marginTop: 20,
