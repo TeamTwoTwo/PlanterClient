@@ -28,11 +28,13 @@ export interface ReqType {
   status: string;
 }
 
+const tmp: any = [1];
+
 const MatchingHistoryListScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isSelectedReq, setIsSelectedReq] = useState<boolean>(true);
   const [isSelectedRcv, setIsSelectedRcv] = useState<boolean>(false);
-  const [reqList, setReqList] = useState<ReqType[] | undefined>();
+  const [reqList, setReqList] = useState<ReqType[]>([]);
   const [reqLastList, setReqLastList] = useState<ReqType[] | undefined>();
   const [reqIngList, setReqIngList] = useState<ReqType[] | undefined>();
   const [rcvList, setRcvList] = useState<ReqType[] | undefined>();
@@ -67,9 +69,32 @@ const MatchingHistoryListScreen = () => {
     });
   };
 
+  const getRcvList = () => {
+    setRefreshing(true);
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + 'matchings?type=1', {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          if (res.data.isSuccess) {
+            console.log(res);
+            setRcvList(res.data.result);
+            setRefreshing(false);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
   useFocusEffect(
     useCallback(() => {
       getReqList();
+      getRcvList();
     }, []),
   );
 
@@ -87,6 +112,21 @@ const MatchingHistoryListScreen = () => {
     setReqLastList(last);
     setReqIngList(ing);
   }, [reqList]);
+
+  useEffect(() => {
+    console.log(rcvList);
+    let last: ReqType[] = [];
+    let ing: ReqType[] = [];
+    rcvList?.forEach(data => {
+      if (data.status === 'complete' || data.status === 'cancel') {
+        last.push(data);
+      } else {
+        ing.push(data);
+      }
+    });
+    setRcvLastList(last);
+    setRcvIngList(ing);
+  }, [rcvList]);
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -145,174 +185,220 @@ const MatchingHistoryListScreen = () => {
       {(isSelectedReq && (reqList?.length === 0 || !reqList)) ||
       (isSelectedRcv && (rcvList?.length === 0 || !rcvList)) ? (
         <View
-          onLayout={onLayoutNoView}
-          style={
-            dstyles(
-              viewWidth,
-              viewHeight,
-              noMatchingViewWidth,
-              noMatchingViewHeight,
-            ).noMatchingView
-          }>
-          <NoMatchingHistory type={isSelectedReq ? '요청한' : '받은'} />
+          onLayout={onLayout}
+          style={{
+            height: '100%',
+          }}>
+          <View
+            onLayout={onLayoutNoView}
+            style={
+              dstyles(
+                viewWidth,
+                viewHeight,
+                noMatchingViewWidth,
+                noMatchingViewHeight,
+              ).noMatchingView
+            }>
+            <NoMatchingHistory type={isSelectedReq ? '요청한' : '받은'} />
+          </View>
         </View>
       ) : (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={getReqList} />
-          }>
-          <View style={styles.main} onLayout={onLayout}>
-            {/* '요청한' 탭 */}
-            {isSelectedReq ? (
-              // 요청한 내역이 존재하면
-              reqList ? (
-                <>
-                  {/* 요청한 내역 중 진행중인 매칭이 존재할 경우 */}
-                  {reqIngList?.length !== 0 ? (
-                    <View>
-                      <View style={styles.textWrap}>
-                        <Text
-                          style={[
-                            Typography.subtitle1,
-                            {color: color.blueGray_06},
-                          ]}>
-                          진행중인 매칭
-                        </Text>
-                      </View>
-                      <FlatList
-                        data={reqIngList}
-                        renderItem={({item}) => (
-                          <MatchingHistoryItem
-                            info={item}
-                            onPress={() => {
-                              navigation.navigate(
-                                'MatchingHistoryDetailScreen',
-                                {
-                                  matchingId: item.matchingId,
-                                },
-                              );
-                            }}
+        <View style={styles.mainWrap}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={isSelectedReq ? getReqList : getRcvList}
+              />
+            }
+            data={tmp}
+            renderItem={() => (
+              <View style={styles.main} onLayout={onLayout}>
+                {/* '요청한' 탭 */}
+                {isSelectedReq ? (
+                  // 요청한 내역이 존재하면
+                  reqList ? (
+                    <>
+                      {/* 요청한 내역 중 진행중인 매칭이 존재할 경우 */}
+                      {reqIngList?.length !== 0 ? (
+                        <View>
+                          <View style={styles.textWrap}>
+                            <Text
+                              style={[
+                                Typography.subtitle1,
+                                {color: color.blueGray_06},
+                              ]}>
+                              진행중인 매칭
+                            </Text>
+                          </View>
+                          <FlatList
+                            data={reqIngList}
+                            renderItem={({item}) => (
+                              <MatchingHistoryItem
+                                info={item}
+                                onPress={() => {
+                                  navigation.navigate(
+                                    'MatchingHistoryDetailScreen',
+                                    {
+                                      matchingId: item.matchingId,
+                                    },
+                                  );
+                                }}
+                              />
+                            )}
+                            keyExtractor={(item, idx) =>
+                              `reqIngList ${item.matchingId.toString()}`
+                            }
+                            listKey="reqIngList"
+                            ListFooterComponent={() => (
+                              <View style={{height: reqLastList ? 32 : 70}} />
+                            )}
                           />
-                        )}
-                        keyExtractor={(item, idx) => item.matchingId.toString()}
-                        listKey="reqIngList"
-                      />
-                    </View>
-                  ) : //  요청한 내역 중 진행중인 매칭이 없을 경우
-                  null}
-                  {reqIngList?.length !== 0 && reqLastList?.length !== 0 ? (
-                    <View style={styles.separator} />
-                  ) : null}
-                  {/* 요청한 내역 중 지난 매칭이 존재할 경우 */}
-                  {reqLastList?.length !== 0 ? (
-                    <View>
-                      <View style={styles.textWrap}>
-                        <Text
-                          style={[
-                            Typography.subtitle1,
-                            {color: color.blueGray_06},
-                          ]}>
-                          지난 매칭
-                        </Text>
-                      </View>
-                      <FlatList
-                        data={reqLastList}
-                        renderItem={({item}) => (
-                          <MatchingHistoryItem
-                            info={item}
-                            onPress={() => {
-                              navigation.navigate(
-                                'MatchingHistoryDetailScreen',
-                                {
-                                  matchingId: item.matchingId,
-                                },
-                              );
-                            }}
+                        </View>
+                      ) : //  요청한 내역 중 진행중인 매칭이 없을 경우
+                      null}
+                      {reqIngList?.length !== 0 && reqLastList?.length !== 0 ? (
+                        <View style={styles.separator} />
+                      ) : null}
+                      {/* 요청한 내역 중 지난 매칭이 존재할 경우 */}
+                      {reqLastList?.length !== 0 ? (
+                        <View>
+                          <View style={styles.textWrap}>
+                            <Text
+                              style={[
+                                Typography.subtitle1,
+                                {color: color.blueGray_06},
+                              ]}>
+                              지난 매칭
+                            </Text>
+                          </View>
+                          <FlatList
+                            data={reqLastList}
+                            renderItem={({item}) => (
+                              <MatchingHistoryItem
+                                info={item}
+                                onPress={() => {
+                                  navigation.navigate(
+                                    'MatchingHistoryDetailScreen',
+                                    {
+                                      matchingId: item.matchingId,
+                                    },
+                                  );
+                                }}
+                              />
+                            )}
+                            keyExtractor={(item, idx) =>
+                              `reqLastList ${item.matchingId.toString()}`
+                            }
+                            listKey="reqLastList"
+                            ListFooterComponent={() => (
+                              <View style={{height: 70}} />
+                            )}
                           />
-                        )}
-                        keyExtractor={(item, idx) => item.matchingId.toString()}
-                        listKey="reqLastList"
-                      />
-                    </View>
-                  ) : //요청한 내역 중 지난 매칭이 없을 경우
-                  null}
-                </>
-              ) : // 요청한 내역 없으면 noMatchingView
-              null
-            ) : // '받은' 탭
-            // 받은 내역이 존재하면
-            rcvList ? (
-              <>
-                {/* 받은 내역 중 진행중인 매칭이 존재할 경우 */}
-                {rcvIngList?.length !== 0 ? (
-                  <View>
-                    <View style={styles.textWrap}>
-                      <Text
-                        style={[
-                          Typography.subtitle1,
-                          {color: color.blueGray_06},
-                        ]}>
-                        진행중인 매칭
-                      </Text>
-                    </View>
-                    <FlatList
-                      data={rcvList}
-                      renderItem={({item}) => (
-                        <MatchingHistoryItem
-                          info={item}
-                          onPress={() => {
-                            navigation.navigate('MatchingHistoryDetailScreen', {
-                              matchingId: item.matchingId,
-                            });
-                          }}
+                        </View>
+                      ) : //요청한 내역 중 지난 매칭이 없을 경우
+                      null}
+                    </>
+                  ) : // 요청한 내역 없으면 noMatchingView
+                  null
+                ) : // '받은' 탭
+                // 받은 내역이 존재하면
+                rcvList ? (
+                  <>
+                    {/* 받은 내역 중 진행중인 매칭이 존재할 경우 */}
+                    {rcvIngList?.length !== 0 ? (
+                      <View>
+                        <View style={styles.textWrap}>
+                          <Text
+                            style={[
+                              Typography.subtitle1,
+                              {color: color.blueGray_06},
+                            ]}>
+                            진행중인 매칭
+                          </Text>
+                        </View>
+                        <FlatList
+                          data={rcvIngList}
+                          renderItem={({item}) => (
+                            <MatchingHistoryItem
+                              type={1}
+                              info={item}
+                              onPress={() => {
+                                navigation.navigate(
+                                  'MatchingHistoryDetailScreen',
+                                  {
+                                    matchingId: item.matchingId,
+                                    type: 1,
+                                  },
+                                );
+                              }}
+                            />
+                          )}
+                          keyExtractor={(item, idx) =>
+                            `rcvIngList ${item.matchingId.toString()}`
+                          }
+                          listKey="rcvIngList"
+                          ListFooterComponent={() => (
+                            <View style={{height: rcvLastList ? 32 : 70}} />
+                          )}
                         />
-                      )}
-                      keyExtractor={item => `img ${item}`}
-                      listKey="rcvIngList"
-                    />
-                  </View>
-                ) : // 받은 내역 중 진행중인 매칭이 없을 경우
-                null}
+                      </View>
+                    ) : // 받은 내역 중 진행중인 매칭이 없을 경우
+                    null}
 
-                {rcvIngList?.length !== 0 && rcvLastList?.length !== 0 ? (
-                  <View style={styles.separator} />
-                ) : null}
+                    {rcvIngList?.length !== 0 && rcvLastList?.length !== 0 ? (
+                      <View style={styles.separator} />
+                    ) : null}
 
-                {/* 받은 내역 중 지난 매칭이 존재할 경우 */}
-                {rcvLastList?.length !== 0 ? (
-                  <View>
-                    <View style={styles.textWrap}>
-                      <Text
-                        style={[
-                          Typography.subtitle1,
-                          {color: color.blueGray_06},
-                        ]}>
-                        지난 매칭
-                      </Text>
-                    </View>
-                    <FlatList
-                      data={rcvList}
-                      renderItem={({item}) => (
-                        <MatchingHistoryItem
-                          info={item}
-                          onPress={() => {
-                            navigation.navigate('MatchingHistoryDetailScreen', {
-                              matchingId: item.matchingId,
-                            });
-                          }}
+                    {/* 받은 내역 중 지난 매칭이 존재할 경우 */}
+                    {rcvLastList?.length !== 0 ? (
+                      <View>
+                        <View style={styles.textWrap}>
+                          <Text
+                            style={[
+                              Typography.subtitle1,
+                              {color: color.blueGray_06},
+                            ]}>
+                            지난 매칭
+                          </Text>
+                        </View>
+                        <FlatList
+                          data={rcvLastList}
+                          renderItem={({item}) => (
+                            <MatchingHistoryItem
+                              type={1}
+                              info={item}
+                              onPress={() => {
+                                navigation.navigate(
+                                  'MatchingHistoryDetailScreen',
+                                  {
+                                    matchingId: item.matchingId,
+                                    type: 1,
+                                  },
+                                );
+                              }}
+                            />
+                          )}
+                          keyExtractor={(item, idx) =>
+                            `rcvLastList ${item.matchingId.toString()}`
+                          }
+                          listKey="rcvLastList"
+                          ListFooterComponent={() => (
+                            <View style={{height: 70}} />
+                          )}
                         />
-                      )}
-                      keyExtractor={item => `img ${item}`}
-                      listKey="rcvLastList"
-                    />
-                  </View>
-                ) : // 받은 내역 중 지난 매칭이 없을 경우
+                      </View>
+                    ) : // 받은 내역 중 지난 매칭이 없을 경우
+                    null}
+                  </>
+                ) : // 받은 내역 없으면 noMatchingView
                 null}
-              </>
-            ) : // 받은 내역 없으면 noMatchingView
-            null}
-          </View>
-        </ScrollView>
+              </View>
+            )}
+            keyExtractor={(item, idx) => `list ${idx}`}
+          />
+        </View>
       )}
     </SafeAreaView>
   );
@@ -375,9 +461,12 @@ const styles = StyleSheet.create({
     padding: 8,
     marginRight: -8,
   },
-  main: {
+  mainWrap: {
     marginTop: 24,
-    minHeight: screen.height,
+    height: '100%',
+  },
+  main: {
+    minHeight: '100%',
   },
   textWrap: {
     paddingHorizontal: 20,
@@ -392,7 +481,6 @@ const styles = StyleSheet.create({
   separator: {
     borderBottomWidth: 1,
     borderBottomColor: color.blueGray_00,
-    marginTop: 20,
     marginBottom: 32,
   },
 });

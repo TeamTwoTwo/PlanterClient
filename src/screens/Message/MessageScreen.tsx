@@ -8,6 +8,7 @@ import {MainTabNavigationProp} from '../../screens/MainTab';
 import MatchingHeader from '../../components/matching/MatchingHeader';
 import axios from 'axios';
 import {getData} from '../../utils/AsyncStorage';
+import NoMessage from '../../assets/illust/illust-message.svg';
 
 interface messageData {
   plantManagerId: number;
@@ -105,8 +106,12 @@ const MessageScreen = ({route}: any) => {
         />
       ) : (
         <View style={styles.contentWrap}>
-          {/* <View style={styles.img} /> */}
-          <Text style={[Typography.body1, {color: color.blueGray_06}]}>
+          <NoMessage />
+          <Text
+            style={[
+              Typography.body1,
+              {color: color.blueGray_06, marginTop: 20},
+            ]}>
             받은 쪽지가 없습니다.
           </Text>
         </View>
@@ -127,12 +132,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 48,
-  },
-  img: {
-    width: 160,
-    height: 160,
-    marginBottom: 20,
-    backgroundColor: '#d9d9d9',
   },
 });
 

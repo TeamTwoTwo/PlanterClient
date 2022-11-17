@@ -41,6 +41,8 @@ const SignupScreen03 = ({route}: any) => {
   const [step, setStep] = useState<number>(1); // 다음 버튼을 위한 입력 단계
 
   const [nicknameCheckStatus, setNicknameCheckStatus] = useState<boolean>(true);
+  const [isNicknameDuplicated, setIsNicknameDuplicated] =
+    useState<boolean>(false);
 
   useEffect(() => {
     nicknameCheckFunc();
@@ -122,8 +124,23 @@ const SignupScreen03 = ({route}: any) => {
       nicknameLen > 20
     ) {
       setNicknameCheckStatus(false);
+      setIsNicknameDuplicated(false);
     } else {
-      setNicknameCheckStatus(true);
+      axios
+        .get(url.dev + `auth/check-duplication?nickname=${nickname}`)
+        .then(res => {
+          if (!res.data.isSuccess) {
+            setNicknameCheckStatus(false);
+            setIsNicknameDuplicated(true);
+            return;
+          } else {
+            setNicknameCheckStatus(true);
+            setIsNicknameDuplicated(false);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   };
 
@@ -184,7 +201,11 @@ const SignupScreen03 = ({route}: any) => {
                   <CustomInput
                     label="닉네임"
                     placeholder="닉네임"
-                    errorText="한글 최대 10자, 영어 최대 20자로 입력해주세요."
+                    errorText={
+                      isNicknameDuplicated
+                        ? '이미 존재하는 닉네임입니다.'
+                        : '한글 최대 10자, 영어 최대 20자로 입력해주세요.'
+                    }
                     onChangeText={setNickname}
                     value={nickname}
                     clearText={() => {

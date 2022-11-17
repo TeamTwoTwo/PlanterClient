@@ -61,14 +61,14 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
   const buttonRef = useRef<ButtonRefProps>({
     isLoading: false,
   });
-  const {matchingId} = route?.params;
+  const {matchingId, type} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
   const [isModalShown, setIsModalShown] = useState<boolean>(false);
   const [modalWidth, setModalWidth] = useState<number>(0);
   const [modalHeight, setModalHeight] = useState<number>(0);
   const [btnType, setBtnType] = useState<string>();
   const [matchingInfo, setMatchingInfo] = useState<MatchingInfoType>();
-  const [type, setType] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
 
   useEffect(() => {
     getData('auth').then(auth => {
@@ -82,7 +82,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
           if (res.data.isSuccess) {
             console.log(res);
             setMatchingInfo(res.data.result);
-            setType(res.data.result.status);
+            setStatus(res.data.result.status);
           }
         })
         .catch(e => {
@@ -104,7 +104,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
     setBtnType(btype);
   };
 
-  const changeStatus = (status: string) => {
+  const changeStatus = (stat: string) => {
     if (matchingInfo !== undefined) {
       if (buttonRef.current.isLoading) {
         return;
@@ -116,7 +116,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
         axios
           .patch(
             url.dev + `matchings/${matchingId}`,
-            {status},
+            {status: stat},
             {
               headers: {
                 Authorization: `Bearer ${auth.token}`,
@@ -126,7 +126,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
           .then(res => {
             if (res.data.isSuccess) {
               console.log(res);
-              if (status === 'complete') {
+              if (stat === 'complete' && type !== 1) {
                 navigation.navigate('ReviewStarScreen', {
                   matchingId,
                   name: matchingInfo?.name,
@@ -182,7 +182,9 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
     <SafeAreaView style={styles.safe}>
       <MatchingHeader
         title={
-          type === 'request' || type === 'care' || type === 'new'
+          status === 'request' ||
+          status === 'care' ||
+          (status === 'request' && type === 1)
             ? '진행중인 매칭'
             : '완료된 매칭'
         }
@@ -191,7 +193,11 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
         <View style={styles.profileWrap}>
           <View style={styles.imgWrap}>
             <Image
-              source={{uri: matchingInfo?.profileImg}}
+              source={
+                matchingInfo?.profileImg
+                  ? {uri: matchingInfo?.profileImg}
+                  : require('../../assets/img/img-profile-default.png')
+              }
               style={styles.profileImg}
             />
             <TouchableOpacity
@@ -202,16 +208,18 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
             </TouchableOpacity>
           </View>
           <View style={styles.profileTextWrap}>
-            <Text style={[Typography.subtitle4, dstyles(type).text]}>
-              {type === 'care'
+            <Text style={[Typography.subtitle4, dstyles(status, type).text]}>
+              {status === 'care'
                 ? '케어 진행중'
-                : type === 'request'
-                ? '매칭 요청중'
-                : type === 'complete'
+                : status === 'request'
+                ? type === 1
+                  ? '새 매칭 요청'
+                  : '매칭 요청중'
+                : status === 'complete'
                 ? '케어 완료'
-                : type === 'cancel'
+                : status === 'cancel'
                 ? '매칭 취소'
-                : '새 매칭 요청'}
+                : null}
             </Text>
             <View style={styles.nameWrap}>
               <Text style={[Typography.subtitle2, {color: color.blueGray_06}]}>
@@ -288,7 +296,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               {matchingInfo && matchingInfo?.totalDate}일
             </Text>
           </View>
-          <View style={styles.mainItemWrap}>
+          <View style={styles.pickUpItemWrap}>
             <Text style={[Typography.body1, {color: color.blueGray_04}]}>
               픽업 형태
             </Text>
@@ -298,7 +306,7 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
           </View>
         </View>
         <View style={styles.btnView}>
-          {type === 'care' ? (
+          {status === 'care' ? (
             <CustomButton
               text="케어 완료하기"
               borderRadius={5}
@@ -308,18 +316,43 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
               backgroundColor={color.mint_05}
               style={{flex: 1}}
             />
-          ) : type === 'request' ? (
-            <CustomButton
-              text="매칭취소"
-              borderRadius={5}
-              backgroundColor={color.gray_00}
-              style={styles.cancelBtnStyle}
-              textStyle={{color: color.blueGray_03}}
-              onPress={() => {
-                onPressComplete('cancel');
-              }}
-            />
-          ) : type === 'complete' ? (
+          ) : status === 'request' ? (
+            type === 1 ? (
+              <View style={styles.newBtnWrap}>
+                <CustomButton
+                  text="매칭거절"
+                  borderRadius={5}
+                  backgroundColor={color.gray_00}
+                  style={styles.refuseBtn}
+                  textStyle={{color: color.blueGray_03}}
+                  onPress={() => {
+                    onPressComplete('refuse');
+                  }}
+                />
+                <View style={{width: 8}} />
+                <CustomButton
+                  text="매칭수락"
+                  borderRadius={5}
+                  onPress={() => {
+                    onPressComplete('accept');
+                  }}
+                  backgroundColor={color.mint_05}
+                  style={styles.refuseBtn}
+                />
+              </View>
+            ) : (
+              <CustomButton
+                text="매칭취소"
+                borderRadius={5}
+                backgroundColor={color.gray_00}
+                style={styles.cancelBtnStyle}
+                textStyle={{color: color.blueGray_03}}
+                onPress={() => {
+                  onPressComplete('cancel');
+                }}
+              />
+            )
+          ) : status === 'complete' ? (
             <CustomButton
               text={matchingInfo?.reviewId ? '남긴 리뷰 보기' : '리뷰 쓰기'}
               borderRadius={5}
@@ -330,29 +363,6 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
                 matchingInfo?.reviewId ? onPressShowReview : onPressWriteReview
               }
             />
-          ) : type === 'new' ? (
-            <View style={styles.newBtnWrap}>
-              <CustomButton
-                text="매칭거절"
-                borderRadius={5}
-                backgroundColor={color.gray_00}
-                style={styles.refuseBtn}
-                textStyle={{color: color.blueGray_03}}
-                onPress={() => {
-                  onPressComplete('refuse');
-                }}
-              />
-              <View style={{width: 8}} />
-              <CustomButton
-                text="매칭수락"
-                borderRadius={5}
-                onPress={() => {
-                  onPressComplete('accept');
-                }}
-                backgroundColor={color.mint_05}
-                style={styles.refuseBtn}
-              />
-            </View>
           ) : null}
         </View>
       </ScrollView>
@@ -406,8 +416,10 @@ const MatchingHistoryDetailScreen = ({route}: any) => {
                     changeStatus('complete');
                     break;
                   case 'accept':
+                    changeStatus('care');
                     break;
                   case 'refuse':
+                    changeStatus('cancel');
                     break;
                   case 'cancel':
                     changeStatus('cancel');
@@ -461,13 +473,13 @@ const modalStyles = (modalWidth: number, modalHeight: number) =>
     },
   });
 
-const dstyles = (type: string) =>
+const dstyles = (status: string, type?: number) =>
   StyleSheet.create({
     text: {
       color:
-        type === 'care' || type === 'new'
+        status === 'care' || (status === 'request' && type === 1)
           ? color.mint_05
-          : type === 'request'
+          : status === 'request'
           ? color.blueGray_06
           : color.blueGray_01,
     },
@@ -524,7 +536,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: '#FAFAFC',
     borderRadius: 8,
-    padding: 20,
+    paddingTop: 20,
+    paddingHorizontal: 20,
   },
   serviceTypeWrap: {
     borderBottomWidth: 1,
@@ -547,6 +560,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#E2E7EF',
+  },
+  pickUpItemWrap: {
+    paddingVertical: 24,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   btnView: {
     marginTop: 20,

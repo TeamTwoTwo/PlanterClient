@@ -34,10 +34,16 @@ import ReportScreen from './ExpertDetail/ReportScreen';
 import MyMatchingPageScreen from './MyPage/MyMatchingPageScreen';
 import ChangeAddressScreen from './MyPage/ChangeAddressScreen';
 import FindAddress from './Signup/FindAddress';
+import AddressScreen from '../screens/Matching/AddressScreen';
 
 type RootStackParamList = {
   MainTab: undefined;
-  LocationScreen: undefined;
+  LocationScreen: {
+    simpleAddress: string;
+    locationAddress: string;
+    userId: number;
+  };
+  AddressScreen: undefined;
   ExpertDetailScreen: {plantManagerId: number};
   MessageScreen: {type?: string};
   MessageDetailScreen: {
@@ -54,6 +60,7 @@ type RootStackParamList = {
   ReviewDetailScreen: {plantManagerId: number};
   MatchingHistoryDetailScreen: {
     matchingId: number;
+    type?: number;
   };
   ReviewStarScreen: {
     matchingId: number;
@@ -160,6 +167,7 @@ const RootStack = () => {
         component={ChangeAddressScreen}
       />
       <Stack.Screen name="FindAddress" component={FindAddress} />
+      <Stack.Screen name="AddressScreen" component={AddressScreen} />
     </Stack.Navigator>
   );
 };

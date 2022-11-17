@@ -8,6 +8,10 @@ import MatchingHeader from '../../components/matching/MatchingHeader';
 import {MatchingRequestInfoState} from '../../recoil/atoms/matchingRequest';
 import {color, screen, Typography} from '../../utils/utils';
 import {MainTabNavigationProp} from '../MainTab';
+import NoGo from '../../assets/illust/illust-no-go.svg';
+import Go from '../../assets/illust/illust-go.svg';
+import NoCome from '../../assets/illust/illust-no-come.svg';
+import Come from '../../assets/illust/illust-come.svg';
 
 const MatchingRequestScreen03 = () => {
   const [MatchingRequestInfo, setMatchingRequestInfo] = useRecoilState(
@@ -32,45 +36,80 @@ const MatchingRequestScreen03 = () => {
           <View style={styles.progressBarInner} />
         </View>
       </View>
-      <View style={[styles.main, styles.padding]}>
+      <View style={styles.main}>
         <TouchableOpacity
+          style={dstyles(go).item}
           activeOpacity={1}
           onPress={() => {
             setGo(true);
             setCome(false);
           }}>
-          <View style={dstyles(go).item}>
-            <View style={styles.illust} />
-            <View style={styles.textWrap}>
-              <Text
-                style={[
-                  Typography.subtitle3,
-                  {color: go ? color.blueGray_06 : color.blueGray_02},
-                ]}>
-                제가 매칭 상대의 주소에 갈게요
-              </Text>
-            </View>
-          </View>
+          {go ? (
+            <>
+              <Go />
+            </>
+          ) : (
+            <>
+              <NoGo />
+            </>
+          )}
+          <Text
+            style={[
+              Typography.subtitle3,
+              {
+                color: go ? color.blueGray_06 : color.blueGray_02,
+                textAlign: 'center',
+              },
+            ]}>
+            제가 매칭 상대의
+          </Text>
+          <Text
+            style={[
+              Typography.subtitle3,
+              {
+                color: go ? color.blueGray_06 : color.blueGray_02,
+                textAlign: 'center',
+              },
+            ]}>
+            주소로 갈게요
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          style={dstyles(come).item}
           activeOpacity={1}
-          style={{marginTop: 12}}
           onPress={() => {
             setGo(false);
             setCome(true);
           }}>
-          <View style={dstyles(come).item}>
-            <View style={styles.illust} />
-            <View style={styles.textWrap}>
-              <Text
-                style={[
-                  Typography.subtitle3,
-                  {color: come ? color.blueGray_06 : color.blueGray_02},
-                ]}>
-                매칭 상대가 제 주소로 와주세요
-              </Text>
-            </View>
-          </View>
+          {come ? (
+            <>
+              <Come />
+            </>
+          ) : (
+            <>
+              <NoCome />
+            </>
+          )}
+          <Text
+            style={[
+              Typography.subtitle3,
+              {
+                color: come ? color.blueGray_06 : color.blueGray_02,
+                textAlign: 'center',
+              },
+            ]}>
+            매칭 상대가
+          </Text>
+          <Text
+            style={[
+              Typography.subtitle3,
+              {
+                color: come ? color.blueGray_06 : color.blueGray_02,
+                textAlign: 'center',
+              },
+            ]}>
+            제 주소로 와주세요
+          </Text>
         </TouchableOpacity>
       </View>
       <View>
@@ -92,8 +131,9 @@ const dstyles = (type: boolean) =>
       borderRadius: 6,
       borderWidth: type ? 2 : 1,
       borderColor: type ? color.mint_05 : color.blueGray_00,
-      paddingTop: type ? 29 : 30,
-      paddingBottom: 14,
+      height: 244,
+      paddingHorizontal: 24,
+      width: screen.width / 2 - 26,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -120,16 +160,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.blueGray_06,
   },
   main: {
-    marginTop: 32,
+    marginTop: 100,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     flex: 1,
-  },
-  illust: {
-    width: 240,
-    height: 140,
-    backgroundColor: 'white',
-  },
-  textWrap: {
-    marginTop: 12,
   },
 });
 export default MatchingRequestScreen03;

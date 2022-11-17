@@ -14,21 +14,28 @@ import CareGray from '../../assets/icon/ic-care-gray-badge.svg';
 interface Props {
   info: ReqType;
   onPress: () => void;
+  type?: number;
 }
 
 const category = ['식물 집사', '꽃집', '식물 전문가', '식물케어 서비스'];
 
-const MatchingHistoryItem = ({info, onPress}: Props) => {
+const MatchingHistoryItem = ({info, onPress, type = 0}: Props) => {
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
-      <View style={dstyles(info?.status).wrap}>
+      <View style={dstyles(info?.status, type).wrap}>
         <View style={styles.profileWrap}>
           <View style={styles.profileImgWrap}>
             <Image
               style={dstyles(info?.status).profileImg}
-              source={{uri: info?.profileImg}}
+              source={
+                info?.profileImg
+                  ? {uri: info?.profileImg}
+                  : require('../../assets/img/img-profile-default.png')
+              }
             />
-            {info?.status === 'new' && <View style={styles.redPoint} />}
+            {/* {info?.status === 'request' && type === 1 && (
+              <View style={styles.redPoint} />
+            )} */}
           </View>
           <View style={styles.profileTextWrap}>
             <View style={styles.nameWrap}>
@@ -93,16 +100,19 @@ const MatchingHistoryItem = ({info, onPress}: Props) => {
           </View>
         </View>
         <View>
-          <Text style={[Typography.subtitle4, dstyles(info?.status).text]}>
+          <Text
+            style={[Typography.subtitle4, dstyles(info?.status, type).text]}>
             {info?.status === 'care'
               ? '케어 진행중'
-              : info?.status === 'request'
+              : info?.status === 'request' && type === 0
               ? '매칭 요청중'
+              : info?.status === 'request' && type === 1
+              ? '새 매칭 요청'
               : info?.status === 'complete'
               ? '케어 완료'
               : info?.status === 'cancel'
               ? '매칭 취소'
-              : '새 매칭 요청'}
+              : null}
           </Text>
         </View>
       </View>
@@ -110,13 +120,13 @@ const MatchingHistoryItem = ({info, onPress}: Props) => {
   );
 };
 
-const dstyles = (type: string) =>
+const dstyles = (status: string, type?: number) =>
   StyleSheet.create({
     text: {
       color:
-        type === 'care' || type === 'new'
+        status === 'care' || (status === 'request' && type === 1)
           ? color.mint_05
-          : type === 'request'
+          : status === 'request'
           ? color.blueGray_06
           : color.blueGray_01,
     },
@@ -124,13 +134,15 @@ const dstyles = (type: string) =>
       width: 40,
       height: 40,
       borderRadius: 20,
-      opacity: type === 'cancel' ? 0.5 : 1,
+      opacity: status === 'cancel' ? 0.5 : 1,
     },
     wrap: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: type === 'new' ? color.mint_00 : color.gray_00,
+      // backgroundColor:
+      //   status === 'request' && type === 1 ? color.mint_00 : color.gray_00,
+      backgroundColor: color.gray_00,
       paddingHorizontal: 20,
       paddingVertical: 12,
     },
