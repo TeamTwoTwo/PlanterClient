@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {color, Typography, url} from '../../utils/utils';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import Place from '../../assets/icon/ic-place.svg';
 import Message from '../../assets/icon/ic-message.svg';
 import NoneCheck from '../../assets/icon/ic-nonecheck.svg';
@@ -43,37 +43,49 @@ interface UserData {
 
 const HomeScreen = () => {
   const navigation = useNavigation<MainTabNavigationProp>();
-  const [checkList, setCheckList] = useState<string[]>([]);
-  const [photoCheck, setPhotoCheck] = useState<boolean>(false);
+  const [checkList, setCheckList] = useState<number[]>([]);
+  const [photoCheck, setPhotoCheck] = useState<boolean>(true);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [checkedFilter, setCheckedFilter] = useState<string>('가까운순');
+  const [checkedFilter, setCheckedFilter] = useState<number>(0);
   const [userData, setUserData] = useState<UserData[]>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [address, setAddress] = useState<string>('');
+  const [simpleAddress, setSimpleAddress] = useState<string>('');
+  const [locationAddress, setLocationAddress] = useState<string>('');
+  const [userId, setUserId] = useState<number>(0);
 
-  const onAddList = (text: string): void => {
-    setCheckList([...checkList, text]);
+  const onAddList = (id: number): void => {
+    setCheckList([...checkList, id]);
 
-    if (checkList.includes(text)) {
-      setCheckList(checkList.filter(check => check !== text));
+    if (checkList.includes(id)) {
+      setCheckList(checkList.filter(check => check !== id));
     }
   };
+
+  const dummy: Dummy[] = [
+    {id: 0, text: '식물 집사'},
+    {id: 1, text: '꽃집'},
+    {id: 2, text: '식물 전문가'},
+    {id: 3, text: '식물케어 서비스'},
+  ];
 
   const onChecked = (): void => {
     setPhotoCheck(!photoCheck);
   };
 
-  const getMatchingList = () => {
+  const getMatchingList = (): void => {
     setRefreshing(true);
     getData('auth').then(auth => {
       axios
-        .get(url.dev + 'plant-managers', {
-          headers: {
-            Authorization: `Bearer ${auth.token}`,
+        .get(
+          url.dev +
+            `plant-managers?category=${checkList}&sort=${checkedFilter}&isPhoto=${photoCheck}`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
           },
-        })
+        )
         .then(res => {
-          console.log(res.data.result);
           if (res.data.isSuccess) {
             setUserData(res.data.result);
             setRefreshing(false);
@@ -87,30 +99,63 @@ const HomeScreen = () => {
 
   const getUserInfo = () => {
     getData('userInfo').then(info => {
-      setAddress(info.simpleAddress);
+      setSimpleAddress(info.simpleAddress);
+      setLocationAddress(info.address);
+    });
+    getData('auth').then(info => {
+      setUserId(info.userId);
+      console.log(info.userId);
     });
   };
 
-  useEffect(() => {
-    getMatchingList();
-    getUserInfo();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getUserInfo(); // 화면이 포커스 됐을 때
+      return () => {
+        console.log('나가욥'); // 화면 포커스 아웃 됐을 때
+      };
+    }, []),
+  );
 
-  const dummy: Dummy[] = [
-    {id: 1, text: '식물 집사'},
-    {id: 2, text: '꽃집'},
-    {id: 3, text: '식물 전문가'},
-    {id: 4, text: '식물케어 서비스'},
-  ];
+  useEffect(() => {
+    getData('auth').then(auth => {
+      axios
+        .get(
+          url.dev +
+            `plant-managers?category=${checkList}&sort=${checkedFilter}&isPhoto=${photoCheck}`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          if (res.data.isSuccess) {
+            setUserData(res.data.result);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  }, [checkList, checkedFilter, photoCheck]);
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.head}>
-        <TouchableOpacity activeOpacity={1}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            navigation.navigate('LocationScreen', {
+              simpleAddress,
+              locationAddress,
+              userId,
+            });
+          }}>
           <View style={styles.navigation}>
             <Place />
             <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-              {address}
+              {simpleAddress}
             </Text>
           </View>
         </TouchableOpacity>
@@ -121,19 +166,20 @@ const HomeScreen = () => {
           <Message stroke={'black'} />
         </Pressable>
       </View>
-      {/* <View style={styles.filter}>
+      <View style={styles.filter}>
         <FlatList
           horizontal
           data={dummy}
           renderItem={({item}: {item: Dummy}) => (
             <MatchingFilter
               text={item.text}
-              onAddList={() => onAddList(item.text)}
+              id={item.id}
+              onAddList={() => onAddList(item.id)}
               checkList={checkList}
             />
           )}
           keyExtractor={(item: Dummy) => item.id.toString()}
-          listKey='matching-home-filter'
+          listKey="matching-home-filter"
         />
       </View>
       <View style={styles.secondfilter}>
@@ -149,11 +195,11 @@ const HomeScreen = () => {
           <View style={styles.filterWrap}>
             <Filter />
             <Text style={[Typography.caption2, styles.filterText]}>
-              {checkedFilter}
+              {checkedFilter === 0 ? '가까운순' : '별점순'}
             </Text>
           </View>
         </Pressable>
-      </View> */}
+      </View>
 
       <Modal
         animationType="none"
@@ -172,7 +218,7 @@ const HomeScreen = () => {
           <Pressable
             style={styles.filterLine}
             onPress={() => {
-              setCheckedFilter('가까운순');
+              setCheckedFilter(0);
               setModalVisible(!modalVisible);
             }}>
             <Text
@@ -180,22 +226,18 @@ const HomeScreen = () => {
                 Typography.subtitle3,
                 {
                   color:
-                    checkedFilter === '가까운순'
-                      ? color.blueGray_06
-                      : color.gray_04,
+                    checkedFilter === 0 ? color.blueGray_06 : color.gray_04,
                 },
               ]}>
               가까운순
             </Text>
-            {checkedFilter === '가까운순' && (
-              <ChekedFilter style={{marginLeft: 5}} />
-            )}
+            {checkedFilter === 0 && <ChekedFilter style={{marginLeft: 5}} />}
           </Pressable>
           <View style={styles.line} />
           <Pressable
             style={styles.filterLine}
             onPress={() => {
-              setCheckedFilter('별점순');
+              setCheckedFilter(1);
               setModalVisible(!modalVisible);
             }}>
             <Text
@@ -203,16 +245,12 @@ const HomeScreen = () => {
                 Typography.subtitle3,
                 {
                   color:
-                    checkedFilter === '별점순'
-                      ? color.blueGray_06
-                      : color.gray_04,
+                    checkedFilter === 1 ? color.blueGray_06 : color.gray_04,
                 },
               ]}>
               별점순
             </Text>
-            {checkedFilter === '별점순' && (
-              <ChekedFilter style={{marginLeft: 5}} />
-            )}
+            {checkedFilter === 1 && <ChekedFilter style={{marginLeft: 5}} />}
           </Pressable>
         </View>
       </Modal>
@@ -225,7 +263,7 @@ const HomeScreen = () => {
               onRefresh={getMatchingList}
             />
           }
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator
           data={userData}
           renderItem={({item}: {item: UserData}) => (
             <MatchingItem
@@ -266,8 +304,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: color.gray_02,
   },
   navigation: {
     flexDirection: 'row',

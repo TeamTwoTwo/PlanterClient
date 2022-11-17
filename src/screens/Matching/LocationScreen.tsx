@@ -1,11 +1,54 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {color, Typography} from '../../utils/utils';
+import {color, Typography, url} from '../../utils/utils';
 import Place from '../../assets/icon/ic-place.svg';
 import MatchingHeader from '../../components/matching/MatchingHeader';
+import {MainTabNavigationProp} from '../MainTab';
+import {useNavigation} from '@react-navigation/native';
+import {getData, setData} from '../../utils/AsyncStorage';
+import {useRecoilState} from 'recoil';
+import {signupState} from '../../recoil/atoms/signup';
+import axios from 'axios';
 
-const LocationScreen = () => {
+const LocationScreen = ({route}: any) => {
+  const navigation = useNavigation<MainTabNavigationProp>();
+  const {simpleAddress, locationAddress, userId} = route?.params;
+  const [signupInfo, setSignupState] = useRecoilState(signupState);
+
+  console.log(simpleAddress, locationAddress, userId);
+
+  useEffect(() => {
+    getData('auth').then(auth => {
+      axios
+        .patch(
+          url.dev + `users/${userId}/location`,
+          {
+            address: locationAddress,
+            detailAddress: '',
+            simpleAddress: simpleAddress,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+            },
+          },
+        )
+        .then(res => {
+          console.log('수정하겟습니다.');
+          console.log(res.data.result);
+          let signupInfoTmp = {...signupInfo};
+          signupInfoTmp.address = res.data.result.address;
+          signupInfoTmp.detailAddress = res.data.result.detailAddress;
+          signupInfoTmp.simpleAddress = res.data.result.simpleAddress;
+          setData('userInfo', signupInfoTmp);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  }, [locationAddress, signupInfo, simpleAddress, userId]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <MatchingHeader title="위치 설정" />
@@ -14,13 +57,20 @@ const LocationScreen = () => {
         <View style={styles.address}>
           <Place />
           <Text style={[Typography.subtitle3, {color: color.blueGray_06}]}>
-            서울 서대문구 연희동
+            {simpleAddress}
           </Text>
         </View>
-        <Text style={[styles.subAddress, Typography.body2]}>연희로12길 34</Text>
+        <Text style={[styles.subAddress, Typography.body2]}>
+          {locationAddress}
+        </Text>
       </View>
       <View style={styles.btnWrap}>
-        <TouchableOpacity activeOpacity={1} style={styles.btn}>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.btn}
+          onPress={() => {
+            navigation.navigate('AddressScreen');
+          }}>
           <View style={styles.textWrap}>
             <Text style={[Typography.subtitle3, {color: color.mint_05}]}>
               주소 변경
