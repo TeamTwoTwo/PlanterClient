@@ -263,7 +263,7 @@ const HomeScreen = () => {
               onRefresh={getMatchingList}
             />
           }
-          showsVerticalScrollIndicator
+          showsVerticalScrollIndicator={false}
           data={userData}
           renderItem={({item}: {item: UserData}) => (
             <MatchingItem
