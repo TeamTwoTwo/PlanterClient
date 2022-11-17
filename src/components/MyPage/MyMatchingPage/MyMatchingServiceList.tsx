@@ -66,12 +66,15 @@ const MyMatchingServiceList = ({
     })
       .then(res => {
         console.log(res);
-        if (res.length > 3) {
+        let list = [...imageFiles];
+        res.forEach(data => {
+          list.push(data);
+        });
+        if (list.length > 3) {
           Alert.alert('사진은 최대 3장까지 첨부할 수 있습니다.');
-          let list = res.slice(0, 3);
-          setImageFiles(list);
+          setImageFiles(list.slice(0, 3));
         } else {
-          setImageFiles(res);
+          setImageFiles(list);
         }
       })
       .catch(e => {
