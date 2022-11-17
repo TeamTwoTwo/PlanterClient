@@ -334,10 +334,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     color: color.blueGray_06,
   },
-  contentWrap: {
-    flex: 1,
-    // borderWidth: 1,
-  },
+  contentWrap: {},
   centeredView: {
     flex: 1,
     backgroundColor: 'rgba(52, 52, 52, 0.5)',
