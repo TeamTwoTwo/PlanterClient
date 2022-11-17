@@ -69,9 +69,32 @@ const MatchingHistoryListScreen = () => {
     });
   };
 
+  const getRcvList = () => {
+    setRefreshing(true);
+    getData('auth').then(auth => {
+      axios
+        .get(url.dev + 'matchings?type=1', {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        })
+        .then(res => {
+          if (res.data.isSuccess) {
+            console.log(res);
+            setRcvList(res.data.result);
+            setRefreshing(false);
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+  };
+
   useFocusEffect(
     useCallback(() => {
       getReqList();
+      getRcvList();
     }, []),
   );
 
@@ -89,6 +112,21 @@ const MatchingHistoryListScreen = () => {
     setReqLastList(last);
     setReqIngList(ing);
   }, [reqList]);
+
+  useEffect(() => {
+    console.log(rcvList);
+    let last: ReqType[] = [];
+    let ing: ReqType[] = [];
+    rcvList?.forEach(data => {
+      if (data.status === 'complete' || data.status === 'cancel') {
+        last.push(data);
+      } else {
+        ing.push(data);
+      }
+    });
+    setRcvLastList(last);
+    setRcvIngList(ing);
+  }, [rcvList]);
 
   const onLayout = (e: {
     nativeEvent: {layout: {width: number; height: number}};
@@ -169,7 +207,10 @@ const MatchingHistoryListScreen = () => {
           <FlatList
             showsVerticalScrollIndicator={false}
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={getReqList} />
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={isSelectedReq ? getReqList : getRcvList}
+              />
             }
             data={tmp}
             renderItem={() => (
@@ -207,7 +248,7 @@ const MatchingHistoryListScreen = () => {
                               />
                             )}
                             keyExtractor={(item, idx) =>
-                              item.matchingId.toString()
+                              `reqIngList ${item.matchingId.toString()}`
                             }
                             listKey="reqIngList"
                             ListFooterComponent={() => (
@@ -248,7 +289,7 @@ const MatchingHistoryListScreen = () => {
                               />
                             )}
                             keyExtractor={(item, idx) =>
-                              item.matchingId.toString()
+                              `reqLastList ${item.matchingId.toString()}`
                             }
                             listKey="reqLastList"
                             ListFooterComponent={() => (
@@ -278,21 +319,25 @@ const MatchingHistoryListScreen = () => {
                           </Text>
                         </View>
                         <FlatList
-                          data={rcvList}
+                          data={rcvIngList}
                           renderItem={({item}) => (
                             <MatchingHistoryItem
+                              type={1}
                               info={item}
                               onPress={() => {
                                 navigation.navigate(
                                   'MatchingHistoryDetailScreen',
                                   {
                                     matchingId: item.matchingId,
+                                    type: 1,
                                   },
                                 );
                               }}
                             />
                           )}
-                          keyExtractor={item => `img ${item}`}
+                          keyExtractor={(item, idx) =>
+                            `rcvIngList ${item.matchingId.toString()}`
+                          }
                           listKey="rcvIngList"
                           ListFooterComponent={() => (
                             <View style={{height: rcvLastList ? 32 : 70}} />
@@ -319,21 +364,25 @@ const MatchingHistoryListScreen = () => {
                           </Text>
                         </View>
                         <FlatList
-                          data={rcvList}
+                          data={rcvLastList}
                           renderItem={({item}) => (
                             <MatchingHistoryItem
+                              type={1}
                               info={item}
                               onPress={() => {
                                 navigation.navigate(
                                   'MatchingHistoryDetailScreen',
                                   {
                                     matchingId: item.matchingId,
+                                    type: 1,
                                   },
                                 );
                               }}
                             />
                           )}
-                          keyExtractor={item => `img ${item}`}
+                          keyExtractor={(item, idx) =>
+                            `rcvLastList ${item.matchingId.toString()}`
+                          }
                           listKey="rcvLastList"
                           ListFooterComponent={() => (
                             <View style={{height: 70}} />
@@ -414,9 +463,10 @@ const styles = StyleSheet.create({
   },
   mainWrap: {
     marginTop: 24,
+    height: '100%',
   },
   main: {
-    minHeight: screen.height,
+    minHeight: '100%',
   },
   textWrap: {
     paddingHorizontal: 20,
