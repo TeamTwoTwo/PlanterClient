@@ -167,6 +167,7 @@ const MatchingHistoryListScreen = () => {
       ) : (
         <View style={styles.mainWrap}>
           <FlatList
+            showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={getReqList} />
             }
