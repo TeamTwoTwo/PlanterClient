@@ -147,16 +147,22 @@ const MatchingHistoryListScreen = () => {
       {(isSelectedReq && (reqList?.length === 0 || !reqList)) ||
       (isSelectedRcv && (rcvList?.length === 0 || !rcvList)) ? (
         <View
-          onLayout={onLayoutNoView}
-          style={
-            dstyles(
-              viewWidth,
-              viewHeight,
-              noMatchingViewWidth,
-              noMatchingViewHeight,
-            ).noMatchingView
-          }>
-          <NoMatchingHistory type={isSelectedReq ? '요청한' : '받은'} />
+          onLayout={onLayout}
+          style={{
+            height: screen.height,
+          }}>
+          <View
+            onLayout={onLayoutNoView}
+            style={
+              dstyles(
+                viewWidth,
+                viewHeight,
+                noMatchingViewWidth,
+                noMatchingViewHeight,
+              ).noMatchingView
+            }>
+            <NoMatchingHistory type={isSelectedReq ? '요청한' : '받은'} />
+          </View>
         </View>
       ) : (
         <View style={styles.mainWrap}>
