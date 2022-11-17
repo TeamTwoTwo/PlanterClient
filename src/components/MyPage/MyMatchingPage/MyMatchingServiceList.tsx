@@ -21,7 +21,7 @@ import MyPageToggleView from './MyPageToggleView';
 import Check from '../../../assets/icon/ic-check.svg';
 
 interface Props {
-  type: string;
+  category: number;
   serviceList: ServiceType[];
   setServiceList: Dispatch<SetStateAction<ServiceType[]>>;
   isMatchingAllowed: boolean;
@@ -35,7 +35,7 @@ interface Props {
 }
 
 const MyMatchingServiceList = ({
-  type,
+  category,
   serviceList,
   setServiceList,
   isMatchingAllowed,
@@ -167,7 +167,7 @@ const MyMatchingServiceList = ({
                   data={serviceList}
                   renderItem={({item, index}) => (
                     <MyMatchingServiceItem
-                      type={type}
+                      category={category}
                       idx={index}
                       serviceItem={item}
                       serviceList={serviceList}
@@ -183,7 +183,7 @@ const MyMatchingServiceList = ({
                   )}
                   listKey="service-item-list"
                 />
-                {type !== 'butler' && (
+                {category !== 0 && (
                   <View style={[styles.addBtnWrap, styles.padding]}>
                     <TouchableOpacity
                       style={styles.addBtn}

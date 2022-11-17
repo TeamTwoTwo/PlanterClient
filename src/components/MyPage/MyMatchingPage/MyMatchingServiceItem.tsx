@@ -10,7 +10,7 @@ import {ServiceType} from '../../../screens/MyPage/MyMatchingPageScreen';
 import {color, Typography} from '../../../utils/utils';
 
 interface Props {
-  type: string;
+  category: number;
   idx: number;
   serviceItem: ServiceType;
   serviceList: ServiceType[];
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const MyMatchingServiceItem = ({
-  type,
+  category,
   idx,
   serviceItem,
   serviceList,
@@ -80,7 +80,7 @@ const MyMatchingServiceItem = ({
           autoCorrect={false}
           value={serviceItem.name}
           onChangeText={onChangeName}
-          editable={type === 'butler' ? false : true}
+          editable={category === 0 ? false : true}
         />
       </View>
       <View style={styles.priceWrap}>

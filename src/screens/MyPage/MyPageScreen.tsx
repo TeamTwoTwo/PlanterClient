@@ -35,7 +35,10 @@ const MyPageScreen = () => {
   };
 
   const onPressMyMatchingPage = () => {
-    navigation.navigate('MyMatchingPageScreen');
+    userInfo &&
+      navigation.navigate('MyMatchingPageScreen', {
+        category: userInfo?.category,
+      });
   };
 
   useFocusEffect(

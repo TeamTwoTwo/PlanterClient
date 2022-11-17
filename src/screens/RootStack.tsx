@@ -80,7 +80,7 @@ type RootStackParamList = {
   SettingScreen: undefined;
   ProfileEditScreen: {nickname: string};
   ReportScreen: {plantManagerId: number; name: string};
-  MyMatchingPageScreen: undefined;
+  MyMatchingPageScreen: {category: number};
 };
 
 export type RootStackNavigationProp =

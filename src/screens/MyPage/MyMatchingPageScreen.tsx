@@ -22,8 +22,8 @@ export interface ServiceType {
   number: number | string;
 }
 
-const MyMatchingPageScreen = () => {
-  const type = 'butler';
+const MyMatchingPageScreen = ({route}: any) => {
+  const {category} = route?.params;
   const navigation = useNavigation<MainTabNavigationProp>();
   const [introOK, setIntroOK] = useState<boolean>(false);
   const [serviceOK, setServiceOK] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const MyMatchingPageScreen = () => {
   const [introduceText, setIntroduceText] = useState<string>('');
   const [serviceList, setServiceList] = useState<ServiceType[]>([
     {
-      name: type === 'butler' ? '식물관리' : '',
+      name: category === 0 ? '식물관리' : '',
       price: '',
       number: '',
     },
@@ -103,7 +103,7 @@ const MyMatchingPageScreen = () => {
           </Pressable>
         </View>
         <MyMatchingServiceList
-          type={type}
+          category={category}
           serviceList={serviceList}
           setServiceList={setServiceList}
           isMatchingAllowed={isMatchingAllowed}
