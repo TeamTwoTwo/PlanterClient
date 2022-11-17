@@ -149,7 +149,7 @@ const MatchingHistoryListScreen = () => {
         <View
           onLayout={onLayout}
           style={{
-            height: screen.height,
+            height: '100%',
           }}>
           <View
             onLayout={onLayoutNoView}
@@ -167,6 +167,7 @@ const MatchingHistoryListScreen = () => {
       ) : (
         <View style={styles.mainWrap}>
           <FlatList
+            showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={getReqList} />
             }
@@ -209,6 +210,9 @@ const MatchingHistoryListScreen = () => {
                               item.matchingId.toString()
                             }
                             listKey="reqIngList"
+                            ListFooterComponent={() => (
+                              <View style={{height: reqLastList ? 32 : 70}} />
+                            )}
                           />
                         </View>
                       ) : //  요청한 내역 중 진행중인 매칭이 없을 경우
@@ -247,6 +251,9 @@ const MatchingHistoryListScreen = () => {
                               item.matchingId.toString()
                             }
                             listKey="reqLastList"
+                            ListFooterComponent={() => (
+                              <View style={{height: 70}} />
+                            )}
                           />
                         </View>
                       ) : //요청한 내역 중 지난 매칭이 없을 경우
@@ -287,6 +294,9 @@ const MatchingHistoryListScreen = () => {
                           )}
                           keyExtractor={item => `img ${item}`}
                           listKey="rcvIngList"
+                          ListFooterComponent={() => (
+                            <View style={{height: rcvLastList ? 32 : 70}} />
+                          )}
                         />
                       </View>
                     ) : // 받은 내역 중 진행중인 매칭이 없을 경우
@@ -325,6 +335,9 @@ const MatchingHistoryListScreen = () => {
                           )}
                           keyExtractor={item => `img ${item}`}
                           listKey="rcvLastList"
+                          ListFooterComponent={() => (
+                            <View style={{height: 70}} />
+                          )}
                         />
                       </View>
                     ) : // 받은 내역 중 지난 매칭이 없을 경우
@@ -418,7 +431,6 @@ const styles = StyleSheet.create({
   separator: {
     borderBottomWidth: 1,
     borderBottomColor: color.blueGray_00,
-    marginTop: 20,
     marginBottom: 32,
   },
 });
