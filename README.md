@@ -7,6 +7,9 @@
 '반려 식물'에 대한 관심이 1인 가구에서 특히 커지고 있습니다.  
 이들에게 반려 식물 돌봄 매칭 서비스를 제공하기 위해 planter는 시작되었습니다.
 ```
+## 앱 소개
+<img src="https://user-images.githubusercontent.com/77619905/203629402-0eccad92-5b78-4563-b8a5-51e0d7a2cdd0.png" width="160" height="346"><img src="https://user-images.githubusercontent.com/77619905/203629433-cf2e82ae-31e8-4b39-8559-076ea6dcd81f.png" width="160" height="346"><img src="https://user-images.githubusercontent.com/77619905/203629437-4249a2f1-b68e-42a8-b791-086eab0e6212.png" width="160" height="346"><img src="https://user-images.githubusercontent.com/77619905/203629439-a4fb828c-4e58-4122-86b1-ba9a97090f3e.png" width="160" height="346"><img src="https://user-images.githubusercontent.com/77619905/203629441-5f0a3d28-06c1-4b60-8199-ae9d12e1cc80.png" width="160" height="346">
+
 ## 앱 스크린샷
 <img src="https://user-images.githubusercontent.com/77619905/202889242-0a771999-c4d1-4993-bd94-a48e58b48624.png" width="200" height="433"><img src="https://user-images.githubusercontent.com/77619905/202889505-d69b8f73-c20d-40b4-8f2c-62c4c1a80ee9.png" width="200" height="433"><img src="https://user-images.githubusercontent.com/77619905/202889507-6ceaa0c3-4813-4eb3-a9fd-33a577a7dc42.png" width="200" height="433"><img src="https://user-images.githubusercontent.com/77619905/202889522-46f109f6-90ae-40f5-94c1-dfa72e2994d6.png" width="200" height="433">
 
